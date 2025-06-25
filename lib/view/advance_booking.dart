@@ -50,8 +50,8 @@ class AdvanceBooking extends StatelessWidget {
               ),
               semiMediumDevice: Padding(
                 padding: EdgeInsets.only(
-                  left: SizeConfig.screenWidth * 0.125,
-                  right: SizeConfig.screenWidth * 0.125,
+                  left: SizeConfig.screenWidth * 0.05,
+                  right: SizeConfig.screenWidth * 0.05,
                 ),
                 child: AdvancedBookingFormWidget(
                   crossAixisCount: 3,

@@ -104,14 +104,12 @@ class _QrScannerComponentEHundiState extends State<QrScannerComponentEHundi> {
                     color: kBlack,
                     size: 23,
                     fontWeight: FontWeight.w400,
-                    toLang: currentLang,
                   ),
                   BuildTextWidget(
                     text: "Scan this QR Code to pay",
                     color: kBlack,
                     size: 18,
                     fontWeight: FontWeight.w300,
-                    toLang: currentLang,
                     textAlign: TextAlign.center,
                   ),
                   QrImageView(

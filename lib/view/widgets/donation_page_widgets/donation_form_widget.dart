@@ -5,6 +5,7 @@ import 'package:kshethra_mini/utils/app_styles.dart';
 import 'package:kshethra_mini/utils/asset/assets.gen.dart';
 import 'package:kshethra_mini/utils/components/size_config.dart';
 import 'package:kshethra_mini/utils/validation.dart';
+import 'package:kshethra_mini/view/widgets/build_text_widget.dart';
 import 'package:kshethra_mini/view_model/donation_viewmodel.dart';
 import 'package:provider/provider.dart';
 
@@ -30,6 +31,7 @@ class DonationFormWidget extends StatefulWidget {
 class _DonationFormWidgetState extends State<DonationFormWidget> {
   late TextEditingController donationNameController;
   late TextEditingController donationPhnoController;
+  late TextEditingController donationAddressController;
   List<Getdonationmodel> donations = [];
   bool isLoading = true;
 
@@ -38,6 +40,7 @@ class _DonationFormWidgetState extends State<DonationFormWidget> {
     super.initState();
     donationNameController = TextEditingController();
     donationPhnoController = TextEditingController();
+    donationAddressController = TextEditingController();
     fetchDonations();
   }
 
@@ -61,11 +64,13 @@ class _DonationFormWidgetState extends State<DonationFormWidget> {
   void dispose() {
     donationNameController.dispose();
     donationPhnoController.dispose();
+    donationAddressController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final fromLang = "en";
     AppStyles styles = AppStyles();
     SizeConfig().init(context);
 
@@ -102,6 +107,19 @@ class _DonationFormWidgetState extends State<DonationFormWidget> {
                 decoration: InputDecoration(
                   hintText: "Phone".tr(),
                   counterText: "",
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                ),
+              ),
+              25.kH,
+              TextFormField(
+                autofocus: true,
+                controller: donationAddressController,
+                textAlign: TextAlign.center,
+                style: styles.blackRegular15,
+                decoration: InputDecoration(
+                  hintText: "Address".tr(),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(15),
                   ),
@@ -147,9 +165,10 @@ class _DonationFormWidgetState extends State<DonationFormWidget> {
                           child: Center(
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: Text(
+                              child: BuildTextWidget(
+                                text:
                                 donationItem.acctHeadName,
-                                style: AppStyles().blackRegular13,
+                                fromLang:fromLang ,
                               ),
                             ),
                           ),

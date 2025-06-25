@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:kshethra_mini/utils/components/choose_payment_method_widget.dart';
@@ -7,15 +6,15 @@ import 'package:kshethra_mini/view_model/booking_viewmodel.dart';
 import 'booking_page_widget/float_button_widget.dart';
 
 class PaymentMethodScreen extends StatefulWidget {
-  final String?amount;
-  const PaymentMethodScreen({super.key,this.amount});
+  final String? amount;
+  const PaymentMethodScreen({super.key, this.amount});
 
   @override
   State<PaymentMethodScreen> createState() => _PaymentMethodScreenState();
 }
 
 class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
-  String _selectedMethod = 'Cash';
+  String _selectedMethod = 'UPI';
 
   void _onMethodSelected(String method) {
     setState(() {
@@ -26,7 +25,8 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
   @override
   Widget build(BuildContext context) {
     final bookingViewmodel = Provider.of<BookingViewmodel>(context, listen: false);
-    final total = bookingViewmodel.combinedTotalAmount+bookingViewmodel.postalAmount;
+    final total = bookingViewmodel.combinedTotalAmount + bookingViewmodel.postalAmount;
+
     return Scaffold(
       body: Column(
         children: [
@@ -37,6 +37,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
               child: ChoosePaymentMethodWidget(
                 selectedMethod: _selectedMethod,
                 onMethodSelected: _onMethodSelected,
+
               ),
             ),
           ),
@@ -48,22 +49,13 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
         title: 'Confirm',
         noOfScreens: 1,
         payOnTap: () {
-          switch (_selectedMethod) {
-            case 'UPI':
-               bookingViewmodel.handleUpiPayment(total.toInt());
-              // bookingViewmodel.navigateToQrScanner(context);
-              break;
-            case 'Cash':
-              bookingViewmodel.navigateToCashPayment(context,total.toInt());
-              break;
-            case 'Card':
-               bookingViewmodel.handleCardPayment(total.toInt());
-              // bookingViewmodel.navigateCardScreen(context);
-              break;
-            default:
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Unsupported payment method')),
-              );
+          if (_selectedMethod == 'UPI') {
+            bookingViewmodel.navigateToQrScanner(context);
+            // bookingViewmodel.handleUpiPayment(total.toInt());
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Unsupported payment method')),
+            );
           }
         },
       ),

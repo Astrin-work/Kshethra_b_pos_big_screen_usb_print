@@ -140,6 +140,9 @@ class DonationViewmodel extends ChangeNotifier {
     );
   }
 
+
+
+
   void navigateToQrScanner(
     BuildContext context,
     String amount, {

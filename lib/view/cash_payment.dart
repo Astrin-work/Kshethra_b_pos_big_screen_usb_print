@@ -6,7 +6,6 @@ import 'package:kshethra_mini/view/widgets/advanced_booking_page_widget/confirm_
 import 'package:kshethra_mini/view_model/booking_viewmodel.dart';
 import 'package:kshethra_mini/view_model/terminal_viewmodel.dart';
 import 'package:provider/provider.dart';
-import '../print_service/print_service.dart';
 import '../services/plutus_smart.dart';
 import '../utils/app_color.dart';
 import '../utils/app_styles.dart';
@@ -121,41 +120,41 @@ class CashPayment extends StatelessWidget {
           for (int index = 0; index < response.length; index++) {
             final group = response[index];
 
-            await PrintService.printReceipt(
-              serialNumber: '${group['serialNumber']}',
-              receipts: List<Map<String, dynamic>>.from(group['receipts']),
-              temples: bookingViewmodel.templeList,
-              index: index,
-
-            );
-
-              //
-              // final payload = {
-              //   "Header": {
-              //     "ApplicationId": "f0d097be4df3441196d1e37cb2c98875",
-              //     "MethodId": "1001",
-              //     "UserId": "user1234",
-              //     "VersionNo": "1.0",
-              //   },
-              //   "Detail": {
-              //     "BillingRefNo": "TX98765432",
-              //     "PaymentAmount": amount,
-              //     "TransactionType": 4001,
-              //   }
-              // };
+            // await PrintService.printReceipt(
+            //   serialNumber: '${group['serialNumber']}',
+            //   receipts: List<Map<String, dynamic>>.from(group['receipts']),
+            //   temples: bookingViewmodel.templeList,
+            //   index: index,
+            //
+            // );
 
               //
-              // final transactionDataJson = jsonEncode(payload);
-              // Logger.info("Sending: $transactionDataJson");
+              final payload = {
+                "Header": {
+                  "ApplicationId": "f0d097be4df3441196d1e37cb2c98875",
+                  "MethodId": "1001",
+                  "UserId": "user1234",
+                  "VersionNo": "1.0",
+                },
+                "Detail": {
+                  "BillingRefNo": "TX98765432",
+                  "PaymentAmount": amount,
+                  "TransactionType": 4001,
+                }
+              };
+
               //
-              // try {
-              //   print("-----------payment working-----------");
-              //   final result = await PlutusSmart.startTransaction(transactionDataJson);
-              //   Logger.info("TRANSACTION RESULT: $result");
-              // } catch (e) {
-              //   Logger.error("Transaction failed: $e");
-              //   return;
-              // }
+              final transactionDataJson = jsonEncode(payload);
+              Logger.info("Sending: $transactionDataJson");
+
+              try {
+                print("-----------payment working-----------");
+                final result = await PlutusSmart.startTransaction(transactionDataJson);
+                Logger.info("TRANSACTION RESULT: $result");
+              } catch (e) {
+                Logger.error("Transaction failed: $e");
+                return;
+              }
           }
           // _handlePrint(TerminalViewmodel());
 

@@ -61,10 +61,12 @@ class DonationDialogWidget extends StatelessWidget {
             (context, donationViewmodel, child) => Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  textAlign: TextAlign.center,
-                  "Enter the amount to Donate".tr(),
-                  style: styles.blackRegular18,
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Amount".tr(),
+                    style: styles.blackRegular18,
+                  ),
                 ),
                 10.kH,
                 Form(

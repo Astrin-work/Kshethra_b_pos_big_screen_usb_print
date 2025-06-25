@@ -24,7 +24,7 @@ class _GodWidgetState extends State<GodWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final currentLang = Provider.of<HomePageViewmodel>(context).currentLanguage;
+    // final currentLang = Provider.of<HomePageViewmodel>(context).currentLanguage;
     // AppStyles styles = AppStyles();
     SizeConfig().init(context);
 
@@ -32,13 +32,13 @@ class _GodWidgetState extends State<GodWidget> {
       builder: (context, bookingViewmodel, child) {
         final godList = bookingViewmodel.gods;
         final isLoading = bookingViewmodel.isLoading;
-
+        final fromLang = "en";
         if (isLoading) {
           return const Center(child: CircularProgressIndicator(color: kDullPrimaryColor,));
         }
 
         return SizedBox(
-          height: 145,
+          height: 235,
           width: SizeConfig.screenWidth,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
@@ -55,8 +55,8 @@ class _GodWidgetState extends State<GodWidget> {
                       },
                       child:
                       Container(
-                        height: 100,
-                        width: 100,
+                        height: 180,
+                        width: 145,
                         decoration: BoxDecoration(
                           boxShadow: [
                             BoxShadow(
@@ -80,8 +80,8 @@ class _GodWidgetState extends State<GodWidget> {
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: BuildTextWidget(
-                        text: godList[index].devathaName.tr(),
-                        toLang: currentLang,
+                        text: godList[index].devathaName,
+                        fromLang: fromLang,
                       ),
                     ),
                   ],

@@ -45,17 +45,14 @@ class QrScannerComponentDonations extends StatelessWidget {
                   BuildTextWidget(
                     text: "Amount ₹" "$amount",
                     color: kBlack,
-                    size: 23,
+                    size: 50,
                     fontWeight: FontWeight.w400,
-                    toLang: currentLang,
                   ),
-                  // Text("Amount ₹ $amount", style: styles.blackRegular22),
                   BuildTextWidget(
                     text:   "Scan this QR Code to pay",
                     color: kBlack,
                     size: 18,
                     fontWeight: FontWeight.w300,
-                    toLang: currentLang,
                     textAlign: TextAlign.center,
                   ),
 

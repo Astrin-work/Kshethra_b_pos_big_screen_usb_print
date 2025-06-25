@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:kshethra_mini/utils/hive/constants.dart';
 import 'package:kshethra_mini/view/splash_screen_view.dart';
+import 'package:kshethra_mini/view/widgets/google_translator_service.dart';
 import 'package:kshethra_mini/view_model/auth_viewmodel.dart';
 import 'package:kshethra_mini/view_model/booking_viewmodel.dart';
 import 'package:kshethra_mini/view_model/donation_viewmodel.dart';
@@ -16,7 +17,6 @@ import 'package:easy_localization/easy_localization.dart';
 Box? box;
 
 Future<void> main() async {
-
   WidgetsFlutterBinding.ensureInitialized();
 
   final dir = await path_provider.getApplicationDocumentsDirectory();
@@ -24,6 +24,14 @@ Future<void> main() async {
 
   await EasyLocalization.ensureInitialized();
   box = await Hive.openBox(Constants.BOX_NAME);
+
+  final translator = GoogleTranslatorService();
+  // try {
+  //   String result = await translator.translateText("Hello", "ta"); // to Tamil
+  //   print("Translated: $result");
+  // } catch (e) {
+  //   print("Translation error: $e");
+  // }
 
   runApp(
     EasyLocalization(
@@ -44,13 +52,14 @@ Future<void> main() async {
           ChangeNotifierProvider(create: (_) => DonationViewmodel()),
           ChangeNotifierProvider(create: (_) => AuthViewmodel()),
           ChangeNotifierProvider(create: (_) => BookingViewmodel()),
-          ChangeNotifierProvider(create: (_) =>TerminalViewmodel()),
+          ChangeNotifierProvider(create: (_) => TerminalViewmodel()),
         ],
         child: const MyApp(),
       ),
     ),
   );
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

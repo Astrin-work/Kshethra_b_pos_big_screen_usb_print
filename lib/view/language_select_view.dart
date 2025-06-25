@@ -37,10 +37,12 @@ class LanguageSelectView extends StatelessWidget {
                       padding: EdgeInsets.only(
                         left: SizeConfig.screenWidth * 0.05,
                       ),
-                      child: SizedBox(
+                      child: Padding(
+                        padding:  EdgeInsets.only(left: 100,top: 100),
                         child: Image.asset(
                           fit: BoxFit.fill,
-                          width: SizeConfig.screenWidth * 0.4,
+                          // width: SizeConfig.screenWidth * 0.4,
+                          width: 100,
                           Assets.icons.astrinsKshethraLogo.path,
                         ),
                       ),

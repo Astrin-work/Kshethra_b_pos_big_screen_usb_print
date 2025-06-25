@@ -64,7 +64,7 @@ class LoginWidget extends StatelessWidget {
                         ),
                       ),
                     ),
-                    55.kH,
+                    20.kH,
                     MaterialButton(
                       onPressed:
                           authViewmodel.isLoading

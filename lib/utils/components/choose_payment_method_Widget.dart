@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kshethra_mini/view/widgets/build_text_widget.dart';
 import '../app_color.dart';
 import '../app_styles.dart';
 
@@ -15,11 +16,9 @@ class ChoosePaymentMethodWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AppStyles styles = AppStyles();
-
+    final fromLang = "en";
     final List<Map<String, dynamic>> paymentMethods = [
-      {'label': 'Cash', 'icon': Icons.money},
       {'label': 'UPI', 'icon': Icons.qr_code},
-      {'label': 'Card', 'icon': Icons.credit_card},
     ];
 
     return Column(
@@ -48,7 +47,7 @@ class ChoosePaymentMethodWidget extends StatelessWidget {
                   children: [
                     Icon(method['icon'], color: kPrimaryColor, size: 28),
                     const SizedBox(width: 15),
-                    Text(method['label'], style: styles.blackRegular15),
+                    BuildTextWidget(text: method['label'], size: 15,fromLang:fromLang,),
                     const Spacer(),
                     if (isSelected)
                       const Icon(Icons.check_circle, color: kPrimaryColor),

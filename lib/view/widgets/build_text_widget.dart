@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:translator/translator.dart';
+import 'package:provider/provider.dart';
+import 'package:kshethra_mini/view_model/home_page_viewmodel.dart';
+import 'package:kshethra_mini/view/widgets/google_translator_service.dart';
 
 class BuildTextWidget extends StatefulWidget {
   final String text;
@@ -8,11 +10,11 @@ class BuildTextWidget extends StatefulWidget {
   final FontWeight? fontWeight;
   final int? maxLines;
   final TextAlign? textAlign;
-  final String? toLang;
   final String? fromLang;
   final bool? softWrap;
   final TextOverflow? overflow;
   final Function(String)? onTranslated;
+
 
   const BuildTextWidget({
     Key? key,
@@ -22,7 +24,6 @@ class BuildTextWidget extends StatefulWidget {
     this.fontWeight = FontWeight.normal,
     this.maxLines = 1,
     this.textAlign = TextAlign.left,
-    this.toLang,
     this.fromLang,
     this.softWrap,
     this.overflow,
@@ -30,7 +31,7 @@ class BuildTextWidget extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _BuildTextWidgetState createState() => _BuildTextWidgetState();
+  State<BuildTextWidget> createState() => _BuildTextWidgetState();
 }
 
 class _BuildTextWidgetState extends State<BuildTextWidget> {
@@ -38,53 +39,50 @@ class _BuildTextWidgetState extends State<BuildTextWidget> {
   bool _isTranslating = false;
 
   @override
-  void initState() {
-    super.initState();
-    _translate(widget.text, widget.fromLang, widget.toLang);
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final toLang = Provider.of<HomePageViewmodel>(context).currentLanguage;
+    _translate(widget.text, widget.fromLang, toLang);
   }
 
   @override
   void didUpdateWidget(covariant BuildTextWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (oldWidget.text != widget.text ||
-        oldWidget.fromLang != widget.fromLang ||
-        oldWidget.toLang != widget.toLang) {
-      _translate(widget.text, widget.fromLang, widget.toLang);
+    final toLang = Provider.of<HomePageViewmodel>(context, listen: false).currentLanguage;
+    if (oldWidget.text != widget.text || oldWidget.fromLang != widget.fromLang) {
+      _translate(widget.text, widget.fromLang, toLang);
     }
   }
 
-  Future<void> _translate(String text, String? fromLang, String? toLang) async {
-    if (toLang == null || toLang.isEmpty) {
+  Future<void> _translate(String text, String? fromLang, String toLang) async {
+    if (text.isEmpty || toLang.isEmpty || toLang == 'en') {
+      // Skip translation and use original if target is English
       setState(() {
         translatedText = text;
+        _isTranslating = false;
       });
       return;
     }
 
-    setState(() {
-      _isTranslating = true;
-    });
+    setState(() => _isTranslating = true);
 
     try {
-      final translator = GoogleTranslator();
-      final translation = await translator.translate(
+      final translator = GoogleTranslatorService();
+      final result = await translator.translateText(
         text,
-        from: fromLang ?? 'auto',
-        to: toLang,
+        toLang,
+        sourceLang: fromLang ?? 'auto',
       );
 
       if (!mounted) return;
-
       setState(() {
-        translatedText = translation.text;
+        translatedText = result;
         _isTranslating = false;
       });
-
-      widget.onTranslated?.call(translation.text);
+      widget.onTranslated?.call(result);
     } catch (e) {
-      print("Translation error: $e");
+      debugPrint("Translation failed: $e");
       if (!mounted) return;
-
       setState(() {
         translatedText = text;
         _isTranslating = false;
@@ -92,16 +90,18 @@ class _BuildTextWidgetState extends State<BuildTextWidget> {
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
     if (_isTranslating || translatedText == null) {
-      return const SizedBox();
+      return const SizedBox.shrink();
     }
+
     return Text(
       translatedText!,
       maxLines: widget.maxLines,
       softWrap: widget.softWrap ?? true,
-      overflow: widget.overflow ?? TextOverflow.clip,
+      overflow: widget.overflow ?? TextOverflow.ellipsis,
       textAlign: widget.textAlign,
       style: TextStyle(
         color: widget.color,

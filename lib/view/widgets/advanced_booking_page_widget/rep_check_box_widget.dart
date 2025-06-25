@@ -1,5 +1,4 @@
 import 'package:easy_localization/easy_localization.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -13,102 +12,41 @@ class RepCheckBoxWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AppStyles styles = AppStyles();
+
     return Consumer<BookingViewmodel>(
-      builder:
-          (context, bookingViewmodel, child) => SizedBox(
-
-            width: 250,
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(
-                      child: Row(
-                        children: [
-                          Text("Once".tr(), style: styles.blackRegular15),
-                          Checkbox(
-                            value: bookingViewmodel.toggleSelectedRepMethod(
-                              "Once",
-                            ),
-                            onChanged: (value) {
-                              bookingViewmodel.switchSelectedRepMethod(
-                                "Once",
-                              );
-                            },
-
-                            activeColor: kDullPrimaryColor,
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      child: Row(
-                        children: [
-                          Text("Weekly".tr(), style: styles.blackRegular15),
-                          Checkbox(
-                            value: bookingViewmodel.toggleSelectedRepMethod(
-                              "Weekly",
-                            ),
-                            onChanged: (value) {
-                              bookingViewmodel.switchSelectedRepMethod(
-                                "Weekly",
-                              );
-                            },
-
-                            activeColor: kDullPrimaryColor,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    SizedBox(
-                      child: Row(
-                        children: [
-                          Text("Daily".tr(), style: styles.blackRegular15),
-                          Checkbox(
-                            value: bookingViewmodel.toggleSelectedRepMethod(
-                              "Daily",
-                            ),
-                            onChanged: (value) {
-                              bookingViewmodel.switchSelectedRepMethod(
-                                "Daily",
-                              );
-                            },
-
-                            activeColor: kDullPrimaryColor,
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      child: Row(
-                        children: [
-                          Text("Monthly".tr(), style: styles.blackRegular15),
-                          Checkbox(
-                            value: bookingViewmodel.toggleSelectedRepMethod(
-                              "Monthly",
-                            ),
-                            onChanged: (value) {
-                              bookingViewmodel.switchSelectedRepMethod(
-                                "Monthly",
-                              );
-                            },
-
-                            activeColor: kDullPrimaryColor,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+      builder: (context, bookingViewmodel, child) => SizedBox(
+        width: double.infinity,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              _buildOption("Once", bookingViewmodel, styles),
+              _buildOption("Weekly", bookingViewmodel, styles),
+              _buildOption("Daily", bookingViewmodel, styles),
+              _buildOption("Monthly", bookingViewmodel, styles),
+            ],
           ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildOption(String label, BookingViewmodel viewmodel, AppStyles styles) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(label.tr(), style: styles.blackRegular15),
+          Checkbox(
+            value: viewmodel.toggleSelectedRepMethod(label),
+            onChanged: (value) {
+              viewmodel.switchSelectedRepMethod(label);
+            },
+            activeColor: kDullPrimaryColor,
+          ),
+        ],
+      ),
     );
   }
 }

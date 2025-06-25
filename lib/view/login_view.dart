@@ -29,12 +29,12 @@ class LoginView extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              SizedBox(height: 100,),
+              SizedBox(height: 200,),
               SizedBox(
-                width: 150,
+                width: 300,
                 child: Image.asset(Assets.icons.kshethraLogo.path),
               ),
-              SizedBox(height: 20,),
+              SizedBox(height: 50,),
               ResponsiveLayout(
                 pinelabDevice: Padding(
                   padding: EdgeInsets.only(left: 20, right: 20),
@@ -56,8 +56,9 @@ class LoginView extends StatelessWidget {
                 ),
               ),
               10.kH,
+              SizedBox(height:300 ,),
               SizedBox(
-                width: 130,
+                width: 250,
                 child: Image.asset(Assets.icons.astrinsLogo.path),
               ),
 

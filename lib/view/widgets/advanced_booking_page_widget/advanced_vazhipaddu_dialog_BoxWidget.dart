@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:kshethra_mini/utils/app_color.dart';
 import 'package:kshethra_mini/utils/app_styles.dart';
 import 'package:kshethra_mini/utils/components/size_config.dart';
+import 'package:kshethra_mini/view/widgets/build_text_widget.dart';
 import 'package:kshethra_mini/view_model/booking_viewmodel.dart';
 import 'package:provider/provider.dart';
 
@@ -19,6 +20,7 @@ class AdvancedVazhipadduDialogBoxwidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final fromLang = "en";
     AppStyles styles = AppStyles();
     SizeConfig().init(context);
     return AlertDialog(
@@ -26,7 +28,7 @@ class AdvancedVazhipadduDialogBoxwidget extends StatelessWidget {
         builder:
             (context, bookingViewmodel, child) => Column(
               children: [
-                Text(selectedVazhippadu.offerName, style: styles.blackSemi18).tr(),
+                BuildTextWidget( text:selectedVazhippadu.offerName,fromLang: fromLang,),
                 10.kH,
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,

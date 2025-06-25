@@ -126,7 +126,7 @@ class AdvPreViewWidget extends StatelessWidget {
                               child: Padding(
                                 padding: const EdgeInsets.only(left: 110),
                                 child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Text(
                                       booking.name.toString(),
@@ -144,6 +144,7 @@ class AdvPreViewWidget extends StatelessWidget {
                                 ),
                               ),
                             ),
+
                             Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [

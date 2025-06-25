@@ -33,7 +33,7 @@ class _GodListWidgetState extends State<GodListWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final currentLang = Provider.of<HomePageViewmodel>(context).currentLanguage;
+    final fromLang = "en";
     SizeConfig().init(context);
 
     return Consumer<EHundiViewmodel>(
@@ -84,7 +84,7 @@ class _GodListWidgetState extends State<GodListWidget> {
                   BuildTextWidget(
                     text: god.devathaName,
                     color: kBlack,
-                    toLang: currentLang,
+                    fromLang:fromLang,
                   ),
                 ],
               ),

@@ -21,6 +21,7 @@ import '../model/api models/get_donation_model.dart';
 import '../model/api models/get_temple_model.dart';
 import '../model/api models/god_model.dart';
 import '../services/plutus_smart.dart';
+import '../utils/components/qr_code_component.dart';
 import '../utils/logger.dart';
 import '../view/advanced_booking_confirm_view.dart';
 import '../view/widgets/advanced_booking_page_widget/advanced_vazhipaddu_dialog_BoxWidget.dart';
@@ -1268,6 +1269,20 @@ class BookingViewmodel extends ChangeNotifier {
           amount: "$totalVazhipaduAmt",
           noOfScreen: 1,
           title: "QR Scanner", name: '', phone: '',acctHeadName: '',
+        ),
+      ),
+    );
+  }
+
+  void navigateToQr(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder:
+            (context) => QrScannerComponent(
+          amount: "$totalVazhipaduAmt",
+          noOfScreen: 1,
+          title: "QR Scanner",
         ),
       ),
     );

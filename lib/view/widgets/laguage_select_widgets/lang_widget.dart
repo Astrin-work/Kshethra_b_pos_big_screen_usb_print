@@ -37,8 +37,8 @@ class LangWidget extends StatelessWidget {
         },
 
         child: Container(
-          height: 80,
-          width: 120,
+          height:180,
+          width: 200,
           decoration: BoxDecoration(
             image: DecorationImage(
               image: AssetImage(Assets.images.langBackground.path),
@@ -50,7 +50,7 @@ class LangWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(lang, style: styles.blackRegular22),
-              Text(disc, style: styles.blackRegular18),
+              Text(disc, style: styles.blackRegular22),
             ],
           ),
         ),

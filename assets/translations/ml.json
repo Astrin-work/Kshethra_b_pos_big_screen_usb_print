@@ -117,7 +117,9 @@
   "Fri": "വെള്ളി",
   "Sat": "ശനി",
   "Count": "എണ്ണം",
-  "amt": "തുക"
+  "amt": "തുക",
+  "Select Payment Method": "പേയ്\u200Cമെൻ്റ് രീതി തിരഞ്ഞെടുക്കുക",
+  "'Please give ₹$amount to our representative": "ദയവായി ഞങ്ങളുടെ പ്രതിനിധിക്ക് നൽകുക."
 
 
 }

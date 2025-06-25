@@ -3,7 +3,6 @@ import 'package:kshethra_mini/view_model/donation_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:kshethra_mini/utils/components/choose_payment_method_widget.dart';
 import 'package:kshethra_mini/utils/components/app_bar_widget.dart';
-import 'package:kshethra_mini/view_model/booking_viewmodel.dart';
 import '../booking_page_widget/float_button_widget.dart';
 
 class PaymentMethodScreenDonation extends StatefulWidget {
@@ -11,6 +10,7 @@ class PaymentMethodScreenDonation extends StatefulWidget {
   final String? name;
   final String? phone;
   final String? acctHeadName;
+
   const PaymentMethodScreenDonation({
     super.key,
     this.amount,
@@ -21,11 +21,12 @@ class PaymentMethodScreenDonation extends StatefulWidget {
 
   @override
   State<PaymentMethodScreenDonation> createState() =>
-      _PaymentMethodScreenState();
+      _PaymentMethodScreenDonationState();
 }
 
-class _PaymentMethodScreenState extends State<PaymentMethodScreenDonation> {
-  String _selectedMethod = 'Cash';
+class _PaymentMethodScreenDonationState
+    extends State<PaymentMethodScreenDonation> {
+  String _selectedMethod = 'UPI';
 
   void _onMethodSelected(String method) {
     setState(() {
@@ -35,10 +36,6 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreenDonation> {
 
   @override
   Widget build(BuildContext context) {
-    final bookingViewmodel = Provider.of<BookingViewmodel>(
-      context,
-      listen: false,
-    );
     return Scaffold(
       body: Column(
         children: [
@@ -59,58 +56,40 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreenDonation> {
         height: 60,
         title: 'Confirm',
         noOfScreens: 1,
-          payOnTap: () {
-            final donationViewmodel = Provider.of<DonationViewmodel>(
-              context,
-              listen: false,
+        payOnTap: () {
+          final donationViewmodel = Provider.of<DonationViewmodel>(
+            context,
+            listen: false,
+          );
+
+          final amountStr = widget.amount;
+          final name = widget.name ?? '';
+          final phone = widget.phone ?? '';
+          final acctHeadName = widget.acctHeadName ?? '';
+
+          if (amountStr == null || int.tryParse(amountStr) == null) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Invalid amount')),
             );
-
-            final amount = widget.amount;
-            final name = widget.name ?? '';
-            final phone = widget.phone ?? '';
-            final acctHeadName =widget.acctHeadName ??'';
-            switch (_selectedMethod) {
-              case 'UPI':
-                // donationViewmodel.navigateToQrScanner(
-                //   context,
-                //   amount,
-                //   name: name,
-                //   phone: phone,
-                //   acctHeadName: acctHeadName,
-                //
-                // );
-                donationViewmodel.handleUpiPayment(int.parse(amount!));
-                break;
-
-              case 'Card':
-                donationViewmodel.handleUpiPayment(int.parse(amount!));
-                // donationViewmodel.navigateCardScreen(
-                //   context,
-                //   amount: amount,
-                //   name: name,
-                //   phone: phone,
-                // );
-                break;
-
-              case 'Cash':
-                donationViewmodel.navigateToCashPayment(
-                  context,
-                  amount: amount.toString(),
-                  name: name,
-                  phone: phone,
-                  acctHeadName: acctHeadName,
-                );
-                break;
-
-              default:
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Unsupported payment method')),
-                );
-            }
+            return;
           }
 
-      ),
+          if (_selectedMethod == 'UPI') {
+            donationViewmodel.navigateToQrScanner(
+              context,
+              amountStr,
+              name: name,
+              phone: phone,
+              acctHeadName: acctHeadName,
+            );
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Unsupported payment method')),
+            );
+          }
+        },
 
+      ),
     );
   }
 }

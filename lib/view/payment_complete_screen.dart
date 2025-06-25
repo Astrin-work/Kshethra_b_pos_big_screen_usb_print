@@ -38,7 +38,6 @@ class PaymentCompleteScreen extends StatelessWidget {
                       color: kBlack,
                       size: 23,
                       fontWeight: FontWeight.w400,
-                      toLang: currentLang,
                     ),
                     SizedBox(
                       height: SizeConfig.screenHeight * 0.45,

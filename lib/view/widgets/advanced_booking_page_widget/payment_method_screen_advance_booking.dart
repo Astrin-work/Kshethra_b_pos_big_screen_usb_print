@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:kshethra_mini/utils/components/choose_payment_method_widget.dart';
@@ -31,7 +32,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreenAdvanceBooking>
     return Scaffold(
       body: Column(
         children: [
-          const AppBarWidget(title: "Select Payment Method"),
+           AppBarWidget(title: "Select Payment Method".tr()),
           Expanded(
             child: Padding(
               padding: const EdgeInsets.all(20.0),

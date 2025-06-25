@@ -5,6 +5,7 @@ import 'package:kshethra_mini/utils/app_styles.dart';
 import 'package:kshethra_mini/utils/components/app_bar_widget.dart';
 import 'package:kshethra_mini/utils/components/responsive_layout.dart';
 import 'package:kshethra_mini/utils/components/size_config.dart';
+import 'package:kshethra_mini/view/widgets/booking_page_widget/booking_action_bar.dart';
 import 'package:kshethra_mini/view/widgets/booking_page_widget/float_button_widget.dart';
 import 'package:kshethra_mini/view/widgets/build_text_widget.dart';
 import 'package:kshethra_mini/view_model/booking_viewmodel.dart';
@@ -24,7 +25,7 @@ class BookingPreviewView extends StatelessWidget {
     return Scaffold(
       floatingActionButton: ResponsiveLayout(
         pinelabDevice: FloatButtonWidget(title: 'Booking', noOfScreens: 4),
-        mediumDevice: FloatButtonWidget(
+        mediumDevice: BookingActionBar(
           title: 'Booking',
           noOfScreens: 4,
           height: 65,
@@ -59,11 +60,10 @@ class PreViewWidget extends StatelessWidget {
     return Consumer<BookingViewmodel>(
       builder: (context, bookingViewmodel, child) {
         final bookings = bookingViewmodel.vazhipaduBookingList;
-
-
+        final fromLang = "en";
         return SizedBox(
           height: SizeConfig.screenHeight * 0.8,
-          width: SizeConfig.screenWidth,
+          width: SizeConfig.screenWidth / 1.1,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15.0),
             child: ListView.builder(
@@ -82,10 +82,11 @@ class PreViewWidget extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Text(
-                            booking.name.toString(),
-                            style: styles.blackSemi18,
+                          BuildTextWidget(
+                            text: booking.name.toString(),
+                            // style: styles.blackSemi18,
                             textAlign: TextAlign.center,
+                            fromLang: fromLang,
                           ),
                           const SizedBox(height: 4),
                           Text(
@@ -113,40 +114,48 @@ class PreViewWidget extends StatelessWidget {
                                       size: 15,
                                       color: kBlack,
                                       fontWeight: FontWeight.w500,
+                                      fromLang: fromLang,
                                     ),
-                                    SizedBox(width: 20,),
+                                    SizedBox(width: 20),
                                     Text(
                                       "₹ ${booking.totalPrice ?? '0'}",
                                       style: styles.blackRegular15,
                                     ),
-                                    SizedBox(width: 10,),
+                                    // SizedBox(wid,),
+                                    Spacer(),
                                     Row(
                                       children: [
                                         IconButton(
                                           color: kRed,
                                           icon: const Icon(Icons.delete),
                                           onPressed: () {
-                                              bookingViewmodel.vazhipaduDelete(index);
+                                            bookingViewmodel.vazhipaduDelete(
+                                              index,
+                                            );
                                           },
                                         ),
-                                        IconButton(
-                                          icon: const Icon(Icons.add),
-                                          onPressed: () {
-                                            bookingViewmodel.popFunction(context);
-                                          },
-                                        ),
+                                        // IconButton(
+                                        //   icon: const Icon(Icons.add),
+                                        //   onPressed: () {
+                                        //     bookingViewmodel.popFunction(
+                                        //       context,
+                                        //     );
+                                        //   },
+                                        // ),
                                       ],
-                                    )
+                                    ),
                                   ],
                                 ),
                                 BuildTextWidget(
                                   text: booking.godname?.tr() ?? "",
                                   size: 14,
                                   color: kBlack,
+                                  fromLang: fromLang,
                                 ),
                                 const SizedBox(height: 10),
                                 Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
                                     Text(
@@ -163,7 +172,6 @@ class PreViewWidget extends StatelessWidget {
                     ),
                   ),
                 );
-
               },
             ),
           ),
@@ -172,4 +180,3 @@ class PreViewWidget extends StatelessWidget {
     );
   }
 }
-

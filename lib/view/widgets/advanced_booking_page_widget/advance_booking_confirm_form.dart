@@ -8,6 +8,7 @@ import 'package:kshethra_mini/utils/validation.dart';
 import 'package:kshethra_mini/view/widgets/advanced_booking_page_widget/rep_check_box_widget.dart';
 import 'package:kshethra_mini/view/widgets/advanced_booking_page_widget/weeklywidget.dart';
 import 'package:kshethra_mini/view/widgets/booking_page_widget/star_dialodbox_widget.dart';
+import 'package:kshethra_mini/view/widgets/build_text_widget.dart';
 import 'package:kshethra_mini/view_model/booking_viewmodel.dart';
 import 'package:provider/provider.dart';
 import '../../../model/api models/god_model.dart';
@@ -64,9 +65,8 @@ class _AdvancedBookingConfirmFormState
   }
 
   double _TottalAmount = 0.0;
-
   final Map<String, double> postalRates = {"Postal".tr(): 5.0, "Speed Post": 45.0};
-
+  final fromLang = "en";
   Widget build(BuildContext context) {
     AppStyles styles = AppStyles();
     SizeConfig().init(context);
@@ -208,6 +208,14 @@ class _AdvancedBookingConfirmFormState
                     ],
                   ),
                   25.kH,
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: BuildTextWidget(text:
+                    "Repeat Type :",
+                      size: 18,
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
                   const RepCheckBoxWidget(),
                   Visibility(
                     visible: bookingViewmodel.selectedRepMethod == "Weekly",
@@ -223,10 +231,11 @@ class _AdvancedBookingConfirmFormState
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              Text(
-                                "Number of Days for Repeat".tr(),
-                                style: styles.blackRegular15,
+                              BuildTextWidget(text:
+                                "Number of Times To Repeat",
+                                size: 18,
                                 textAlign: TextAlign.center,
+                                fromLang:fromLang,
                               ),
                               Text(":", style: styles.blackSemi18),
                               SizedBox(
@@ -261,16 +270,42 @@ class _AdvancedBookingConfirmFormState
                             ],
                           ),
                         if (bookingViewmodel.selectedRepMethod != "Once") 15.kH,
-                        CheckboxListTile(
-                          contentPadding: EdgeInsets.zero,
-                          title: Text(
-                            "Prasadam".tr(),
-                            style: styles.blackRegular15,
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[200],
+                            borderRadius: BorderRadius.circular(10),
                           ),
-                          value: bookingViewmodel.prasadamSelected,
-                          onChanged: (value) {
-                            bookingViewmodel.togglePrasadam(value!);
-                          },
+                          child: CheckboxListTile(
+                            contentPadding: EdgeInsets.zero,
+                            title: RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: "Need Prasadam? ",
+                                    style: TextStyle(
+                                      fontSize: 18,
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                  ),
+                                  TextSpan(
+                                    text: "(If Required)",
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.black54,
+                                    ),
+
+                                  ),
+                                ],
+                              ),
+                            ),
+                            value: bookingViewmodel.prasadamSelected,
+                            onChanged: (value) {
+                              bookingViewmodel.togglePrasadam(value!);
+                            },
+                            controlAffinity: ListTileControlAffinity.trailing,
+                          ),
                         ),
                         15.kH,
                         if (bookingViewmodel.prasadamSelected)
