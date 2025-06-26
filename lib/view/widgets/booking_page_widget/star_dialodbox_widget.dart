@@ -32,8 +32,8 @@ class StarDialogBox extends StatelessWidget {
       content: Consumer<BookingViewmodel>(
         builder:
             (context, bookingViewmodel, child) => SizedBox(
-              height: SizeConfig.screenHeight * 0.7,
-              width: SizeConfig.screenWidth * 0.7,
+              height: SizeConfig.screenHeight * 0.5,
+              width: SizeConfig.screenWidth * 0.5,
               child: Column(
                 children: [
                   Text("Select your Star".tr(), style: styles.blackRegular18),

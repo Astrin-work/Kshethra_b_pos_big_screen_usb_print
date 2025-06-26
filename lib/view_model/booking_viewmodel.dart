@@ -45,17 +45,22 @@ class BookingViewmodel extends ChangeNotifier {
   bool _isPrasadamSelected = false;
   bool get isPrasadamSelected => _isPrasadamSelected;
   bool _shouldResetPrasadam = false;
+  Counter? selectedCounter;
+  String selectedCategory = 'All';
   List<UserBookingModel> _vazhipaduBookingList = [];
   List<UserBookingModel> get vazhipaduBookingList => _vazhipaduBookingList;
   List<Godmodel> _gods = [];
   List<Getdonationmodel> donations = [];
   List<GetTemplemodel> templeList = [];
+  int _selectedCounterIndex = 0;
+  int get selectedCounterIndex => _selectedCounterIndex;
   List<Godmodel> get gods => _gods;
   List<Map<String, dynamic>> _submittedGroups = [];
   List<Map<String, dynamic>> get submittedGroups => _submittedGroups;
   Map<String, dynamic> _fullSubmittedData = {};
   Map<String, dynamic> get fullSubmittedData => _fullSubmittedData;
   int selectedIndex = 0;
+
   int _noOfBookingVazhipaddu = 1;
   int get noOfBookingVazhipaddu => _noOfBookingVazhipaddu;
   int _advBookingAmt = 0;
@@ -87,7 +92,13 @@ class BookingViewmodel extends ChangeNotifier {
   double get postalAmount => _postalAmount;
   double _totalAmount = 0.0;
   double get totalAmount => _totalAmount * noOfBookingVazhipaddu;
-
+  int _selectedBookingCategoryIndex = 0;
+  int get selectedBookingCategoryIndex => _selectedBookingCategoryIndex;
+  int _selectedAdvancedBookingCategoryIndex = 0;
+  int get selectedAdvancedBookingCategoryIndex =>
+      _selectedAdvancedBookingCategoryIndex;
+  List<Vazhipadus> _filteredVazhipadus = [];
+  List<Vazhipadus> get filteredVazhipadus => _filteredVazhipadus;
 
   @override
   void dispose() {
@@ -96,6 +107,46 @@ class BookingViewmodel extends ChangeNotifier {
     bookingRepController.dispose();
     bookingAddressController.dispose();
     super.dispose();
+  }
+
+
+
+  void selectCategory(int index) {
+    _selectedCounterIndex = index;
+
+    if (index == 0) {
+      selectedCategory = 'All';
+
+      // Show all vazhipadus from all counters
+      _filteredVazhipadus = [];
+      if (selectedGods != null) {
+        for (var counter in selectedGods!.counters) {
+          _filteredVazhipadus.addAll(counter.vazhipadus);
+        }
+      }
+    } else if (selectedGods != null && index - 1 < selectedGods!.counters.length) {
+      selectedCategory = selectedGods!.counters[index - 1].counterName;
+
+      // Show only vazhipadus under selected counter
+      _filteredVazhipadus = selectedGods!.counters[index - 1].vazhipadus;
+    }
+
+    notifyListeners();
+  }
+
+  void setSelectedAdvancedBookingCategoryIndex(int index) {
+    _selectedAdvancedBookingCategoryIndex = index;
+    notifyListeners();
+  }
+
+  void clearSelectedCounter() {
+    selectedCounter = null;
+    notifyListeners();
+  }
+
+  void setSelectedCounter(int index) {
+    _selectedCounterIndex = index;
+    notifyListeners();
   }
 
   // Future<void> submitVazhipadu() async {
@@ -234,7 +285,6 @@ class BookingViewmodel extends ChangeNotifier {
     return [];
   }
 
-
   Future<void> fetchTempleData() async {
     try {
       final data = await ApiService().getTemple();
@@ -255,41 +305,40 @@ class BookingViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
-
   Future<void> submitAdvVazhipadu() async {
     if (vazhipaduBookingList.isEmpty) {
       print(' No advanced vazhipadu bookings to submit.');
       return;
     }
 
-    final List<Map<String, dynamic>> receipts = vazhipaduBookingList.map((item) {
-      DateTime selectedDate = DateTime.now();
-      String formattedDate = "${DateFormat('yyyy-MM-dd').format(selectedDate)}T00:00:00";
+    final List<Map<String, dynamic>> receipts =
+        vazhipaduBookingList.map((item) {
+          DateTime selectedDate = DateTime.now();
+          String formattedDate =
+              "${DateFormat('yyyy-MM-dd').format(selectedDate)}T00:00:00";
 
-      return {
-        "devathaName": item.godname??"",
-        "offerName": item.vazhipadu ?? "vazhipadu2",
-        "personName": item.name ?? "",
-        "personStar": item.star,
-        "phoneNumber": item.phno ?? "",
-        "address": bookingAddressController.text.trim(),
-        "startDate": formattedDate,
-        "repeatType": item.repMethode ?? "once",
-        "repeatCount": int.tryParse(bookingRepController.text.trim()) ?? 1,
-        "repeatDays": [
-          "monday"
-        ],
-        "rate": int.tryParse(item.price?.toString() ?? "0") ?? 0,
-        "quantity": int.tryParse(item.count?.toString() ?? "1") ?? 1,
-        "type": "AB",
-        "pincode": bookingPinCodeController.text.trim(),
-        "paymentMode": "UPI",
-        "postalCharge": 10,
-        "prasadham": true,
-        "prasadhamType": "standard",
-        "postalType": "registered",
-      };
-    }).toList();
+          return {
+            "devathaName": item.godname ?? "",
+            "offerName": item.vazhipadu ?? "vazhipadu2",
+            "personName": item.name ?? "",
+            "personStar": item.star,
+            "phoneNumber": item.phno ?? "",
+            "address": bookingAddressController.text.trim(),
+            "startDate": formattedDate,
+            "repeatType": item.repMethode ?? "once",
+            "repeatCount": int.tryParse(bookingRepController.text.trim()) ?? 1,
+            "repeatDays": ["monday"],
+            "rate": int.tryParse(item.price?.toString() ?? "0") ?? 0,
+            "quantity": int.tryParse(item.count?.toString() ?? "1") ?? 1,
+            "type": "AB",
+            "pincode": bookingPinCodeController.text.trim(),
+            "paymentMode": "UPI",
+            "postalCharge": 10,
+            "prasadham": true,
+            "prasadhamType": "standard",
+            "postalType": "registered",
+          };
+        }).toList();
 
     final Map<String, dynamic> postData = {
       "receipts": receipts,
@@ -307,7 +356,9 @@ class BookingViewmodel extends ChangeNotifier {
         List<dynamic> successList = response['successList'];
         for (int i = 0; i < successList.length; i++) {
           final item = successList[i];
-          print(" Booking ${i + 1}: ${item['offerName']} for ${item['personName']}");
+          print(
+            " Booking ${i + 1}: ${item['offerName']} for ${item['personName']}",
+          );
         }
       } else {
         print(" Submission failed or no successList.");
@@ -341,8 +392,8 @@ class BookingViewmodel extends ChangeNotifier {
                 Navigator.of(context).pop();
                 Navigator.pushAndRemoveUntil(
                   context,
-                  MaterialPageRoute(builder: (context) =>  HomeWidget()),
-                      (route) => false,
+                  MaterialPageRoute(builder: (context) => HomeWidget()),
+                  (route) => false,
                 );
               }
             });
@@ -552,17 +603,17 @@ class BookingViewmodel extends ChangeNotifier {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => AdvancedBookingPreviewView(
-          selectedRepMethod: selectedRepMethod,
-          selectedDays: selectedDays,
-          totalAmount:_amtOfBookingVazhipaddu,
-        ),
+        builder:
+            (context) => AdvancedBookingPreviewView(
+              selectedRepMethod: selectedRepMethod,
+              selectedDays: selectedDays,
+              totalAmount: _amtOfBookingVazhipaddu,
+            ),
       ),
     );
 
     notifyListeners();
   }
-
 
   // void navigateAdvBookingPreview(BuildContext context) {
   //   if (_totalVazhipaduAmt == 0) {
@@ -654,9 +705,9 @@ class BookingViewmodel extends ChangeNotifier {
         MaterialPageRoute(
           builder:
               (context) => BookingPreviewView(
-            page: 'booking',
-            selectedRepMethod: selectedRepMethod,
-          ),
+                page: 'booking',
+                selectedRepMethod: selectedRepMethod,
+              ),
         ),
       );
     } else {
@@ -704,11 +755,11 @@ class BookingViewmodel extends ChangeNotifier {
   }
 
   void bookingRepOnchange(
-      String value,
-      Vazhipadus selectedVazhipaadu,
-      Map<String, double> postalRates,
-      double amount,
-      ) {
+    String value,
+    Vazhipadus selectedVazhipaadu,
+    Map<String, double> postalRates,
+    double amount,
+  ) {
     int? repCount = int.tryParse(value.trim());
 
     if (repCount == null || repCount <= 0) {
@@ -747,10 +798,10 @@ class BookingViewmodel extends ChangeNotifier {
   }
 
   void navigateAdvancedBookingConfirm(
-      BuildContext context,
-      Vazhipadus selectedVazhipaadu,
-      BookingViewmodel bookingViewmodel,
-      ) {
+    BuildContext context,
+    Vazhipadus selectedVazhipaadu,
+    BookingViewmodel bookingViewmodel,
+  ) {
     _selectedRepMethod = "Once";
     _selectedWeeklyDay = "Sun";
     bookingRepController.text = "1";
@@ -764,9 +815,9 @@ class BookingViewmodel extends ChangeNotifier {
       MaterialPageRoute(
         builder:
             (context) => AdvancedBookingConfirmView(
-          selectedVazhipaadu: selectedVazhipaadu,
-          totalAmount: _totalVazhipaduAmt,
-        ),
+              selectedVazhipaadu: selectedVazhipaadu,
+              totalAmount: _totalVazhipaduAmt,
+            ),
       ),
     );
 
@@ -810,9 +861,9 @@ class BookingViewmodel extends ChangeNotifier {
   //   popFunction(context);
   // }
   void advBookingAddVazhipadu(
-      Vazhipadus selectedVazhipaadu,
-      BuildContext context,
-      ) {
+    Vazhipadus selectedVazhipaadu,
+    BuildContext context,
+  ) {
     bool valid = advBookingKey.currentState?.validate() ?? false;
     if (!valid) return;
 
@@ -827,9 +878,9 @@ class BookingViewmodel extends ChangeNotifier {
     }
 
     final int repeatCount =
-    selectedRepMethod == "Once"
-        ? 1
-        : int.tryParse(bookingRepController.text.trim()) ?? 1;
+        selectedRepMethod == "Once"
+            ? 1
+            : int.tryParse(bookingRepController.text.trim()) ?? 1;
 
     final double itemPrice = selectedVazhipaadu.cost.toDouble(); // from model
     final double postalAmt = prasadamSelected ? postalAmount : 0.0;
@@ -888,9 +939,9 @@ class BookingViewmodel extends ChangeNotifier {
   // }
 
   void showVazhipadduDialogBox(
-      BuildContext context,
-      Vazhipadus selectedVazhipaadu,
-      ) {
+    BuildContext context,
+    Vazhipadus selectedVazhipaadu,
+  ) {
     bool valid = bookingKey.currentState?.validate() ?? false;
     if (!valid) return;
 
@@ -902,8 +953,8 @@ class BookingViewmodel extends ChangeNotifier {
         context: context,
         builder:
             (context) => VazhipadduDialogBoxWidget(
-          selectedVazhippadu: selectedVazhipaadu,
-        ),
+              selectedVazhippadu: selectedVazhipaadu,
+            ),
       );
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -915,9 +966,9 @@ class BookingViewmodel extends ChangeNotifier {
   }
 
   void showAdvancedVazhipadduDialogBox(
-      BuildContext context,
-      Vazhipadus selectedVazhipaadu,
-      ) {
+    BuildContext context,
+    Vazhipadus selectedVazhipaadu,
+  ) {
     _noOfBookingVazhipaddu = 1;
     _amtOfBookingVazhipaddu = selectedVazhipaadu.cost;
 
@@ -925,8 +976,8 @@ class BookingViewmodel extends ChangeNotifier {
       context: context,
       builder:
           (context) => AdvancedVazhipadduDialogBoxwidget(
-        selectedVazhippadu: selectedVazhipaadu,
-      ),
+            selectedVazhippadu: selectedVazhipaadu,
+          ),
     );
 
     notifyListeners();
@@ -971,11 +1022,10 @@ class BookingViewmodel extends ChangeNotifier {
   }
 
   void setVazhipaduBookingList(
-      String vazhipaduName,
-      String vazhipaduPrice,
-      BuildContext context,
-      ) {
-
+    String vazhipaduName,
+    String vazhipaduPrice,
+    BuildContext context,
+  ) {
     final newBooking = UserBookingModel(
       name: bookingNameController.text.trim(),
       phno: bookingPhnoController.text.trim(),
@@ -1070,17 +1120,17 @@ class BookingViewmodel extends ChangeNotifier {
   //   return baseTotal + postal;
   // }
 
-
   void setVazhipaduAdvBookingList(
-      Vazhipadus selectedVazhipaadu,
-      BuildContext context,
-      ) {
+    Vazhipadus selectedVazhipaadu,
+    BuildContext context,
+  ) {
     bool valid = advBookingKey.currentState?.validate() ?? false;
     if (!valid) return;
 
-
-    if (_selectedStar.isEmpty || _selectedStar == "Star" ||
-        _selectedDate.isEmpty || _selectedDate == "Date") {
+    if (_selectedStar.isEmpty ||
+        _selectedStar == "Star" ||
+        _selectedDate.isEmpty ||
+        _selectedDate == "Date") {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBarWidget(
           msg: "Please select both Star and Date",
@@ -1121,7 +1171,6 @@ class BookingViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
-
   int calculateBookingTotalAmt() {
     if (_vazhipaduBookingList.isEmpty) return 0;
 
@@ -1130,10 +1179,10 @@ class BookingViewmodel extends ChangeNotifier {
   }
 
   void addVazhipaddToExisting(
-      String vazhipaduName,
-      int price,
-      BuildContext context,
-      ) {
+    String vazhipaduName,
+    int price,
+    BuildContext context,
+  ) {
     final lastDevotee = _vazhipaduBookingList.last;
     final newBooking = UserBookingModel(
       name: lastDevotee.name,
@@ -1188,11 +1237,11 @@ class BookingViewmodel extends ChangeNotifier {
   }
 
   void bookingPreviewSecondFloatButton(
-      BuildContext context,
-      int? amount,
-      int noOfScreens,
-      String title,
-      ) {
+    BuildContext context,
+    int? amount,
+    int noOfScreens,
+    String title,
+  ) {
     if (totalVazhipaduAmt == 0) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBarWidget(
@@ -1208,6 +1257,7 @@ class BookingViewmodel extends ChangeNotifier {
     );
     notifyListeners();
   }
+
   Future<void> handleCardPayment(int amount) async {
     final payload = {
       "Header": {
@@ -1220,7 +1270,7 @@ class BookingViewmodel extends ChangeNotifier {
         "BillingRefNo": "TX98765432",
         "PaymentAmount": amount,
         "TransactionType": 4001,
-      }
+      },
     };
     final transactionDataJson = jsonEncode(payload);
     Logger.info("Card Sending: $transactionDataJson");
@@ -1246,7 +1296,7 @@ class BookingViewmodel extends ChangeNotifier {
         "BillingRefNo": "TX98765432",
         "PaymentAmount": amount,
         "TransactionType": 5120,
-      }
+      },
     };
     final transactionDataJson = jsonEncode(payload);
     Logger.info("UPI Sending: $transactionDataJson");
@@ -1266,10 +1316,13 @@ class BookingViewmodel extends ChangeNotifier {
       MaterialPageRoute(
         builder:
             (context) => QrScannerComponentDonations(
-          amount: "$totalVazhipaduAmt",
-          noOfScreen: 1,
-          title: "QR Scanner", name: '', phone: '',acctHeadName: '',
-        ),
+              amount: "$totalVazhipaduAmt",
+              noOfScreen: 1,
+              title: "QR Scanner",
+              name: '',
+              phone: '',
+              acctHeadName: '',
+            ),
       ),
     );
   }
@@ -1280,10 +1333,10 @@ class BookingViewmodel extends ChangeNotifier {
       MaterialPageRoute(
         builder:
             (context) => QrScannerComponent(
-          amount: "$totalVazhipaduAmt",
-          noOfScreen: 1,
-          title: "QR Scanner",
-        ),
+              amount: "$totalVazhipaduAmt",
+              noOfScreen: 1,
+              title: "QR Scanner",
+            ),
       ),
     );
   }
@@ -1291,9 +1344,7 @@ class BookingViewmodel extends ChangeNotifier {
   void navigateToCashPayment(BuildContext context, int total) {
     Navigator.push(
       context,
-      MaterialPageRoute(
-        builder: (context) => CashPayment(amount: total),
-      ),
+      MaterialPageRoute(builder: (context) => CashPayment(amount: total)),
     );
   }
 

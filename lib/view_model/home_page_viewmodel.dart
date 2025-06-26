@@ -64,6 +64,7 @@ class HomePageViewmodel extends ChangeNotifier {
   }
 
   void updateLanguage(String languageCode) {
+
     _currentLanguage = languageCode;
     notifyListeners();
   }

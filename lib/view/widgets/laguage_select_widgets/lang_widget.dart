@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:kshethra_mini/view_model/booking_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 import '../../../utils/app_styles.dart';
@@ -17,6 +18,7 @@ class LangWidget extends StatelessWidget {
     required this.lang,
     required this.disc,
     required this.locale,
+
   });
 
   @override
@@ -31,6 +33,8 @@ class LangWidget extends StatelessWidget {
         //
         // },
         onTap: () async {
+          print('hi'*100);
+           BookingViewmodel().fetchTempleData();
           await context.setLocale(Locale(locale.languageCode));
           homepageViewmodel.updateLanguage(locale.languageCode);
           homepageViewmodel.homePageNavigate(context);

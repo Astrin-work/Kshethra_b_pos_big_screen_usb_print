@@ -65,8 +65,8 @@ class BookingView extends StatelessWidget {
               ),
               semiMediumDevice: Padding(
                 padding: EdgeInsets.only(
-                  left: SizeConfig.screenWidth * 0.05,
-                  right: SizeConfig.screenWidth * 0.05,
+                  left: SizeConfig.screenWidth * 0.01,
+                  right: SizeConfig.screenWidth * 0.01,
 
                 ),
                 child: BookingFormWidget(

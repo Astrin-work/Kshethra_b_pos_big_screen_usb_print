@@ -24,7 +24,7 @@ class $AssetsIconsGen {
 
   /// File path: assets/icons/astrins_kshethra_logo.png
   AssetGenImage get astrinsKshethraLogo =>
-      const AssetGenImage('assets/icons/Kshetra_Logo_Enhanced.png');
+      const AssetGenImage('assets/images/kshethra logo.png');
 
   /// File path: assets/icons/astrins_logo.png
   AssetGenImage get astrinsLogo =>
@@ -53,7 +53,7 @@ class $AssetsIconsGen {
 
   /// File path: assets/icons/kshethra_logo.png
   AssetGenImage get kshethraLogo =>
-      const AssetGenImage('assets/icons/Kshetra_Logo_NoseRing_Enhanced.png');
+      const AssetGenImage('assets/images/Kshetra Eye Logo New.png');
 
   /// File path: assets/icons/plus_icon.png
   AssetGenImage get plusIcon =>

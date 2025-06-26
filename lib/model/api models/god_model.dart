@@ -12,26 +12,50 @@ class Godmodel {
   int devathaId;
   String devathaName;
   String devathaImage;
-  List<Vazhipadus> vazhipadus;
+  List<Counter> counters;
 
   Godmodel({
     required this.devathaId,
     required this.devathaName,
     required this.devathaImage,
-    required this.vazhipadus,
+    required this.counters,
   });
 
   factory Godmodel.fromJson(Map<String, dynamic> json) => Godmodel(
     devathaId: json["devathaId"],
     devathaName: json["devathaName"],
     devathaImage: json["devathaImage"],
-    vazhipadus: List<Vazhipadus>.from(json["vazhipadus"].map((x) => Vazhipadus.fromJson(x))),
+    counters: List<Counter>.from(json["counters"].map((x) => Counter.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
     "devathaId": devathaId,
     "devathaName": devathaName,
     "devathaImage": devathaImage,
+    "counters": List<dynamic>.from(counters.map((x) => x.toJson())),
+  };
+}
+
+class Counter {
+  int counterId;
+  String counterName;
+  List<Vazhipadus> vazhipadus;
+
+  Counter({
+    required this.counterId,
+    required this.counterName,
+    required this.vazhipadus,
+  });
+
+  factory Counter.fromJson(Map<String, dynamic> json) => Counter(
+    counterId: json["counterId"],
+    counterName: json["counterName"],
+    vazhipadus: List<Vazhipadus>.from(json["vazhipadus"].map((x) => Vazhipadus.fromJson(x))),
+  );
+
+  Map<String, dynamic> toJson() => {
+    "counterId": counterId,
+    "counterName": counterName,
     "vazhipadus": List<dynamic>.from(vazhipadus.map((x) => x.toJson())),
   };
 }
