@@ -14,7 +14,7 @@
       return Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          // Text("Select your language", style: styles.blackRegular22),
+          Text("Select your language", style: styles.blackRegular22),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -39,6 +39,7 @@
               LangWidget(lang: "आ", disc: "हिंदी", locale: Locale('hi')),
             ],
           ),
+
         ],
       );
     }

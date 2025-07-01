@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:kshethra_mini/model/demo_model/temple_model.dart';
 import 'package:kshethra_mini/view_model/booking_viewmodel.dart';
 import 'package:provider/provider.dart';
 
@@ -23,6 +24,7 @@ class LangWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     AppStyles styles = AppStyles();
     SizeConfig().init(context);
     return Consumer<HomePageViewmodel>(
@@ -33,16 +35,26 @@ class LangWidget extends StatelessWidget {
         //
         // },
         onTap: () async {
-          print('hi'*100);
-           BookingViewmodel().fetchTempleData();
+          print('hi' * 100);
+
+          final bookingViewmodel = Provider.of<BookingViewmodel>(context, listen: false);
+          await bookingViewmodel.fetchTempleData();
+
+          if (bookingViewmodel.templeList.isNotEmpty) {
+            print(bookingViewmodel.templeList.first.templeName);
+          } else {
+            print("No temple data found.");
+          }
+
           await context.setLocale(Locale(locale.languageCode));
           homepageViewmodel.updateLanguage(locale.languageCode);
           homepageViewmodel.homePageNavigate(context);
         },
 
+
         child: Container(
-          height:180,
-          width: 200,
+          height:SizeConfig.screenHeight*0.15,
+          width: SizeConfig.screenWidth*0.25,
           decoration: BoxDecoration(
             image: DecorationImage(
               image: AssetImage(Assets.images.langBackground.path),

@@ -32,7 +32,6 @@ class AdvanceBooking extends StatelessWidget {
             //     ),
             //   ],
             // ),
-
              ResponsiveLayout(
               pinelabDevice: Padding(
                 padding: const EdgeInsets.only(left: 15.0, right: 15),
@@ -40,8 +39,8 @@ class AdvanceBooking extends StatelessWidget {
               ),
               mediumDevice: Padding(
                 padding: EdgeInsets.only(
-                  left: SizeConfig.screenWidth * 0.125,
-                  right: SizeConfig.screenWidth * 0.125,
+                  left: SizeConfig.screenWidth * 0.010,
+                  right: SizeConfig.screenWidth * 0.010,
                 ),
                 child: AdvancedBookingFormWidget(
                   crossAxisSpace: SizeConfig.screenWidth * 0.15,

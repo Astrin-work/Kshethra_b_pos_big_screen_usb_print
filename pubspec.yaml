@@ -48,7 +48,11 @@ dependencies:
   shimmer: ^3.0.0
   flutter_secure_storage: ^9.2.4
   dio: ^5.8.0+1
-  intl: ^0.19.0
+  intl: ^0.20.2
+  jwt_decoder: ^2.0.1
+  #  razorpay_flutter: ^1.4.0
+  #  flutter_razorpay_web: ^0.0.3
+  #  razorpay_web: ^3.0.0
 
 
 #  google_cloud_translation: ^0.0.4

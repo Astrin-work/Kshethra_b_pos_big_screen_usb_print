@@ -37,4 +37,5 @@ class AppStyles {
   TextStyle get blackSemi18 => _baseTextStyle(kBlack, 18.0, FontWeight.w500);
   TextStyle get blackRegular22 => _baseTextStyle(kBlack, 22.0, FontWeight.w400);
   TextStyle get blackRegular20 => _baseTextStyle(kBlack, 25.0, FontWeight.w300);
+  TextStyle get blackRegular25 => _baseTextStyle(kBlack, 28.0, FontWeight.w500);
 }

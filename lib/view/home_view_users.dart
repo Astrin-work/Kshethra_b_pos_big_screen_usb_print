@@ -42,23 +42,14 @@ class HomeViewUsers extends StatelessWidget {
                           Consumer<HomePageViewmodel>(
                             builder:
                                 (context, homePageViewmodel, child) => SizedBox(
-                              height: 20,
+                              height: SizeConfig.screenHeight*0.05,
                               child: Row(
                                 children: [
-                                  // IconButton(
-                                  //   iconSize: 30,
-                                  //   onPressed: () {
-                                  //     homePageViewmodel
-                                  //         .navigateSuperAdminHomeView(
-                                  //       context,
-                                  //     );
-                                  //   },
-                                  //   icon: Icon(Icons.settings),
-                                  // ),
                                   5.kW,
                                   IconButton(
-                                    iconSize: 30,
+                                    iconSize: 40,
                                     onPressed: () {
+                                      print('-----taped-----');
                                       homePageViewmodel.showLogoutDialog(
                                         context,
                                       );

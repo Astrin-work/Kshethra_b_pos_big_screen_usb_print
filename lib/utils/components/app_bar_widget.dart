@@ -31,7 +31,7 @@ class AppBarWidget extends StatelessWidget {
       child: Column(
         children: [
           BackButtonComponent(),
-          SizedBox(height:80 ,),
+          SizedBox(height:SizeConfig.screenHeight*0.04,),
           Text(title.tr(), style: TextStyle(fontSize: 30,fontWeight: FontWeight.w300)),
           // BuildTextWidget(text: title, size: 20),
         ],

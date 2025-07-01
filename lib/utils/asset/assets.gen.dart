@@ -24,7 +24,7 @@ class $AssetsIconsGen {
 
   /// File path: assets/icons/astrins_kshethra_logo.png
   AssetGenImage get astrinsKshethraLogo =>
-      const AssetGenImage('assets/images/kshethra logo.png');
+      const AssetGenImage('assets/images/Astrins- Kshetra new Logo.png');
 
   /// File path: assets/icons/astrins_logo.png
   AssetGenImage get astrinsLogo =>
@@ -100,7 +100,7 @@ class $AssetsImagesGen {
       const AssetGenImage('assets/images/home_background.png');
 
   AssetGenImage get splashBackground =>
-      const AssetGenImage('assets/images/image_bg10.png');
+      const AssetGenImage('assets/images/image_bg1.png');
   /// File path: assets/images/lang_background.png
   AssetGenImage get langBackground =>
       const AssetGenImage('assets/images/lang_background.png');

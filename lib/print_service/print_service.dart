@@ -46,6 +46,10 @@ class PrintService {
         Logger.success("Service bound successfully.");
         final result = await PlutusSmart.startPrintJob(printDataJson);
         Logger.success("🧾 Print result: $result");
+      } else if (bindResult == "SERVICE_NOT_AVAILABLE") {
+        Logger.info("Plutus service not available, using fallback printing...");
+        final result = await PlutusSmart.startPrintJob(printDataJson);
+        Logger.success("🧾 Fallback print result: $result");
       } else {
         Logger.error("Binding failed: $bindResult");
       }

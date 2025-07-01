@@ -25,6 +25,7 @@ class QrScannerComponent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+
     final currentLang = Provider.of<HomePageViewmodel>(context).currentLanguage;
     AppStyles styles = AppStyles();
     SizeConfig().init(context);

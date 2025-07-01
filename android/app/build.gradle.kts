@@ -11,12 +11,12 @@ android {
     ndkVersion = "27.0.12077973"
 
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_11.toString()
+        jvmTarget = JavaVersion.VERSION_17.toString()
     }
 
     defaultConfig {
@@ -38,6 +38,23 @@ android {
         }
     }
 }
+//dependencies {
+//    implementation(name = "printer-lib-2.2.4", ext = "aar")
+//}
+dependencies {
+    implementation(files("F:\\panel_printer\\android\\app\\libs\\printer-lib-2.2.4.aar"))
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+        flatDir {
+            dirs("libs")
+        }
+    }
+}
+
 
 flutter {
     source = "../.."

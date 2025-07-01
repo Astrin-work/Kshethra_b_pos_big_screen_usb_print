@@ -32,78 +32,78 @@ class StarDialogBox extends StatelessWidget {
       content: Consumer<BookingViewmodel>(
         builder:
             (context, bookingViewmodel, child) => SizedBox(
-              height: SizeConfig.screenHeight * 0.5,
-              width: SizeConfig.screenWidth * 0.5,
-              child: Column(
-                children: [
-                  Text("Select your Star".tr(), style: styles.blackRegular18),
-                  // BuildTextWidget(
-                  //   text: "Select your Star",
-                  //   toLang: currentLang,
-                  //   color: kBlack,
-                  //   fontWeight: FontWeight.w500,
-                  //   size: 16,
-                  // ),
-                  15.kH,
-                  Flexible(
-                    child: GridView.builder(
-                      itemCount: stars.length,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        mainAxisSpacing: mainAxisSpace ?? 15,
-                        crossAxisSpacing: crossAxisSpace ?? 10,
-                        childAspectRatio: 1.85,
-                        crossAxisCount: axisCount ?? 2,
-                      ),
-                      itemBuilder:
-                          (context, index) => InkWell(
-                            onTap: () {
-                              bookingViewmodel.setStar(
-                                stars[index].starKey?.tr() ?? "",
-                                context,
-                              );
-                            },
+          height: SizeConfig.screenHeight * 0.7,
+          width: SizeConfig.screenWidth * 0.6,
+          child: Column(
+            children: [
+              Text("Select your Star".tr(), style: styles.blackRegular18),
+              // BuildTextWidget(
+              //   text: "Select your Star",
+              //   toLang: currentLang,
+              //   color: kBlack,
+              //   fontWeight: FontWeight.w500,
+              //   size: 16,
+              // ),
+              15.kH,
+              Flexible(
+                child: GridView.builder(
+                  itemCount: stars.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    mainAxisSpacing: mainAxisSpace ?? 15,
+                    crossAxisSpacing: crossAxisSpace ?? 10,
+                    childAspectRatio: 1.80,
+                    crossAxisCount: axisCount ?? 2,
+                  ),
+                  itemBuilder:
+                      (context, index) => InkWell(
+                    onTap: () {
+                      bookingViewmodel.setStar(
+                        stars[index].starKey?.tr() ?? "",
+                        context,
+                      );
+                    },
 
-                            child: Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                image: DecorationImage(
-                                  image: AssetImage(
-                                    Assets.images.homeBackground.path,
-                                  ),
-                                ),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 2.5,
-                                ),
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    color: kWhite,
-                                    borderRadius: BorderRadius.circular(
-                                      borderRadius ?? 15,
-                                    ),
-                                  ),
-                                  child: Center(
-                                    child:
-                                    // BuildTextWidget(
-                                    //   text: stars[index].star?.tr() ?? "",
-                                    //   // toLang: currentLang,
-                                    //   color: kBlack,
-                                    // ),
-                                    Text(
-                                      stars[index].starKey!.toString().tr(),
-                                      style: styles.blackRegular13,
-                                    ),
-                                  ),
-                                ),
-                              ),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        image: DecorationImage(
+                          image: AssetImage(
+                            Assets.images.homeBackground.path,
+                          ),
+                        ),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 3,
+                        ),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: kWhite,
+                            borderRadius: BorderRadius.circular(
+                              borderRadius ?? 15,
                             ),
                           ),
+                          child: Center(
+                            child:
+                            // BuildTextWidget(
+                            //   text: stars[index].star?.tr() ?? "",
+                            //   // toLang: currentLang,
+                            //   color: kBlack,
+                            // ),
+                            Text(
+                              stars[index].starKey!.toString().tr(),
+                              style: styles.blackRegular13,
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
-                ],
+                ),
               ),
-            ),
+            ],
+          ),
+        ),
       ),
     );
   }

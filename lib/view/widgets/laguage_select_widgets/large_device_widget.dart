@@ -16,13 +16,12 @@ class LargeDeviceWidget extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        SizedBox(height: 50,),
+        SizedBox(height: SizeConfig.screenHeight*0.05,),
         Text("Select your language",style: TextStyle(fontSize: 30,fontWeight: FontWeight.w400),),
-        SizedBox(height: 100),
-
+        SizedBox(height: SizeConfig.screenHeight*0.050),
         Wrap(
-          spacing: 40,          // No horizontal space between items
-          runSpacing:50 ,       // Minimal vertical space between rows
+          spacing: 30,
+          runSpacing:35 ,
           alignment: WrapAlignment.center,
           children: const [
             LangWidget(lang: "EN", disc: "English", locale: Locale('en')),
@@ -31,14 +30,13 @@ class LargeDeviceWidget extends StatelessWidget {
             LangWidget(lang: "ಆ", disc: "ಕನ್ನಡ", locale: Locale('kn')),
             LangWidget(lang: "ఆ", disc: "తెలుగు", locale: Locale('te')),
             LangWidget(lang: "आ", disc: "हिंदी", locale: Locale('hi')),
-
           ],
         ),
-        SizedBox(height: 80,),
+        SizedBox(height: SizeConfig.screenHeight*0.02,),
         Image.asset(
           fit: BoxFit.fill,
           // width: SizeConfig.screenWidth * 0.4,
-          height: 70,
+          height: SizeConfig.screenHeight*0.08,
           Assets.icons.astrinsLogo.path,
         )
       ],

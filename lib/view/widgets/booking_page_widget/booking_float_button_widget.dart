@@ -44,7 +44,7 @@ class BookingFloatButtonWidget extends StatelessWidget {
                 ),
                 child: Center(
                   child: Text(
-                    "PAY ₹${bookingViewmodel.totalVazhipaduAmt}",
+                    "Proceed to Pay ₹${bookingViewmodel.totalVazhipaduAmt}",
                     style: styles.whiteRegular20,
                   ),
                 ),

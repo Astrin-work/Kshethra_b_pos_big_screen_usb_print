@@ -38,7 +38,7 @@ class _GodWidgetState extends State<GodWidget> {
         }
 
         return SizedBox(
-          height: 235,
+          height: SizeConfig.screenHeight*0.190,
           width: SizeConfig.screenWidth,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
@@ -55,27 +55,38 @@ class _GodWidgetState extends State<GodWidget> {
                       },
                       child:
                       Container(
-                        height: 180,
-                        width: 145,
+                        height: SizeConfig.screenHeight * 0.140,
+                        width: SizeConfig.screenWidth * 0.213,
                         decoration: BoxDecoration(
                           boxShadow: [
                             BoxShadow(
-                              color:
-                              bookingViewmodel.selectedGods == godList[index]
+                              color: bookingViewmodel.selectedGods == godList[index]
                                   ? kPrimaryColor
                                   : kTransparent,
                               blurRadius: 5,
                               spreadRadius: 5,
                             ),
                           ],
-                          image: DecorationImage(
-                            image: NetworkImage(godList[index].devathaImage),
-                            fit: BoxFit.contain,
-                          ),
-                          // color: Colors.red,
                           borderRadius: BorderRadius.circular(10.0),
+                          image: DecorationImage(
+                            image: AssetImage('assets/images/make_image.png'),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10.0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: NetworkImage(godList[index].devathaImage),
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          ),
                         ),
                       )
+
+
                     ),
                     Align(
                       alignment: Alignment.bottomCenter,

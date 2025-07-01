@@ -1,5 +1,6 @@
 
 import 'package:dio/dio.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:kshethra_mini/model/api%20models/get_temple_model.dart';
 import '../model/api models/E_Hundi_Get_Devatha_Model.dart';
 import '../model/api models/get_donation_model.dart';
@@ -214,12 +215,13 @@ class ApiService {
     }
   }
 
-  Future<List<GetTemplemodel>> getTemple() async {
+
+  Future<List<GetTemplemodel>> getTemple(String dbName) async {
     try {
       final token = await AppHive().getToken();
 
       final response = await _dio.get(
-        '/Temple/astripri_db_kshetra_android_SreeKrishna',
+        '/Temple/$dbName',
         options: Options(headers: {
           'Authorization': 'Bearer $token',
         }),
@@ -229,10 +231,8 @@ class ApiService {
 
       if (responseData is Map<String, dynamic> && responseData['data'] is List) {
         final dataList = responseData['data'] as List;
-
         return dataList.map((item) => GetTemplemodel.fromJson(item)).toList();
       } else if (responseData is Map<String, dynamic>) {
-        // Handle single temple object
         return [GetTemplemodel.fromJson(responseData)];
       } else {
         return [];
@@ -243,6 +243,29 @@ class ApiService {
     }
   }
 
+  Future<String?> getDatabaseNameFromToken() async {
+    try {
+      final token = await AppHive().getToken();
+
+      if (token != null && token.isNotEmpty) {
+        final Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
+
+        print("Decoded Token: $decodedToken");
+
+        if (decodedToken.containsKey('DatabaseName')) {
+          return decodedToken['DatabaseName'] as String;
+        } else {
+          print("Key 'DatabaseName' not found in token.");
+        }
+      } else {
+        print("JWT token is null or empty.");
+      }
+    } catch (e) {
+      print("Error decoding token: $e");
+    }
+
+    return null;
+  }
 
 
 

@@ -74,7 +74,7 @@ class _AdvancedBookingConfirmFormState
     return Consumer<BookingViewmodel>(
       builder:
           (context, bookingViewmodel, child) => Padding(
-            padding: const EdgeInsets.only(left: 15.0, right: 15, top: 20),
+            padding: const EdgeInsets.only( top: 20),
             child: Form(
               autovalidateMode: AutovalidateMode.onUserInteraction,
               key: bookingViewmodel.advBookingKey,

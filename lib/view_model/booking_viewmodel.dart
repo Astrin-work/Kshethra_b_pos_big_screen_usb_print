@@ -99,7 +99,8 @@ class BookingViewmodel extends ChangeNotifier {
       _selectedAdvancedBookingCategoryIndex;
   List<Vazhipadus> _filteredVazhipadus = [];
   List<Vazhipadus> get filteredVazhipadus => _filteredVazhipadus;
-
+  Vazhipadus? _selectedVazhipadu;
+  Vazhipadus? get selectedVazhipadu => _selectedVazhipadu;
   @override
   void dispose() {
     bookingNameController.dispose();
@@ -110,6 +111,24 @@ class BookingViewmodel extends ChangeNotifier {
   }
 
 
+  Vazhipadus? _selectedVazhipaddu;
+  Vazhipadus? get selectedVazhipaddu => _selectedVazhipaddu;
+
+  void selectVazhipaddu(Vazhipadus vazhipaddu) {
+    _selectedVazhipaddu = vazhipaddu;
+    notifyListeners();
+  }
+
+
+
+
+
+
+
+  void selectVazhipadu(Vazhipadus item) {
+    _selectedVazhipadu = item;
+    notifyListeners();
+  }
 
   void selectCategory(int index) {
     _selectedCounterIndex = index;
@@ -287,18 +306,23 @@ class BookingViewmodel extends ChangeNotifier {
 
   Future<void> fetchTempleData() async {
     try {
-      final data = await ApiService().getTemple();
-
-      if (data.isNotEmpty) {
-        templeList = data;
-        notifyListeners();
+      final dbName = await ApiService().getDatabaseNameFromToken();
+      if (dbName != null && dbName.isNotEmpty) {
+        final data = await ApiService().getTemple(dbName);
+        if (data.isNotEmpty) {
+          templeList = data;
+          notifyListeners();
+        } else {
+          print("No temple data received.");
+        }
       } else {
-        print("No temple data received.");
+        print("Database name missing or invalid.");
       }
     } catch (e) {
       print("Error fetching temple data: $e");
     }
   }
+
 
   void storeGroupedResponses(List<Map<String, dynamic>> responses) {
     _submittedGroups = responses;
@@ -541,6 +565,8 @@ class BookingViewmodel extends ChangeNotifier {
     return total;
   }
 
+
+
   void setBookingPage() {
     _advBookOption = "";
     _advBookingSavedAmt = 0;
@@ -615,82 +641,8 @@ class BookingViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
-  // void navigateAdvBookingPreview(BuildContext context) {
-  //   if (_totalVazhipaduAmt == 0) {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBarWidget(
-  //         msg: "Payment request denied!",
-  //         color: kRed,
-  //       ).build(context),
-  //     );
-  //     return;
-  //   }
-  //
-  //   if (_gods.isNotEmpty) {
-  //     selectedGods = _gods[0];
-  //   }
-  //   _selectedStar = "Star".tr();
-  //   bookingNameController.clear();
-  //   _isExistedDevotee = false;
-  //
-  //   final selectedDays = selectedWeeklyDays;
-  //
-  //   Navigator.push(
-  //     context,
-  //     MaterialPageRoute(
-  //       builder: (context) => AdvancedBookingPreviewView(
-  //         selectedRepMethod: selectedRepMethod,
-  //         selectedDays: selectedDays,
-  //         totalAmount: totalVazhipaduAmt,
-  //       ),
-  //     ),
-  //   );
-  //
-  //   notifyListeners();
-  // }
 
-  // void navigateBookingPreviewView(BuildContext context) {
-  //   if (_totalVazhipaduAmt != 0) {
-  //     _selectedGod = bList[0];
-  //     _selectedStar = "Star".tr();
-  //     bookingNameController.clear();
-  //     _isExistedDevotee = false;
-  //
-  //     Navigator.push(
-  //       context,
-  //       MaterialPageRoute(
-  //         builder: (context) => BookingPreviewView(
-  //           page: 'booking',
-  //           selectedRepMethod: selectedRepMethod,
-  //         ),
-  //       ),
-  //     );
-  //   } else {
-  //     ScaffoldMessenger.of(context).showSnackBar(
-  //       SnackBarWidget(
-  //         msg: "Please select a Vazhippadu",
-  //         color: kGrey,
-  //       ).build(context),
-  //     );
-  //   }
-  //
-  //   notifyListeners();
-  // }
 
-  // Future<void> fetchDonations() async {
-  //   donations = await ApiService().getDonation();
-  //   notifyListeners(); // if using Provider
-  // }
-
-  // Future<void> fetchVazhipadu() async {
-  //   try {
-  //     final response = await ApiService().getVazhipadu();
-  //     vazhipaduList = response;
-  //     notifyListeners();
-  //   } catch (e) {
-  //     print("Error in fetchVazhipadu: $e");
-  //   }
-  // }
   void navigateBookingPreviewView(BuildContext context) {
     if (_totalVazhipaduAmt != 0) {
       if (_gods.isNotEmpty) {
@@ -721,6 +673,7 @@ class BookingViewmodel extends ChangeNotifier {
 
     notifyListeners();
   }
+
 
   void setAdvBookOption(String value) {
     _advBookOption = value;

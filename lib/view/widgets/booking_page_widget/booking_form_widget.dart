@@ -6,6 +6,7 @@ import 'package:kshethra_mini/utils/validation.dart';
 import 'package:kshethra_mini/view/widgets/booking_page_widget/god_widget.dart';
 import 'package:kshethra_mini/view/widgets/booking_page_widget/star_dialodbox_widget.dart';
 import 'package:kshethra_mini/view/widgets/booking_page_widget/vazhipaddu_widget.dart';
+import 'package:kshethra_mini/view/widgets/build_text_widget.dart';
 import 'package:kshethra_mini/view_model/booking_viewmodel.dart';
 import 'package:provider/provider.dart';
 import '../../../utils/components/responsive_layout.dart';
@@ -30,7 +31,7 @@ class BookingFormWidget extends StatelessWidget {
     final bookingViewmodel = Provider.of<BookingViewmodel>(context);
     final counterList = bookingViewmodel.selectedGods?.counters ?? [];
     final List<dynamic> counterListWithAll = ['All', ...counterList];
-
+    final fromLang = "en";
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 20),
@@ -102,10 +103,22 @@ class BookingFormWidget extends StatelessWidget {
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+
                 Container(
-                  width: 200,
+                  width: SizeConfig.screenWidth * 0.253,
                   height: SizeConfig.screenHeight,
-                  color: const Color(0xFFFBEDE6),
+                  margin: const EdgeInsets.only(right: 10),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF2D7C7),
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.08),
+                        blurRadius: 6,
+                        offset: const Offset(2, 2),
+                      ),
+                    ],
+                  ),
                   padding: const EdgeInsets.only(left: 8, top: 10),
                   child: ListView.builder(
                     padding: const EdgeInsets.symmetric(vertical: 20),
@@ -129,8 +142,9 @@ class BookingFormWidget extends StatelessWidget {
                               color: isSelected ? Colors.orangeAccent : Colors.transparent,
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            child: Text(
-                              categoryName,
+                            child: BuildTextWidget(
+                              text: categoryName,
+                              fromLang: fromLang,
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
@@ -145,18 +159,33 @@ class BookingFormWidget extends StatelessWidget {
                 ),
                 Expanded(
                   child: Padding(
-                    padding: const EdgeInsets.only(left: 15.0),
-                    child: VazhipadduWidget(
-                      crossAixisCount: crossAixisCount ?? 3,
-                      crossAxisSpace: crossAxisSpace ?? 15,
-                      mainAxisSpace: mainAxisSpace ?? 15,
-                      selectedCategoryIndex: bookingViewmodel.selectedCounterIndex,
-                      screeName: 'bookingPage',
+                    padding:  EdgeInsets.only(left: 5.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color:  Color(0xFFF9F5F2),
+                        borderRadius: BorderRadius.circular(12),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.08),
+                            blurRadius: 6,
+                            offset:  Offset(2, 2),
+                          ),
+                        ],
+                      ),
+                      padding:  EdgeInsets.all(8.0),
+                      child: VazhipadduWidget(
+                        crossAixisCount: crossAixisCount ?? 3,
+                        crossAxisSpace: crossAxisSpace ?? 15,
+                        mainAxisSpace: mainAxisSpace ?? 15,
+                        selectedCategoryIndex: bookingViewmodel.selectedCounterIndex,
+                        screeName: 'bookingPage',
+                      ),
                     ),
                   ),
                 ),
               ],
             ),
+
           ],
         ),
       ),

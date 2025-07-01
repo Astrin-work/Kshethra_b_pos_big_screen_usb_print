@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:kshethra_mini/utils/app_styles.dart';
 import 'package:kshethra_mini/utils/asset/assets.gen.dart';
 import 'package:kshethra_mini/utils/components/size_config.dart';
 import 'package:kshethra_mini/view/widgets/home_page_widgets/option_selector_widget.dart';
@@ -17,13 +18,11 @@ class HomeWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     SizeConfig().init(context);
 
-    final bookingViewmodel = Provider.of<BookingViewmodel>(context, listen: false);
-    final templeList = bookingViewmodel.templeList;
-
-    return Consumer<HomePageViewmodel>(
-      builder: (context, homepageViewmodel, child) {
+    return Consumer2<HomePageViewmodel, BookingViewmodel>(
+      builder: (context, homepageViewmodel, bookingViewmodel, child) {
+        final templeList = bookingViewmodel.templeList;
         final String welcomeText = templeList.isNotEmpty
-            ? "Welcome ${templeList.first.templeName}"
+            ? "Welcome ${templeList.last.templeName}"
             : "Welcome";
 
         return SizedBox(
@@ -31,24 +30,23 @@ class HomeWidget extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              const SizedBox(height: 70),
+              SizedBox(height: SizeConfig.screenHeight * 0.050),
               BuildTextWidget(
-                text: welcomeText, // Safe and dynamic
+                text: welcomeText,
                 color: Colors.black,
                 size: 28,
                 fontWeight: FontWeight.w500,
                 maxLines: 2,
                 textAlign: TextAlign.center,
+                style: AppStyles().blackRegular25,
               ),
-              const SizedBox(height: 50),
-
-              // Row 1
+              SizedBox(height: SizeConfig.screenHeight * 0.04),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   OptionSelectorWidget(
                     icon: SizedBox(
-                      height: 52,
+                      height: SizeConfig.screenHeight * 0.052,
                       child: Image.asset(Assets.icons.pray.path),
                     ),
                     titleWidget: BuildTextWidget(
@@ -58,15 +56,16 @@ class HomeWidget extends StatelessWidget {
                       fontWeight: FontWeight.w500,
                       maxLines: 2,
                       textAlign: TextAlign.center,
+                      style:AppStyles().blackSemi15 ,
                     ),
                     onTap: () {
                       homepageViewmodel.bookingPageNavigate(context);
                     },
                   ),
-                  const SizedBox(width: 40),
+                  SizedBox(width: SizeConfig.screenWidth * 0.05),
                   OptionSelectorWidget(
                     icon: SizedBox(
-                      height: 45,
+                      height: SizeConfig.screenHeight * 0.045,
                       child: Image.asset(Assets.icons.preBooking.path),
                     ),
                     titleWidget: BuildTextWidget(
@@ -76,6 +75,7 @@ class HomeWidget extends StatelessWidget {
                       fontWeight: FontWeight.w500,
                       maxLines: 2,
                       textAlign: TextAlign.center,
+                      style:AppStyles().blackSemi15 ,
                     ),
                     onTap: () {
                       homepageViewmodel.preBookingPageNavigate(context);
@@ -84,15 +84,15 @@ class HomeWidget extends StatelessWidget {
                 ],
               ),
 
-              const SizedBox(height: 40),
+              SizedBox(height: SizeConfig.screenHeight * 0.020),
 
-              // Row 2
+              /// Second Row: Donation Options
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   OptionSelectorWidget(
                     icon: SizedBox(
-                      height: 50,
+                      height: SizeConfig.screenHeight * 0.050,
                       child: Image.asset(Assets.icons.donation.path),
                     ),
                     titleWidget: BuildTextWidget(
@@ -102,10 +102,10 @@ class HomeWidget extends StatelessWidget {
                       fontWeight: FontWeight.w500,
                       maxLines: 1,
                       textAlign: TextAlign.center,
+                      style:AppStyles().blackSemi15 ,
                     ),
                     onTap: () async {
                       try {
-                        List<Getdonationmodel> donationList =
                         await ApiService().getDonation();
                         homepageViewmodel.donationPageNavigate(context);
                       } catch (e) {
@@ -113,10 +113,10 @@ class HomeWidget extends StatelessWidget {
                       }
                     },
                   ),
-                  const SizedBox(width: 40),
+                  SizedBox(width: SizeConfig.screenWidth * 0.05),
                   OptionSelectorWidget(
                     icon: SizedBox(
-                      height: 50,
+                      height: SizeConfig.screenHeight * 0.050,
                       child: Image.asset(Assets.icons.eHundi.path),
                     ),
                     titleWidget: BuildTextWidget(
@@ -126,6 +126,7 @@ class HomeWidget extends StatelessWidget {
                       fontWeight: FontWeight.w500,
                       maxLines: 1,
                       textAlign: TextAlign.center,
+                      style:AppStyles().blackSemi15 ,
                     ),
                     onTap: () {
                       homepageViewmodel.eHundiPageNavigate(context);
@@ -134,9 +135,9 @@ class HomeWidget extends StatelessWidget {
                 ],
               ),
 
-              const SizedBox(height: 30),
+              SizedBox(height: SizeConfig.screenHeight * 0.010),
               SizedBox(
-                height: 70,
+                height: SizeConfig.screenHeight * 0.070,
                 child: Image.asset(Assets.icons.astrinsLogo.path),
               ),
             ],
@@ -145,5 +146,6 @@ class HomeWidget extends StatelessWidget {
       },
     );
   }
+
 }
 

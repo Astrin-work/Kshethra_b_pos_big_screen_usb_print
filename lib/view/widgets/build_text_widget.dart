@@ -14,7 +14,7 @@ class BuildTextWidget extends StatefulWidget {
   final bool? softWrap;
   final TextOverflow? overflow;
   final Function(String)? onTranslated;
-
+  final TextStyle? style; // ✅ Optional style
 
   const BuildTextWidget({
     Key? key,
@@ -28,6 +28,7 @@ class BuildTextWidget extends StatefulWidget {
     this.softWrap,
     this.overflow,
     this.onTranslated,
+    this.style, // ✅ Accept custom style
   }) : super(key: key);
 
   @override
@@ -56,7 +57,6 @@ class _BuildTextWidgetState extends State<BuildTextWidget> {
 
   Future<void> _translate(String text, String? fromLang, String toLang) async {
     if (text.isEmpty || toLang.isEmpty || toLang == 'en') {
-      // Skip translation and use original if target is English
       setState(() {
         translatedText = text;
         _isTranslating = false;
@@ -90,7 +90,6 @@ class _BuildTextWidgetState extends State<BuildTextWidget> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     if (_isTranslating || translatedText == null) {
@@ -103,7 +102,7 @@ class _BuildTextWidgetState extends State<BuildTextWidget> {
       softWrap: widget.softWrap ?? true,
       overflow: widget.overflow ?? TextOverflow.ellipsis,
       textAlign: widget.textAlign,
-      style: TextStyle(
+      style: widget.style ?? TextStyle( // ✅ Use provided style if available
         color: widget.color,
         fontSize: widget.size,
         fontWeight: widget.fontWeight,

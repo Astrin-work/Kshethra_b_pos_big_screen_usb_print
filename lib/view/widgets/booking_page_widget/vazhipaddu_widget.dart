@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kshethra_mini/model/api%20models/god_model.dart';
+import 'package:kshethra_mini/utils/app_styles.dart';
 import 'package:provider/provider.dart';
 import 'package:kshethra_mini/utils/app_color.dart';
 import 'package:kshethra_mini/utils/asset/assets.gen.dart';
@@ -21,8 +22,9 @@ class VazhipadduWidget extends StatelessWidget {
     this.crossAxisCount,
     required this.screeName,
     required this.selectedCategoryIndex,
-    required double crossAxisSpace, 
-    required double mainAxisSpace, required int crossAixisCount,
+    required double crossAxisSpace,
+    required double mainAxisSpace,
+    required int crossAixisCount,
   });
 
   @override
@@ -62,47 +64,65 @@ class VazhipadduWidget extends StatelessWidget {
             crossAxisCount: crossAxisCount ?? 3,
             mainAxisSpacing: mainAxisSpacing ?? 20,
             crossAxisSpacing: crossAxisSpacing ?? 20,
+            childAspectRatio: 0.90,
           ),
           itemBuilder: (context, index) {
             final item = vazhipadus[index];
+            final isSelected = bookingViewmodel.selectedVazhipaddu == item;
 
             return InkWell(
               onTap: () {
+                bookingViewmodel.selectVazhipaddu(item);
                 if (screeName == "bookingPage") {
                   bookingViewmodel.showVazhipadduDialogBox(context, item);
                 } else {
                   bookingViewmodel.showAdvancedVazhipadduDialogBox(context, item);
                 }
               },
-              child: Container(
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(15),
                   image: DecorationImage(
                     image: AssetImage(Assets.images.homeBackground.path),
                     fit: BoxFit.fill,
                   ),
+                  // border: isSelected
+                  //     ? Border.all(color: Colors.orange.shade200, width: 5)
+                  //     : Border.all(color: Colors.transparent),
                 ),
                 child: Container(
                   margin: const EdgeInsets.all(4.0),
                   decoration: BoxDecoration(
-                    color: kWhite,
                     borderRadius: BorderRadius.circular(15),
+                    color: isSelected ? null : kWhite,
+                    gradient: isSelected
+                        ? LinearGradient(
+                      colors: [
+                        Colors.orange.shade100,
+                        Colors.deepOrange.shade50,
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    )
+                        : null,
                   ),
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       BuildTextWidget(
-                        text: item.offerName ?? '',
+                        text: item.offerName,
                         fromLang: fromLang,
                         textAlign: TextAlign.center,
                         size: 15,
                         fontWeight: FontWeight.w400,
-
+                        maxLines: 3,
+                        style: AppStyles().blackRegular15,
                       ),
-                      const SizedBox(height: 6),
+                      const SizedBox(height: 5),
                       BuildTextWidget(
-                        text: "₹ ${item.cost ?? '0'}/-",
+                        text: "₹ ${item.cost}/-",
                         fromLang: fromLang,
                         textAlign: TextAlign.center,
                         size: 14,
@@ -110,7 +130,8 @@ class VazhipadduWidget extends StatelessWidget {
                     ],
                   ),
                 ),
-              ),
+              )
+
             );
           },
         );
