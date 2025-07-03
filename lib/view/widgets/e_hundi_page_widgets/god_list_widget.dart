@@ -4,7 +4,6 @@ import 'package:kshethra_mini/utils/components/size_config.dart';
 import 'package:kshethra_mini/view/widgets/build_text_widget.dart';
 import 'package:kshethra_mini/view_model/e_hundi_viewmodel.dart';
 import 'package:provider/provider.dart';
-import '../../../view_model/home_page_viewmodel.dart';
 
 class GodListWidget extends StatefulWidget {
   final double? crossAxisSpace;
@@ -39,7 +38,9 @@ class _GodListWidgetState extends State<GodListWidget> {
     return Consumer<EHundiViewmodel>(
       builder: (context, viewmodel, child) {
         if (viewmodel.isLoading) {
-          return const Center(child: CircularProgressIndicator(color: kDullPrimaryColor,));
+          return const Center(
+            child: CircularProgressIndicator(color: kDullPrimaryColor),
+          );
         }
 
         final godList = viewmodel.gods;
@@ -52,9 +53,11 @@ class _GodListWidgetState extends State<GodListWidget> {
             crossAxisCount: widget.axisCount ?? 2,
             crossAxisSpacing: widget.crossAxisSpace ?? 30,
             mainAxisSpacing: widget.mainAxisSpace ?? 25,
+            childAspectRatio: 0.8,
           ),
           itemBuilder: (context, index) {
             final god = godList[index];
+
             return InkWell(
               onTap: () {
                 viewmodel.showEhundiDonationDialog(context);
@@ -65,26 +68,29 @@ class _GodListWidgetState extends State<GodListWidget> {
                   Expanded(
                     child: Container(
                       decoration: BoxDecoration(
-                        boxShadow: const [
-                          BoxShadow(
-                            blurRadius: 2,
-                            spreadRadius: 1,
-                            color: kPrimaryColor,
-                          ),
-                        ],
-                        image: DecorationImage(
-                          image: NetworkImage(god.devathaImage),
+                        image: const DecorationImage(
+                          image: AssetImage('assets/images/make_image.png'),
                           fit: BoxFit.cover,
                         ),
-                        borderRadius: BorderRadius.circular(10.0),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Container(
+                        margin: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          image: DecorationImage(
+                            image: NetworkImage(god.devathaImage),
+                            fit: BoxFit.contain,
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                  10.kH,
+                  const SizedBox(height: 8),
                   BuildTextWidget(
                     text: god.devathaName,
                     color: kBlack,
-                    fromLang:fromLang,
+                    fromLang: fromLang,
                   ),
                 ],
               ),
@@ -95,4 +101,3 @@ class _GodListWidgetState extends State<GodListWidget> {
     );
   }
 }
-

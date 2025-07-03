@@ -45,23 +45,20 @@ class BookingView extends StatelessWidget {
         ),
       ),
       body: SingleChildScrollView(
+        physics: NeverScrollableScrollPhysics(),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             AppBarWidget(title: 'Vazhipaddu'.tr()),
             ResponsiveLayout(
-              pinelabDevice: Padding(
-                padding:  EdgeInsets.only(left: 15.0, right: 15),
-                child: BookingFormWidget(),
-              ),
+              pinelabDevice: BookingFormWidget(),
               mediumDevice: BookingFormWidget(
                 crossAxisSpace: SizeConfig.screenWidth * 0.15,
                 mainAxisSpace: SizeConfig.screenWidth * 0.15,
               ),
               semiMediumDevice: Padding(
-                padding: EdgeInsets.only(
-                  left: SizeConfig.screenWidth * 0.01,
-                  right: SizeConfig.screenWidth * 0.01,
-
+                padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.screenWidth * 0.01,
                 ),
                 child: BookingFormWidget(
                   crossAixisCount: 3,
@@ -70,9 +67,8 @@ class BookingView extends StatelessWidget {
                 ),
               ),
               largeDevice: Padding(
-                padding: EdgeInsets.only(
-                  left: SizeConfig.screenWidth * 0.125,
-                  right: SizeConfig.screenWidth * 0.125,
+                padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.screenWidth * 0.125,
                 ),
                 child: BookingFormWidget(
                   crossAixisCount: 4,
@@ -84,6 +80,8 @@ class BookingView extends StatelessWidget {
           ],
         ),
       ),
+
+
     );
   }
 }

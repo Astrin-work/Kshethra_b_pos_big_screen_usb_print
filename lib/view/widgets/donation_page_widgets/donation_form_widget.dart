@@ -131,9 +131,9 @@ class _DonationFormWidgetState extends State<DonationFormWidget> {
                 physics: NeverScrollableScrollPhysics(),
                 itemCount: donations.length,
                 gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  mainAxisSpacing: widget.mainAxisSpacing,
-                  crossAxisSpacing: widget.crossAxisSpacing,
-                  crossAxisCount: widget.crossAxisCount ?? 2,
+                  mainAxisSpacing: widget.mainAxisSpacing/1,
+                  crossAxisSpacing: widget.crossAxisSpacing/6   ,
+                  crossAxisCount: widget.crossAxisCount ?? 3,
                 ),
                 itemBuilder: (context, index) {
                   final donationItem = donations[index];

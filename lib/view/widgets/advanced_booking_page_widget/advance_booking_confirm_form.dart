@@ -65,7 +65,10 @@ class _AdvancedBookingConfirmFormState
   }
 
   double _TottalAmount = 0.0;
-  final Map<String, double> postalRates = {"Postal".tr(): 5.0, "Speed Post": 45.0};
+  final Map<String, double> postalRates = {
+    "Ordinary Post": 5.0,
+    "Speed Post": 45.0,
+  };
   final fromLang = "en";
   Widget build(BuildContext context) {
     AppStyles styles = AppStyles();
@@ -74,7 +77,7 @@ class _AdvancedBookingConfirmFormState
     return Consumer<BookingViewmodel>(
       builder:
           (context, bookingViewmodel, child) => Padding(
-            padding: const EdgeInsets.only( top: 20),
+            padding: const EdgeInsets.only(top: 20),
             child: Form(
               autovalidateMode: AutovalidateMode.onUserInteraction,
               key: bookingViewmodel.advBookingKey,
@@ -192,17 +195,7 @@ class _AdvancedBookingConfirmFormState
                                     border: Border.all(color: kBlack, width: 1),
                                     borderRadius: BorderRadius.circular(15),
                                   ),
-                          child: Center(
-                            child: Text(
-                              bookingViewmodel.selectedDate.isNotEmpty
-                                  ? bookingViewmodel.selectedDate
-                                  : "Date",
-                              style:
-                                  bookingViewmodel.selectedDate.isNotEmpty
-                                      ? styles.whiteSemi15
-                                      : styles.blackSemi15,
-                            ),
-                          ),
+
                         ),
                       ),
                     ],
@@ -210,13 +203,15 @@ class _AdvancedBookingConfirmFormState
                   25.kH,
                   Align(
                     alignment: Alignment.topLeft,
-                    child: BuildTextWidget(text:
-                    "Repeat Type :",
+                    child: BuildTextWidget(
+                      text: "Repeat Type :",
                       size: 18,
                       textAlign: TextAlign.center,
+                      fromLang: fromLang,
                     ),
                   ),
                   const RepCheckBoxWidget(),
+                  SizedBox(height: 10),
                   Visibility(
                     visible: bookingViewmodel.selectedRepMethod == "Weekly",
                     child: const WeeklyWidget(),
@@ -231,15 +226,20 @@ class _AdvancedBookingConfirmFormState
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
-                              BuildTextWidget(text:
-                                "Number of Times To Repeat",
-                                size: 18,
-                                textAlign: TextAlign.center,
-                                fromLang:fromLang,
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 25),
+                                child: Text(
+                                  "Number of Times to Repeat".tr(),
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 22,
+                                    color: Colors.black,
+                                  ),
+                                ),
                               ),
                               Text(":", style: styles.blackSemi18),
                               SizedBox(
-                                width: SizeConfig.screenWidth * 0.2,
+                                width: SizeConfig.screenWidth * 0.1,
                                 child: TextFormField(
                                   keyboardType: TextInputType.number,
                                   validator:
@@ -271,35 +271,44 @@ class _AdvancedBookingConfirmFormState
                           ),
                         if (bookingViewmodel.selectedRepMethod != "Once") 15.kH,
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12.0,
+                            vertical: 8.0,
+                          ),
                           decoration: BoxDecoration(
                             color: Colors.grey[200],
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: CheckboxListTile(
+                            activeColor:kDullPrimaryColor,
                             contentPadding: EdgeInsets.zero,
-                            title: RichText(
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text: "Need Prasadam? ",
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w500,
-                                    ),
+                            title: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                BuildTextWidget(
+                                  text: "Need Prasadam? ",
+                                  fromLang: "en",
+                                  size: 18,
+                                  fontWeight: FontWeight.w500,
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w500,
                                   ),
-                                  TextSpan(
-                                    text: "(If Required)",
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.black54,
-                                    ),
-
+                                ),
+                                BuildTextWidget(
+                                  text: "(If Required)",
+                                  fromLang: "en",
+                                  size: 14,
+                                  fontWeight: FontWeight.normal,
+                                  style: const TextStyle(
+                                    color: Colors.black54,
+                                    fontSize: 14,
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
+
                             value: bookingViewmodel.prasadamSelected,
                             onChanged: (value) {
                               bookingViewmodel.togglePrasadam(value!);
@@ -308,12 +317,13 @@ class _AdvancedBookingConfirmFormState
                           ),
                         ),
                         15.kH,
+                        SizedBox(height: 20,),
                         if (bookingViewmodel.prasadamSelected)
                           Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "Select Postel Option".tr(),
+                                "Select Postel".tr(),
                                 style: styles.blackRegular15,
                               ),
                               20.kH,

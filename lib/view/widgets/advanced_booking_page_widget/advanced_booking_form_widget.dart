@@ -37,12 +37,11 @@ class AdvancedBookingFormWidget extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Category list
                   Container(
                     width: SizeConfig.screenWidth * 0.253,
                     margin: const EdgeInsets.only(right: 10),
                     decoration: BoxDecoration(
-                      color: const Color(0xFFF2D7C7), // same as BookingForm
+                      color: const Color(0xFFF2D7C7),
                       borderRadius: BorderRadius.circular(12),
                       boxShadow: [
                         BoxShadow(
@@ -100,13 +99,12 @@ class AdvancedBookingFormWidget extends StatelessWidget {
                     ),
                   ),
 
-                  // Vazhipaddu Grid
                   Expanded(
                     child: Padding(
                       padding: const EdgeInsets.only(left: 5.0),
                       child: Container(
                         decoration: BoxDecoration(
-                          color: const Color(0xFFF9F5F2), // unified background
+                          color: const Color(0xFFF9F5F2),
                           borderRadius: BorderRadius.circular(12),
                           boxShadow: [
                             BoxShadow(

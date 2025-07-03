@@ -56,84 +56,84 @@ class VazhipadduWidget extends StatelessWidget {
           return const Center(child: Text("No vazhipadu found"));
         }
 
-        return GridView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: vazhipadus.length,
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: crossAxisCount ?? 3,
-            mainAxisSpacing: mainAxisSpacing ?? 20,
-            crossAxisSpacing: crossAxisSpacing ?? 20,
-            childAspectRatio: 0.90,
-          ),
-          itemBuilder: (context, index) {
-            final item = vazhipadus[index];
-            final isSelected = bookingViewmodel.selectedVazhipaddu == item;
+        return SizedBox(
+          height: MediaQuery.of(context).size.height * 0.6,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            child: GridView.builder(
+              itemCount: vazhipadus.length,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: crossAxisCount ?? 3,
+                mainAxisSpacing: mainAxisSpacing ?? 20,
+                crossAxisSpacing: crossAxisSpacing ?? 20,
+                childAspectRatio: 0.90,
+              ),
+              itemBuilder: (context, index) {
+                final item = vazhipadus[index];
+                final isSelected = bookingViewmodel.selectedVazhipaddu == item;
 
-            return InkWell(
-              onTap: () {
-                bookingViewmodel.selectVazhipaddu(item);
-                if (screeName == "bookingPage") {
-                  bookingViewmodel.showVazhipadduDialogBox(context, item);
-                } else {
-                  bookingViewmodel.showAdvancedVazhipadduDialogBox(context, item);
-                }
+                return InkWell(
+                  onTap: () {
+                    bookingViewmodel.selectVazhipaddu(item);
+                    if (screeName == "bookingPage") {
+                      bookingViewmodel.showVazhipadduDialogBox(context, item);
+                    } else {
+                      bookingViewmodel.showAdvancedVazhipadduDialogBox(context, item);
+                    }
+                  },
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 300),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      image: DecorationImage(
+                        image: AssetImage(Assets.images.homeBackground.path),
+                        fit: BoxFit.fill,
+                      ),
+                    ),
+                    child: Container(
+                      margin: const EdgeInsets.all(4.0),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(15),
+                        color: isSelected ? null : kWhite,
+                        gradient: isSelected
+                            ? LinearGradient(
+                          colors: [
+                            Colors.orange.shade100,
+                            Colors.deepOrange.shade50,
+                          ],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        )
+                            : null,
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          BuildTextWidget(
+                            text: item.offerName,
+                            fromLang: fromLang,
+                            textAlign: TextAlign.center,
+                            size: 15,
+                            fontWeight: FontWeight.w400,
+                            maxLines: 3,
+                            style: AppStyles().blackRegular15,
+                          ),
+                          const SizedBox(height: 5),
+                          BuildTextWidget(
+                            text: "₹ ${item.cost}/-",
+                            fromLang: fromLang,
+                            textAlign: TextAlign.center,
+                            size: 14,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
               },
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(15),
-                  image: DecorationImage(
-                    image: AssetImage(Assets.images.homeBackground.path),
-                    fit: BoxFit.fill,
-                  ),
-                  // border: isSelected
-                  //     ? Border.all(color: Colors.orange.shade200, width: 5)
-                  //     : Border.all(color: Colors.transparent),
-                ),
-                child: Container(
-                  margin: const EdgeInsets.all(4.0),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(15),
-                    color: isSelected ? null : kWhite,
-                    gradient: isSelected
-                        ? LinearGradient(
-                      colors: [
-                        Colors.orange.shade100,
-                        Colors.deepOrange.shade50,
-                      ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    )
-                        : null,
-                  ),
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      BuildTextWidget(
-                        text: item.offerName,
-                        fromLang: fromLang,
-                        textAlign: TextAlign.center,
-                        size: 15,
-                        fontWeight: FontWeight.w400,
-                        maxLines: 3,
-                        style: AppStyles().blackRegular15,
-                      ),
-                      const SizedBox(height: 5),
-                      BuildTextWidget(
-                        text: "₹ ${item.cost}/-",
-                        fromLang: fromLang,
-                        textAlign: TextAlign.center,
-                        size: 14,
-                      ),
-                    ],
-                  ),
-                ),
-              )
-
-            );
-          },
+            ),
+          ),
         );
       },
     );

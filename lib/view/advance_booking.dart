@@ -14,6 +14,7 @@ class AdvanceBooking extends StatelessWidget {
     SizeConfig().init(context);
     return Scaffold(
       body: SingleChildScrollView(
+        physics: NeverScrollableScrollPhysics(),
         child: Column(
           children: [
             AppBarWidget(title: "Advance Booking".tr()),

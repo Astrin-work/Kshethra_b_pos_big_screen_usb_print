@@ -24,8 +24,8 @@ class OptionSelectorWidget extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Container(
-        height: SizeConfig.screenHeight * 0.18,
-        width: SizeConfig.screenWidth * 0.34,
+        height: SizeConfig.screenHeight * 0.16,
+        width: SizeConfig.screenWidth * 0.32,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
           image: DecorationImage(
@@ -37,7 +37,7 @@ class OptionSelectorWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             icon,
-            5.kW,
+            const SizedBox(height: 8),
             titleWidget ??
                 Text(
                   title ?? '',
@@ -49,6 +49,7 @@ class OptionSelectorWidget extends StatelessWidget {
                 ),
           ],
         ),
+
       ),
     );
   }

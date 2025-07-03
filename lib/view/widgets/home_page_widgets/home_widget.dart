@@ -17,20 +17,29 @@ class HomeWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
-
+    final fromLang = "en";
     return Consumer2<HomePageViewmodel, BookingViewmodel>(
       builder: (context, homepageViewmodel, bookingViewmodel, child) {
         final templeList = bookingViewmodel.templeList;
         final String welcomeText = templeList.isNotEmpty
-            ? "Welcome ${templeList.last.templeName}"
+            ? " ${templeList.last.templeName}"
             : "Welcome";
-
         return SizedBox(
           width: SizeConfig.screenWidth,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              SizedBox(height: SizeConfig.screenHeight * 0.050),
+              SizedBox(height: SizeConfig.screenHeight * 0.030),
+              BuildTextWidget(
+                text: 'Welcom',
+                color: Colors.black,
+                size: 28,
+                fontWeight: FontWeight.w500,
+                maxLines: 2,
+                textAlign: TextAlign.center,
+                style: AppStyles().blackRegular25,
+                fromLang: fromLang,
+              ),
               BuildTextWidget(
                 text: welcomeText,
                 color: Colors.black,
@@ -39,8 +48,9 @@ class HomeWidget extends StatelessWidget {
                 maxLines: 2,
                 textAlign: TextAlign.center,
                 style: AppStyles().blackRegular25,
+                fromLang: fromLang,
               ),
-              SizedBox(height: SizeConfig.screenHeight * 0.04),
+              SizedBox(height: SizeConfig.screenHeight * 0.03),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -68,15 +78,30 @@ class HomeWidget extends StatelessWidget {
                       height: SizeConfig.screenHeight * 0.045,
                       child: Image.asset(Assets.icons.preBooking.path),
                     ),
-                    titleWidget: BuildTextWidget(
-                      text: 'Advance Booking'.tr(),
-                      color: Colors.black,
-                      size: 16,
-                      fontWeight: FontWeight.w500,
-                      maxLines: 2,
-                      textAlign: TextAlign.center,
-                      style:AppStyles().blackSemi15 ,
+                    titleWidget: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        BuildTextWidget(
+                          text: 'Adavance',
+                          color: Colors.black,
+                          size: 16,
+                          fontWeight: FontWeight.w500,
+                          textAlign: TextAlign.center,
+                          style: AppStyles().blackSemi15,
+                          fromLang: fromLang,
+                        ),
+                        BuildTextWidget(
+                          text: 'Booking',
+                          color: Colors.black,
+                          size: 16,
+                          fontWeight: FontWeight.w500,
+                          textAlign: TextAlign.center,
+                          style: AppStyles().blackSemi15,
+                          fromLang: fromLang,
+                        ),
+                      ],
                     ),
+
                     onTap: () {
                       homepageViewmodel.preBookingPageNavigate(context);
                     },
@@ -120,13 +145,14 @@ class HomeWidget extends StatelessWidget {
                       child: Image.asset(Assets.icons.eHundi.path),
                     ),
                     titleWidget: BuildTextWidget(
-                      text: 'E- Bhandaram'.tr(),
+                      text: 'E-Bhandaram',
                       color: Colors.black,
                       size: 16,
                       fontWeight: FontWeight.w500,
                       maxLines: 1,
                       textAlign: TextAlign.center,
                       style:AppStyles().blackSemi15 ,
+                      fromLang: fromLang,
                     ),
                     onTap: () {
                       homepageViewmodel.eHundiPageNavigate(context);
@@ -135,7 +161,7 @@ class HomeWidget extends StatelessWidget {
                 ],
               ),
 
-              SizedBox(height: SizeConfig.screenHeight * 0.010),
+              SizedBox(height: SizeConfig.screenHeight * 0.040),
               SizedBox(
                 height: SizeConfig.screenHeight * 0.070,
                 child: Image.asset(Assets.icons.astrinsLogo.path),

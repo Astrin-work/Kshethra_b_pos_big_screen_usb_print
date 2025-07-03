@@ -14,7 +14,7 @@ class BuildTextWidget extends StatefulWidget {
   final bool? softWrap;
   final TextOverflow? overflow;
   final Function(String)? onTranslated;
-  final TextStyle? style; // ✅ Optional style
+  final TextStyle? style;
 
   const BuildTextWidget({
     Key? key,
@@ -102,7 +102,7 @@ class _BuildTextWidgetState extends State<BuildTextWidget> {
       softWrap: widget.softWrap ?? true,
       overflow: widget.overflow ?? TextOverflow.ellipsis,
       textAlign: widget.textAlign,
-      style: widget.style ?? TextStyle( // ✅ Use provided style if available
+      style: widget.style ?? TextStyle(
         color: widget.color,
         fontSize: widget.size,
         fontWeight: widget.fontWeight,

@@ -127,7 +127,7 @@ class _PaymentMethodScreenDonationState
         noOfScreens: 1,
         payOnTap: () {
           print("------clicked--------");
-          _printReceipt();
+          // _printReceipt();
       /*    final donationViewmodel = Provider.of<DonationViewmodel>(
             context,
             listen: false,

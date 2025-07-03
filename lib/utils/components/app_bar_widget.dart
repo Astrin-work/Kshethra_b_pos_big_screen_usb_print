@@ -4,7 +4,7 @@ import 'package:kshethra_mini/utils/app_styles.dart';
 import 'package:kshethra_mini/utils/asset/assets.gen.dart';
 import 'package:kshethra_mini/utils/components/back_button_component.dart';
 import 'package:kshethra_mini/utils/components/size_config.dart';
-
+import 'package:kshethra_mini/view/widgets/build_text_widget.dart';
 
 class AppBarWidget extends StatelessWidget {
   final String title;
@@ -12,7 +12,7 @@ class AppBarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
+    final fromLang = "en";
     AppStyles styles = AppStyles();
     SizeConfig().init(context);
     return Container(
@@ -31,8 +31,12 @@ class AppBarWidget extends StatelessWidget {
       child: Column(
         children: [
           BackButtonComponent(),
-          SizedBox(height:SizeConfig.screenHeight*0.04,),
-          Text(title.tr(), style: TextStyle(fontSize: 30,fontWeight: FontWeight.w300)),
+          SizedBox(height: SizeConfig.screenHeight * 0.04),
+          BuildTextWidget(
+            text: title,
+            style: TextStyle(fontSize: 30, fontWeight: FontWeight.w300,),
+            fromLang: fromLang,
+          ),
           // BuildTextWidget(text: title, size: 20),
         ],
       ),

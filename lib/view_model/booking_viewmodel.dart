@@ -462,7 +462,7 @@ class BookingViewmodel extends ChangeNotifier {
   }
 
   void _updatePostalAmount() {
-    if (_postalOption == 'Postal') {
+    if (_postalOption == 'Ordinary Post') {
       _postalAmount = 5.0 * _repeatDays;
     } else if (_postalOption == 'Speed Post') {
       _postalAmount = 45.0 * _repeatDays;
@@ -685,12 +685,24 @@ class BookingViewmodel extends ChangeNotifier {
       context: context,
       firstDate: getTomorrow(),
       lastDate: getOneYear(),
+      builder: (context, child) {
+        return Theme(
+          data: ThemeData(
+            colorScheme: ColorScheme.light(
+              primary: kDullPrimaryColor,
+            ),
+          ),
+          child: child!,
+        );
+      },
     );
+
     if (value != null) {
       _selectedDate = formatDateTime(value);
+      notifyListeners();
     }
-    notifyListeners();
   }
+
 
   String formatDateTime(DateTime dateTime) {
     String year = dateTime.year.toString();

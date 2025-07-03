@@ -100,6 +100,20 @@ class BookingFormWidget extends StatelessWidget {
             ),
             const SizedBox(height: 15),
             GodWidget(),
+            // Padding(
+            //   padding: const EdgeInsets.only(left: 10),
+            //   child: Align(alignment: Alignment.center,
+            //     child: BuildTextWidget(
+            //       text: "vazhipadukal",
+            //       fromLang: fromLang,
+            //       style: TextStyle(
+            //         fontSize: 30,
+            //         fontWeight: FontWeight.w500,
+            //         color:  Colors.black,
+            //       ),
+            //     ),
+            //   ),
+            // ),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
