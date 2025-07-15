@@ -248,7 +248,7 @@ class ApiService {
     try {
       final token = await AppHive().getToken();
 
-      if (token != null && token.isNotEmpty) {
+      if (token.isNotEmpty) {
         final Map<String, dynamic> decodedToken = JwtDecoder.decode(token);
 
         print("Decoded Token: $decodedToken");

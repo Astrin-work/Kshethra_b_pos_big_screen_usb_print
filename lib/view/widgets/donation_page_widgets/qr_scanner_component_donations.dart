@@ -1,4 +1,3 @@
-import 'dart:ui' as ui;
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -157,7 +156,6 @@ class QrScannerComponentDonations extends StatelessWidget {
     }
 
     final name = bookings.first.name ?? "-";
-    final phone = bookings.first.phno ?? "-";
     final star = bookings.first.star ?? "-";
 
     final temple = bookingViewmodel.templeList.isNotEmpty

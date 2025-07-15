@@ -8,7 +8,6 @@ import 'package:kshethra_mini/view_model/booking_viewmodel.dart';
 import 'package:kshethra_mini/view_model/home_page_viewmodel.dart';
 import 'package:provider/provider.dart';
 import '../../../api_services/api_service.dart';
-import '../../../model/api models/get_donation_model.dart';
 import '../build_text_widget.dart';
 
 class HomeWidget extends StatelessWidget {
