@@ -4,12 +4,14 @@ import 'package:kshethra_mini/utils/app_color.dart';
 import 'package:kshethra_mini/utils/app_styles.dart';
 import 'package:kshethra_mini/utils/components/size_config.dart';
 import 'package:kshethra_mini/utils/validation.dart';
+import 'package:kshethra_mini/view/widgets/build_text_widget.dart';
 import 'package:kshethra_mini/view/widgets/e_hundi_page_widgets/payment_method_screen_e_hundi.dart';
+import 'package:kshethra_mini/view/widgets/booking_page_widget/star_dialodbox_widget.dart';
 import 'package:kshethra_mini/view_model/e_hundi_viewmodel.dart';
 import 'package:provider/provider.dart';
 
+import '../../../utils/components/responsive_layout.dart';
 import '../../../view_model/booking_viewmodel.dart';
-import '../booking_page_widget/star_dialodbox_widget.dart';
 
 class EHundiDialogWidget extends StatefulWidget {
   const EHundiDialogWidget({super.key});
@@ -19,65 +21,17 @@ class EHundiDialogWidget extends StatefulWidget {
 }
 
 class _EHundiDialogWidgetState extends State<EHundiDialogWidget> {
-  late TextEditingController _amountController;
-  late TextEditingController _nameController;
-  late TextEditingController _phoneController;
-
-  // Future<bool> postEbannaramiDonation(BuildContext context, int index) async {
-  //   final eHundiViewModel = Provider.of<EHundiViewmodel>(
-  //     context,
-  //     listen: false,
-  //   );
-  //   final bookingViewModel = Provider.of<BookingViewmodel>(
-  //     context,
-  //     listen: false,
-  //   );
-  //
-  //   final data = {
-  //     "devathaName": eHundiViewModel.gods[index].devathaName,
-  //     "amount": _amountController.text.trim(),
-  //     "personName": _nameController.text.trim(),
-  //     "phoneNumber": _phoneController.text.trim(),
-  //     "personStar": bookingViewModel.selectedStar,
-  //     "paymentType": "lsk",
-  //     "transactionId": "11221",
-  //     "bankId": "131333",
-  //     "bankName": "sbi"
-  //   };
-  //
-  //   try {
-  //     await ApiService().postEHundiDetails(data);
-  //     if (context.mounted) {
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBarWidget(
-  //           msg: "Donation posted successfully!",
-  //           color: Colors.green,
-  //         ).build(context),
-  //       );
-  //     }
-  //     return true;
-  //   } catch (e) {
-  //     final errorMessage = e?.toString() ?? "Unknown error occurred";
-  //     if (context.mounted) {
-  //       ScaffoldMessenger.of(context).showSnackBar(
-  //         SnackBarWidget(
-  //           msg: "Failed to post donation: $errorMessage",
-  //           color: Colors.red,
-  //         ).build(context),
-  //       );
-  //     }
-  //     return false;
-  //   }
-  //
-  // }
+  late TextEditingController amountController;
+  late TextEditingController nameController;
+  late TextEditingController phoneController;
 
   @override
   void initState() {
     super.initState();
     final viewModel = Provider.of<EHundiViewmodel>(context, listen: false);
-    _amountController = viewModel.eHundiAmountController;
-    _nameController = viewModel.eHundiNameController;
-    _phoneController = viewModel.eHundiPhoneController;
+    amountController = viewModel.eHundiAmountController;
+    nameController = viewModel.eHundiNameController;
+    phoneController = viewModel.eHundiPhoneController;
   }
 
   @override
@@ -109,19 +63,19 @@ class _EHundiDialogWidgetState extends State<EHundiDialogWidget> {
                                   "Enter an amount",
                                   "Enter a valid amount",
                                 ),
-                            controller: _amountController,
+                            controller: amountController,
                             textAlign: TextAlign.start,
                             style: styles.blackRegular13,
                             decoration: InputDecoration(
                               suffixIcon: IconButton(
                                 onPressed: eHundiViewmodel.clearHundiAmount,
-                                icon: Icon(Icons.close),
+                                icon: const Icon(Icons.close),
                               ),
                               label: RichText(
                                 text: TextSpan(
                                   text: 'Amount'.tr(),
                                   style: styles.blackRegular15,
-                                  children: [
+                                  children: const [
                                     TextSpan(
                                       text: '*',
                                       style: TextStyle(color: Colors.red),
@@ -132,23 +86,36 @@ class _EHundiDialogWidgetState extends State<EHundiDialogWidget> {
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(15),
                               ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15),
+                                borderSide: const BorderSide(
+                                  color: kDullPrimaryColor,
+                                  width: 2.0,
+                                ),
+                              ),
                             ),
                           ),
-
                           10.kH,
                           TextFormField(
-                            controller: _nameController,
+                            controller: nameController,
                             style: styles.blackRegular13,
                             decoration: InputDecoration(
                               hintText: "Enter your Name (optional)".tr(),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(15),
                               ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15),
+                                borderSide: const BorderSide(
+                                  color: kDullPrimaryColor,
+                                  width: 2.0,
+                                ),
+                              ),
                             ),
                           ),
                           10.kH,
                           TextFormField(
-                            controller: _phoneController,
+                            controller: phoneController,
                             style: styles.blackRegular13,
                             keyboardType: TextInputType.number,
                             maxLength: 10,
@@ -157,34 +124,76 @@ class _EHundiDialogWidgetState extends State<EHundiDialogWidget> {
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(15),
                               ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(15),
+                                borderSide: const BorderSide(
+                                  color: kDullPrimaryColor,
+                                  width: 2.0,
+                                ),
+                              ),
                             ),
                           ),
-                          GestureDetector(
-                            onTap: () {
-                              showDialog(
-                                context: context,
-                                builder: (context) => const StarDialogBox(),
-                              );
-                            },
-                            child: InputDecorator(
-                              decoration: InputDecoration(
-                                hintText: "Select Star (optional)",
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                ),
-                                contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 14,
-                                  horizontal: 12,
-                                ),
-                              ),
-                              child: Consumer<BookingViewmodel>(
-                                builder:
-                                    (context, bookingViewmodel, child) => Text(
-                                      bookingViewmodel.selectedStar,
-                                      style: styles.blackRegular13,
+                          10.kH,
+                          Consumer<BookingViewmodel>(
+                            builder:
+                                (context, bookingViewmodel, _) =>
+                                    MaterialButton(
+                                      minWidth: 250,
+                                      height: 50,
+                                      padding:  EdgeInsets.symmetric(
+                                        horizontal: 16,
+                                      ),
+                                      shape: RoundedRectangleBorder(
+                                        side: BorderSide(
+                                          color: Colors.grey,
+                                          width: 1.2,
+                                        ),
+                                        borderRadius: BorderRadius.circular(12),
+                                      ),
+                                      onPressed: () {
+                                        showDialog(
+                                          context: context,
+                                          builder:
+                                              (context) => ResponsiveLayout(
+                                                pinelabDevice: StarDialogBox(),
+                                                mediumDevice: StarDialogBox(
+                                                  borderRadius: 25,
+                                                  mainAxisSpace: 30,
+                                                  crossAxisSpace: 45,
+                                                ),
+                                                semiMediumDevice: StarDialogBox(
+                                                  borderRadius: 25,
+                                                  mainAxisSpace: 30,
+                                                  crossAxisSpace: 45,
+                                                  axisCount: 3,
+                                                ),
+                                                semiLargeDevice: StarDialogBox(
+                                                  borderRadius: 30,
+                                                  mainAxisSpace: 30,
+                                                  crossAxisSpace: 45,
+                                                  axisCount: 3,
+                                                ),
+                                                largeDevice: StarDialogBox(
+                                                  borderRadius: 35,
+                                                  mainAxisSpace: 30,
+                                                  crossAxisSpace: 45,
+                                                  axisCount: 4,
+                                                ),
+                                              ),
+                                        );
+                                      },
+                                      child: Align(
+                                        alignment: Alignment.centerLeft,
+                                        child: BuildTextWidget(
+                                          text: bookingViewmodel.selectedStar,
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w400,
+                                            color: Colors.black87,
+                                          ),
+                                        ),
+                                      ),
                                     ),
-                              ),
-                            ),
                           ),
                         ],
                       ),
@@ -195,37 +204,43 @@ class _EHundiDialogWidgetState extends State<EHundiDialogWidget> {
                       children: [
                         MaterialButton(
                           onPressed: () {
-                            final eHundiViewModel = Provider.of<EHundiViewmodel>(
-                              context,
-                              listen: false,
-                            );
+                            final eHundiViewModel =
+                                Provider.of<EHundiViewmodel>(
+                                  context,
+                                  listen: false,
+                                );
 
-                            if (eHundiViewModel.eHundiKey.currentState?.validate() ?? false) {
-                              final amount = eHundiViewModel.eHundiAmountController.text.trim();
-                              final name = _nameController.text.trim();
-                              final phone = _phoneController.text.trim();
-                              print("Navigating with amount: $amount");
+                            if (eHundiViewModel.eHundiKey.currentState
+                                    ?.validate() ??
+                                false) {
+                              final amount =
+                                  eHundiViewModel.eHundiAmountController.text
+                                      .trim();
+                              final name = nameController.text.trim();
+                              final phone = phoneController.text.trim();
 
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => PaymentMethodScreenEHundi(
-                                    amount: amount,
-                                    name: name,
-                                    phone: phone,
-                                  ),
+                                  builder:
+                                      (context) => PaymentMethodScreenEHundi(
+                                        amount: amount,
+                                        name: name,
+                                        phone: phone,
+                                      ),
                                 ),
                               );
                             }
                           },
                           shape: RoundedRectangleBorder(
-                            side: const BorderSide(color: kDullPrimaryColor, width: 2),
+                            side: const BorderSide(
+                              color: kDullPrimaryColor,
+                              width: 2,
+                            ),
                             borderRadius: BorderRadius.circular(15),
                           ),
                           child: Text("Pay".tr()),
                         ),
-
-
                         MaterialButton(
                           onPressed: () {
                             final viewModel = Provider.of<EHundiViewmodel>(
@@ -245,7 +260,7 @@ class _EHundiDialogWidgetState extends State<EHundiDialogWidget> {
                           child: Text("Cancel".tr()),
                         ),
                       ],
-                    )
+                    ),
                   ],
                 ),
               ),

@@ -38,7 +38,7 @@ class _GodWidgetState extends State<GodWidget> {
         }
 
         return SizedBox(
-          height: SizeConfig.screenHeight*0.190,
+          height: SizeConfig.screenHeight*0.175,
           width: SizeConfig.screenWidth,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,
@@ -88,11 +88,14 @@ class _GodWidgetState extends State<GodWidget> {
 
 
                     ),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: BuildTextWidget(
-                        text: godList[index].devathaName,
-                        fromLang: fromLang,
+                    Padding(
+                      padding:  EdgeInsets.only(top: 5),
+                      child: Align(
+                        alignment: Alignment.bottomCenter,
+                        child: BuildTextWidget(
+                          text: godList[index].devathaName,
+                          fromLang: fromLang,
+                        ),
                       ),
                     ),
                   ],

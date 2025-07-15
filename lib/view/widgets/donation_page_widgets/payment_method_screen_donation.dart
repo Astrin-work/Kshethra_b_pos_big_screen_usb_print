@@ -126,12 +126,7 @@ class _PaymentMethodScreenDonationState
         title: 'Confirm',
         noOfScreens: 1,
         payOnTap: () {
-          print("------clicked--------");
-          // _printReceipt();
-      /*    final donationViewmodel = Provider.of<DonationViewmodel>(
-            context,
-            listen: false,
-          );
+          final donationViewmodel = Provider.of<DonationViewmodel>(context, listen: false);
 
           final amountStr = widget.amount;
           final name = widget.name ?? '';
@@ -152,16 +147,19 @@ class _PaymentMethodScreenDonationState
               name: name,
               phone: phone,
               acctHeadName: acctHeadName,
-            );*/
+            );
 
-            // Call print after navigating or confirming
+            // Optional: print receipt after scan
+            // _printReceipt();
 
-          // } else {
-          //   ScaffoldMessenger.of(context).showSnackBar(
-          //     const SnackBar(content: Text('Unsupported payment method')),
-          //   );
-          // }
+            print("------clicked--------");
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Unsupported payment method')),
+            );
+          }
         },
+
       ),
     );
   }

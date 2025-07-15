@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:kshethra_mini/utils/app_color.dart';
 import 'package:kshethra_mini/utils/app_styles.dart';
 import 'package:kshethra_mini/utils/components/size_config.dart';
 import 'package:kshethra_mini/utils/validation.dart';
@@ -52,6 +53,13 @@ class BookingFormWidget extends StatelessWidget {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(15),
                   ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(15),
+                    borderSide: const BorderSide(
+                      color:kDullPrimaryColor ,
+                      width: 2.0,
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -100,20 +108,6 @@ class BookingFormWidget extends StatelessWidget {
             ),
             const SizedBox(height: 15),
             GodWidget(),
-            // Padding(
-            //   padding: const EdgeInsets.only(left: 10),
-            //   child: Align(alignment: Alignment.center,
-            //     child: BuildTextWidget(
-            //       text: "vazhipadukal",
-            //       fromLang: fromLang,
-            //       style: TextStyle(
-            //         fontSize: 30,
-            //         fontWeight: FontWeight.w500,
-            //         color:  Colors.black,
-            //       ),
-            //     ),
-            //   ),
-            // ),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -173,7 +167,7 @@ class BookingFormWidget extends StatelessWidget {
                 ),
                 Expanded(
                   child: Padding(
-                    padding:  EdgeInsets.only(left: 5.0),
+                    padding:  EdgeInsets.only(left: 5.0,),
                     child: Container(
                       decoration: BoxDecoration(
                         color:  Color(0xFFF9F5F2),

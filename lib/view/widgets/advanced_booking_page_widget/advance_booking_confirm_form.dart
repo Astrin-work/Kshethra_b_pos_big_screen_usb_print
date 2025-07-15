@@ -94,6 +94,13 @@ class _AdvancedBookingConfirmFormState
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15),
                       ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide: const BorderSide(
+                          color:kDullPrimaryColor ,
+                          width: 2.0,
+                        ),
+                      ),
                     ),
                   ),
                   25.kH,
@@ -108,6 +115,13 @@ class _AdvancedBookingConfirmFormState
                       hintText: "Phone".tr(),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide: const BorderSide(
+                          color:kDullPrimaryColor ,
+                          width: 2.0,
+                        ),
                       ),
                     ),
                   ),
@@ -184,18 +198,28 @@ class _AdvancedBookingConfirmFormState
                         child: Container(
                           height: 55,
                           width: 125,
-                          decoration:
-                              bookingViewmodel.selectedDate.isNotEmpty
-                                  ? BoxDecoration(
-                                    color: kDullPrimaryColor,
-                                    borderRadius: BorderRadius.circular(15),
-                                  )
-                                  : BoxDecoration(
-                                    color: kScaffoldColor,
-                                    border: Border.all(color: kBlack, width: 1),
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
-
+                          decoration: bookingViewmodel.selectedDate.isNotEmpty
+                              ? BoxDecoration(
+                            color: kDullPrimaryColor,
+                            borderRadius: BorderRadius.circular(15),
+                          )
+                              : BoxDecoration(
+                            color: kScaffoldColor,
+                            border: Border.all(color: kBlack, width: 1),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          alignment: Alignment.center,
+                          child: Text(
+                            bookingViewmodel.selectedDate.isNotEmpty
+                                ? bookingViewmodel.selectedDate
+                                : "Select Date",
+                            style: TextStyle(
+                              color: bookingViewmodel.selectedDate.isNotEmpty
+                                  ? Colors.white
+                                  : Colors.black,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
                         ),
                       ),
                     ],
@@ -263,6 +287,13 @@ class _AdvancedBookingConfirmFormState
                                   decoration: InputDecoration(
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(15),
+                                      borderSide: const BorderSide(
+                                        color:kDullPrimaryColor ,
+                                        width: 2.0,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -409,6 +440,13 @@ class _AdvancedBookingConfirmFormState
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(15),
                                   ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                    borderSide: const BorderSide(
+                                      color:kDullPrimaryColor ,
+                                      width: 2.0,
+                                    ),
+                                  ),
                                 ),
                               ),
                               10.kH,
@@ -428,6 +466,13 @@ class _AdvancedBookingConfirmFormState
                                   hintText: "Pincode".tr(),
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(15),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(15),
+                                    borderSide: const BorderSide(
+                                      color:kDullPrimaryColor ,
+                                      width: 2.0,
+                                    ),
                                   ),
                                 ),
                               ),

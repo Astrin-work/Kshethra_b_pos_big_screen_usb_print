@@ -29,9 +29,9 @@ class HomeWidget extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              SizedBox(height: SizeConfig.screenHeight * 0.030),
+              SizedBox(height: SizeConfig.screenHeight * 0.025),
               BuildTextWidget(
-                text: 'Welcom',
+                text: 'Welcome',
                 color: Colors.black,
                 size: 28,
                 fontWeight: FontWeight.w500,
@@ -110,8 +110,6 @@ class HomeWidget extends StatelessWidget {
               ),
 
               SizedBox(height: SizeConfig.screenHeight * 0.020),
-
-              /// Second Row: Donation Options
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -161,7 +159,7 @@ class HomeWidget extends StatelessWidget {
                 ],
               ),
 
-              SizedBox(height: SizeConfig.screenHeight * 0.040),
+              SizedBox(height: SizeConfig.screenHeight * 0.030),
               SizedBox(
                 height: SizeConfig.screenHeight * 0.070,
                 child: Image.asset(Assets.icons.astrinsLogo.path),

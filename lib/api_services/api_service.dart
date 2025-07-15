@@ -36,6 +36,7 @@ class ApiService {
         data: {
           'userUserName': username,
           'userPassword': password,
+          'deviceId': 'gujh',
         },
       );
 

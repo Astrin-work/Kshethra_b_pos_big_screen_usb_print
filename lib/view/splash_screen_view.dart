@@ -22,7 +22,6 @@ class SplashScreenView extends StatelessWidget {
             ),
           ),
           child: Column(
-
             children: [
               15.kH,
               Spacer(),

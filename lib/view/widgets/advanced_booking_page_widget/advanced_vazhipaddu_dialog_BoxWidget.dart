@@ -9,12 +9,12 @@ import 'package:provider/provider.dart';
 
 import '../../../model/api models/god_model.dart';
 
-
 class AdvancedVazhipadduDialogBoxwidget extends StatelessWidget {
   // final Map<String, dynamic> selectedVazhippadu;
   final Vazhipadus selectedVazhippadu;
   const AdvancedVazhipadduDialogBoxwidget({
-    super.key, required this.selectedVazhippadu,
+    super.key,
+    required this.selectedVazhippadu,
     // required this.selectedVazhippadu,
   });
 
@@ -28,7 +28,10 @@ class AdvancedVazhipadduDialogBoxwidget extends StatelessWidget {
         builder:
             (context, bookingViewmodel, child) => Column(
               children: [
-                BuildTextWidget( text:selectedVazhippadu.offerName,fromLang: fromLang,),
+                BuildTextWidget(
+                  text: selectedVazhippadu.offerName,
+                  fromLang: fromLang,
+                ),
                 10.kH,
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -45,6 +48,7 @@ class AdvancedVazhipadduDialogBoxwidget extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: kWhite,
                           borderRadius: BorderRadius.circular(360),
+                          border: Border.all(color: kDullPrimaryColor),
                           boxShadow: [
                             BoxShadow(
                               color: kGrey4,
@@ -60,7 +64,7 @@ class AdvancedVazhipadduDialogBoxwidget extends StatelessWidget {
                       height: 40,
                       width: 70,
                       decoration: BoxDecoration(
-                        border: Border.all(color: kBlack),
+                        border: Border.all(color: kDullPrimaryColor),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Center(
@@ -83,6 +87,7 @@ class AdvancedVazhipadduDialogBoxwidget extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: kWhite,
                           borderRadius: BorderRadius.circular(360),
+                          border: Border.all(color: kDullPrimaryColor),
                           boxShadow: [
                             BoxShadow(
                               color: kGrey4,
@@ -101,7 +106,7 @@ class AdvancedVazhipadduDialogBoxwidget extends StatelessWidget {
                   height: 40,
                   width: 90,
                   decoration: BoxDecoration(
-                    border: Border.all(color: kBlack),
+                    border: Border.all(color: kDullPrimaryColor),
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Center(
@@ -127,6 +132,7 @@ class AdvancedVazhipadduDialogBoxwidget extends StatelessWidget {
 
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
+                        side: BorderSide(color: kDullPrimaryColor),
                       ),
                       color: kWhite,
                       child: Text(
@@ -141,6 +147,7 @@ class AdvancedVazhipadduDialogBoxwidget extends StatelessWidget {
                       },
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
+                        side: BorderSide(color: kDullPrimaryColor),
                       ),
                       color: kWhite,
                       child: Text("Cancel".tr(), style: styles.blackRegular15),

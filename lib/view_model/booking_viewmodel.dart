@@ -136,7 +136,6 @@ class BookingViewmodel extends ChangeNotifier {
     if (index == 0) {
       selectedCategory = 'All';
 
-      // Show all vazhipadus from all counters
       _filteredVazhipadus = [];
       if (selectedGods != null) {
         for (var counter in selectedGods!.counters) {
@@ -146,7 +145,6 @@ class BookingViewmodel extends ChangeNotifier {
     } else if (selectedGods != null && index - 1 < selectedGods!.counters.length) {
       selectedCategory = selectedGods!.counters[index - 1].counterName;
 
-      // Show only vazhipadus under selected counter
       _filteredVazhipadus = selectedGods!.counters[index - 1].vazhipadus;
     }
 
@@ -565,8 +563,6 @@ class BookingViewmodel extends ChangeNotifier {
     return total;
   }
 
-
-
   void setBookingPage() {
     _advBookOption = "";
     _advBookingSavedAmt = 0;
@@ -641,8 +637,6 @@ class BookingViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
-
-
   void navigateBookingPreviewView(BuildContext context) {
     if (_totalVazhipaduAmt != 0) {
       if (_gods.isNotEmpty) {
@@ -674,7 +668,6 @@ class BookingViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
-
   void setAdvBookOption(String value) {
     _advBookOption = value;
     notifyListeners();
@@ -702,7 +695,6 @@ class BookingViewmodel extends ChangeNotifier {
       notifyListeners();
     }
   }
-
 
   String formatDateTime(DateTime dateTime) {
     String year = dateTime.year.toString();

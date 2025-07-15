@@ -89,6 +89,13 @@ class DonationDialogWidget extends StatelessWidget {
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(15),
                       ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide: const BorderSide(
+                          color:kDullPrimaryColor ,
+                          width: 2.0,
+                        ),
+                      ),
                     ),
                   ),
                 ),

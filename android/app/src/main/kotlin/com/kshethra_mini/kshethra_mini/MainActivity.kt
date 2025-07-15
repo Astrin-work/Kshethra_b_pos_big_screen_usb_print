@@ -1,255 +1,125 @@
 package com.kshethra_mini.kshethra_mini
 
-import android.content.ComponentName
-import android.content.Context
-import android.content.Intent
-import android.content.ServiceConnection
+import android.Manifest
+import android.bluetooth.BluetoothAdapter
+import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothSocket
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
-import android.os.IBinder
 import android.util.Log
+import androidx.core.app.ActivityCompat
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
-import io.flutter.plugin.common.MethodChannel
-import io.flutter.plugin.common.MethodChannel.MethodCallHandler
-import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.MethodCall
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import kotlinx.coroutines.*
-import net.posprinter.IDeviceConnection
-import net.posprinter.IPOSListener
-import net.posprinter.POSConnect
-import net.posprinter.POSConst
-import net.posprinter.POSPrinter
+import io.flutter.plugin.common.MethodChannel
+import java.io.IOException
+import java.io.OutputStream
+import java.util.*
 
 class MainActivity : FlutterActivity() {
-    private val CHANNEL = "plutus_channel"
-    private var curConnect: IDeviceConnection? = null
-    private var imageBytes: ByteArray? = null
-    private val PLUTUS_SMART_ACTION = "com.pinelabs.masterapp.SERVER"
-    private val PLUTUS_SMART_PACKAGE = "com.pinelabs.masterapp"
-    private var isServiceBound = false
-    private var mService: IBinder? = null
-    private var pendingResult: Result? = null
-
-
-    private val serviceConnection = object : ServiceConnection {
-        override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-            Log.d("MainActivity", "Service connected: $name")
-            mService = service
-            isServiceBound = true
-        }
-
-        override fun onServiceDisconnected(name: ComponentName?) {
-            Log.d("MainActivity", "Service disconnected: $name")
-            mService = null
-            isServiceBound = false
-        }
-    }
+    private val CHANNEL = "printer_channel"
+    private val REQUEST_BLUETOOTH_PERMISSIONS = 1001
+    private val MY_UUID: UUID = UUID.fromString("00001101-0000-1000-8000-00805F9B34FB")
+    private var bluetoothAdapter: BluetoothAdapter? = null
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
-
-        MethodChannel(
-            flutterEngine.dartExecutor.binaryMessenger,
-            CHANNEL
-        ).setMethodCallHandler { call, result ->
-            when (call.method) {
-                "bindToService" -> bindToService(result)
-                "startTransaction" -> {
-                    val transactionData = call.argument<String>("transactionData")
-                    if (transactionData != null && isServiceBound) {
-                        startTransaction(transactionData, result)
-
-                    }
-
-
-                else {
-                    result.error(
-                        "SERVICE_NOT_BOUND",
-                        "Service not bound or missing transaction data",
-                        null
-                    )
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
+            if (call.method == "printReceipt") {
+                if (!checkPermissions()) {
+                    requestPermissions()
+                    result.error("PERMISSION", "Bluetooth permissions not granted", null)
+                    return@setMethodCallHandler
                 }
-            }
-            "startPrintJob" -> {
-            val printData = call.argument<String>("printData")
-            if (printData != null && isServiceBound) {
-                startPrintJob(printData, result)
-            } else {
-                result.error("SERVICE_NOT_BOUND", "Service not bound or missing print data", null)
-            }
-        }
-            "printReceipt" -> {
-                print("--------------");
-                print(call.argument<ByteArray>("image"));
-            imageBytes = call.argument<ByteArray>("image")
 
-//         configPrinter (result)
-    }
-                else -> result.notImplemented()
-            }
-        }
-    }
-
-    private fun bindToService(result: MethodChannel.Result) {
-        try {
-            val intent = Intent().apply {
-                action = PLUTUS_SMART_ACTION
-                setPackage(PLUTUS_SMART_PACKAGE)
-            }
-            val success = bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE)
-            if (success) {
-                Log.d("MainActivity", "Service Bindind Success")
-                result.success("SUCCESS") // Return "SUCCESS" instead of "BINDING SUCCESS."
-            } else {
-                Log.e("MainActivity", "Failed to bind to service")
-                result.error("FAILED", "Failed to initiate service binding", null)
-            }
-        } catch (e: Exception) {
-            Log.e("MainActivity", "Exception binding to service", e)
-            result.error("BINDING_ERROR", e.localizedMessage, null)
-        }
-    }
-
-    private fun startTransaction(transactionData: String, result: Result) {
-        try {
-            Log.d("MainActivity", "Service bound, starting transaction: $transactionData")
-            pendingResult = result
-
-            val intent = Intent("com.pinelabs.masterapp.HYBRID_REQUEST").apply {
-                setPackage(PLUTUS_SMART_PACKAGE)
-                putExtra("REQUEST_DATA", transactionData)
-                putExtra("packageName", "com.kshethra_mini.kshethra_mini")
-            }
-            startActivityForResult(intent, 1001)
-        } catch (e: Exception) {
-            Log.e("MainActivity", "Error starting transaction", e)
-            result.error("TRANSACTION_ERROR", e.localizedMessage, null)
-        }
-    }
-
-    private fun startPrintJob(printData: String, result: Result) {
-        try {
-            Log.d("MainActivity", "Service bound, starting print job: $printData")
-            pendingResult = result
-
-            val intent = Intent("com.pinelabs.masterapp.HYBRID_REQUEST").apply {
-                setPackage(PLUTUS_SMART_PACKAGE)
-                putExtra("REQUEST_DATA", printData)
-                putExtra("packageName", "com.kshethra_mini.kshethra_mini")
-            }
-            startActivityForResult(intent, 1002)
-        } catch (e: Exception) {
-            Log.e("MainActivity", "Error starting print job", e)
-            result.error("PRINT_JOB_ERROR", e.localizedMessage, null)
-        }
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        when (requestCode) {
-            1001, 1002 -> handleResult(requestCode, resultCode, data)
-        }
-    }
-
-    private fun handleResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (pendingResult == null) {
-            Log.e("MainActivity", "No pending result to return data")
-            return
-        }
-
-        try {
-            if (resultCode == RESULT_OK && data != null) {
-                val responseData = data.getStringExtra("RESPONSE_DATA")
-                Log.d("MainActivity", "Response data: $responseData")
-                pendingResult?.success(responseData)
-            } else {
-                val errorMsg = if (requestCode == 1001) "Transaction failed" else "Print job failed"
-                pendingResult?.error("FAILED", errorMsg, null)
-            }
-        } catch (e: Exception) {
-            Log.e("MainActivity", "Error handling result", e)
-            pendingResult?.error("ERROR", e.localizedMessage, null)
-        } finally {
-            pendingResult = null
-        }
-    }
-
-private fun configPrinter(result: MethodChannel.Result) {
-    CoroutineScope(Dispatchers.IO).launch {
-        try {
-            POSConnect.init(this@MainActivity)
-
-            val entries = POSConnect.getUsbDevices(this@MainActivity)
-
-            if (entries.isNotEmpty()) {
-                try {
-                    printReceipt(entries[0], result)
-                } catch (e: Exception) {
-                    withContext(Dispatchers.Main) {
-                        result.error("PRINT_ERROR", "Error printing receipt: ${e.message}", null)
-                    }
+                val printResult = printReceipt(call)
+                if (printResult == null) {
+                    result.success("Printed successfully")
+                } else {
+                    result.error("PRINT_ERROR", printResult, null)
                 }
             } else {
-                withContext(Dispatchers.Main) {
-                    result.error("NO_PRINTER", "No USB printers found", null)
-                }
-            }
-        } catch (e: Exception) {
-            withContext(Dispatchers.Main) {
-                result.error("CONFIG_ERROR", "Error occurred: ${e.message}", null)
+                result.notImplemented()
             }
         }
     }
-}
 
-private fun printReceipt(pathName: String, result: MethodChannel.Result) {
-    curConnect?.close()
-    curConnect = POSConnect.createDevice(POSConnect.DEVICE_TYPE_USB)
-    curConnect!!.connect(pathName, connectListener(result))
-}
-
-private fun connectListener(result: MethodChannel.Result) = IPOSListener { code, _ ->
-    when (code) {
-        POSConnect.CONNECT_SUCCESS -> {
-            imageBytes?.let {
-                initImagePrint(it) // Pass the imageBytes to the print function
-                result.success("Print Success")
-            } ?: run {
-                result.error("IMAGE_ERROR", "No image data available", null)
-            }
-        }
-        POSConnect.CONNECT_FAIL,
-        POSConnect.CONNECT_INTERRUPT,
-        POSConnect.SEND_FAIL,
-        POSConnect.USB_DETACHED,
-        POSConnect.USB_ATTACHED -> {
-            result.error("CONNECT_FAIL", "Printer connection failed", null)
+    private fun checkPermissions(): Boolean {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(this, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+        } else {
+            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
         }
     }
-}
 
-private fun initImagePrint(imageBytes: ByteArray) {
-    val printer = POSPrinter(curConnect)
+    private fun requestPermissions() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(
+                    Manifest.permission.BLUETOOTH_CONNECT,
+                    Manifest.permission.BLUETOOTH_SCAN,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                ),
+                REQUEST_BLUETOOTH_PERMISSIONS
+            )
+        } else {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                REQUEST_BLUETOOTH_PERMISSIONS
+            )
+        }
+    }
 
-    // Convert the byte array to Bitmap
-    val bitmap = BitmapFactory.decodeByteArray(imageBytes, 0, imageBytes.size)
+    private fun printReceipt(call: MethodCall): String? {
+        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
+        if (bluetoothAdapter == null) return "Bluetooth not supported"
+        if (!bluetoothAdapter!!.isEnabled) bluetoothAdapter!!.enable()
 
-    printer.printBitmap(bitmap, POSConst.ALIGNMENT_CENTER, 600)
+        val pairedDevices: Set<BluetoothDevice> = bluetoothAdapter!!.bondedDevices
+        if (pairedDevices.isEmpty()) return "No paired Bluetooth devices found"
 
-    printer.cutHalfAndFeed(1) // Optional, depending on your printer's features
+        val device = pairedDevices.first() // You can add device selection logic
 
-}
+        return try {
+            val socket: BluetoothSocket = device.createRfcommSocketToServiceRecord(MY_UUID)
+            socket.connect()
 
+            val outputStream: OutputStream = socket.outputStream
+            val textToPrint = call.argument<String>("text") ?: "No text received"
 
+            printLongText(outputStream, textToPrint)
 
+            outputStream.flush()
+            outputStream.close()
+            socket.close()
+            null // success
+        } catch (e: IOException) {
+            Log.e("Printer", "Printing failed", e)
+            "Printing failed: ${e.message}"
+        }
+    }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        if (isServiceBound) {
-            unbindService(serviceConnection)
-            isServiceBound = false
+    private fun printLongText(outputStream: OutputStream, text: String) {
+        val chunkSize = 256
+        var i = 0
+        while (i < text.length) {
+            val end = (i + chunkSize).coerceAtMost(text.length)
+            val chunk = text.substring(i, end)
+            outputStream.write(chunk.toByteArray())
+            outputStream.flush()
+            i += chunkSize
+        }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == REQUEST_BLUETOOTH_PERMISSIONS && checkPermissions()) {
+            Log.d("Printer", "Bluetooth permissions granted")
         }
     }
 }

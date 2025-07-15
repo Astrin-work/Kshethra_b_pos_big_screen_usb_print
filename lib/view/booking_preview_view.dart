@@ -59,7 +59,7 @@ class PreViewWidget extends StatelessWidget {
 
     return Consumer<BookingViewmodel>(
       builder: (context, bookingViewmodel, child) {
-        final bookings = bookingViewmodel.vazhipaduBookingList;
+          final bookings = bookingViewmodel.vazhipaduBookingList;
         final fromLang = "en";
         return SizedBox(
           height: SizeConfig.screenHeight * 0.8,
