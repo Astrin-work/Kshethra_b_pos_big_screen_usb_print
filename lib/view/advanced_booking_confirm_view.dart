@@ -81,7 +81,7 @@ class AdvancedBookingConfirmView extends StatelessWidget {
         body: SingleChildScrollView(
           child: Column(
             children: [
-              AppBarWidget(title: selectedVazhipaadu.offerName ?? 'Vazhipadu'),
+              AppBarWidget(title: selectedVazhipaadu.offerName),
               ResponsiveLayout(
                 pinelabDevice: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
