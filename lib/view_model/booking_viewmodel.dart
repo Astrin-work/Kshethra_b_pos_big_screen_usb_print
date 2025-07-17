@@ -23,6 +23,7 @@ import '../model/api models/god_model.dart';
 import '../services/plutus_smart.dart';
 import '../utils/components/qr_code_component.dart';
 import '../utils/logger.dart';
+import '../utils/validation.dart';
 import '../view/advanced_booking_confirm_view.dart';
 import '../view/widgets/advanced_booking_page_widget/advanced_vazhipaddu_dialog_BoxWidget.dart';
 
@@ -47,6 +48,8 @@ class BookingViewmodel extends ChangeNotifier {
   bool _shouldResetPrasadam = false;
   Counter? selectedCounter;
   String selectedCategory = 'All';
+
+  String? starError;
   List<UserBookingModel> _vazhipaduBookingList = [];
   List<UserBookingModel> get vazhipaduBookingList => _vazhipaduBookingList;
   List<Godmodel> _gods = [];
@@ -622,48 +625,71 @@ class BookingViewmodel extends ChangeNotifier {
 
     final selectedDays = selectedWeeklyDays;
 
-    Navigator.push(
+    Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder:
-            (context) => AdvancedBookingPreviewView(
-              selectedRepMethod: selectedRepMethod,
-              selectedDays: selectedDays,
-              totalAmount: _amtOfBookingVazhipaddu,
-            ),
+        builder: (context) => AdvancedBookingPreviewView(
+          selectedRepMethod: selectedRepMethod,
+          selectedDays: selectedDays,
+          totalAmount:_amtOfBookingVazhipaddu,
+        ),
       ),
     );
 
     notifyListeners();
   }
 
-  void navigateBookingPreviewView(BuildContext context) {
-    if (_totalVazhipaduAmt != 0) {
-      if (_gods.isNotEmpty) {
-        selectedGods = _gods[0];
-      }
-      _selectedStar = "Star".tr();
-      bookingNameController.clear();
-      _isExistedDevotee = false;
 
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder:
-              (context) => BookingPreviewView(
-                page: 'booking',
-                selectedRepMethod: selectedRepMethod,
-              ),
-        ),
-      );
-    } else {
+  void navigateBookingPreviewView(BuildContext context) {
+    final name = bookingNameController.text.trim();
+    final isStarValid = _selectedStar != "Star".tr() && _selectedStar.isNotEmpty;
+    final isNameValid = Validation.nameValidation(name) == null;
+    final hasVazhipadu = _totalVazhipaduAmt != 0;
+
+    if (!hasVazhipadu) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBarWidget(
           msg: "Please select a Vazhippadu",
           color: kGrey,
         ).build(context),
       );
+      return;
     }
+
+    if (!isNameValid) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBarWidget(
+          msg: "Please enter a valid name",
+          color: kGrey,
+        ).build(context),
+      );
+      return;
+    }
+
+    if (!isStarValid) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBarWidget(
+          msg: "Please select a star",
+          color: kGrey,
+        ).build(context),
+      );
+      return;
+    }
+
+    if (_gods.isNotEmpty) {
+      selectedGods = _gods[0];
+    }
+    _isExistedDevotee = false;
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => BookingPreviewView(
+          page: 'booking',
+          selectedRepMethod: selectedRepMethod,
+        ),
+      ),
+    );
 
     notifyListeners();
   }
@@ -755,10 +781,10 @@ class BookingViewmodel extends ChangeNotifier {
   }
 
   void navigateAdvancedBookingConfirm(
-    BuildContext context,
-    Vazhipadus selectedVazhipaadu,
-    BookingViewmodel bookingViewmodel,
-  ) {
+      BuildContext context,
+      Vazhipadus selectedVazhipaadu,
+      BookingViewmodel bookingViewmodel,
+      ) {
     _selectedRepMethod = "Once";
     _selectedWeeklyDay = "Sun";
     bookingRepController.text = "1";
@@ -772,15 +798,16 @@ class BookingViewmodel extends ChangeNotifier {
       MaterialPageRoute(
         builder:
             (context) => AdvancedBookingConfirmView(
-              selectedVazhipaadu: selectedVazhipaadu,
-              totalAmount: _totalVazhipaduAmt,
-            ),
+          selectedVazhipaadu: selectedVazhipaadu,
+          totalAmount: _totalVazhipaduAmt,
+        ),
       ),
     );
 
     print("-----------amount------------");
     print(_totalVazhipaduAmt);
   }
+
 
   // void advBookingAddVazhipadu(
   //     Map<String, dynamic> selectedVazhipaadu,
@@ -862,6 +889,17 @@ class BookingViewmodel extends ChangeNotifier {
     selectedGods = value;
     notifyListeners();
   }
+
+
+  void clearBookingForm() {
+    bookingNameController.clear();
+    bookingPhnoController.clear();
+    _selectedStar = "Star";
+    selectedGods = null;
+    _isExistedDevotee = false;
+    notifyListeners();
+  }
+
 
   // void setGod(BookingModel value) {
   //   _selectedGod = value;
@@ -1078,16 +1116,15 @@ class BookingViewmodel extends ChangeNotifier {
   // }
 
   void setVazhipaduAdvBookingList(
-    Vazhipadus selectedVazhipaadu,
-    BuildContext context,
-  ) {
+      Vazhipadus selectedVazhipaadu,
+      BuildContext context,
+      ) {
     bool valid = advBookingKey.currentState?.validate() ?? false;
     if (!valid) return;
 
-    if (_selectedStar.isEmpty ||
-        _selectedStar == "Star" ||
-        _selectedDate.isEmpty ||
-        _selectedDate == "Date") {
+
+    if (_selectedStar.isEmpty || _selectedStar == "Star" ||
+        _selectedDate.isEmpty || _selectedDate == "Date") {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBarWidget(
           msg: "Please select both Star and Date",
@@ -1127,7 +1164,6 @@ class BookingViewmodel extends ChangeNotifier {
     navigateAdvBookingPreview(context);
     notifyListeners();
   }
-
   int calculateBookingTotalAmt() {
     if (_vazhipaduBookingList.isEmpty) return 0;
 
@@ -1215,56 +1251,10 @@ class BookingViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> handleCardPayment(int amount) async {
-    final payload = {
-      "Header": {
-        "ApplicationId": "f0d097be4df3441196d1e37cb2c98875",
-        "MethodId": "1001",
-        "UserId": "user1234",
-        "VersionNo": "1.0",
-      },
-      "Detail": {
-        "BillingRefNo": "TX98765432",
-        "PaymentAmount": amount,
-        "TransactionType": 4001,
-      },
-    };
-    final transactionDataJson = jsonEncode(payload);
-    Logger.info("Card Sending: $transactionDataJson");
 
-    try {
-      Logger.info("-----------Card payment initiated-----------");
-      final result = await PlutusSmart.startTransaction(transactionDataJson);
-      Logger.info("CARD TRANSACTION RESULT: $result");
-    } catch (e) {
-      Logger.error("Card Transaction failed: $e");
-    }
-  }
-
-  Future<void> handleUpiPayment(int amount) async {
-    final payload = {
-      "Header": {
-        "ApplicationId": "f0d097be4df3441196d1e37cb2c98875",
-        "MethodId": "1001",
-        "UserId": "user1234",
-        "VersionNo": "1.0",
-      },
-      "Detail": {
-        "BillingRefNo": "TX98765432",
-        "PaymentAmount": amount,
-        "TransactionType": 5120,
-      },
-    };
-    final transactionDataJson = jsonEncode(payload);
-    Logger.info("UPI Sending: $transactionDataJson");
-
-    try {
-      Logger.info("-----------UPI payment initiated-----------");
-      final result = await PlutusSmart.startTransaction(transactionDataJson);
-      Logger.info("UPI TRANSACTION RESULT: $result");
-    } catch (e) {
-      Logger.error("UPI Transaction failed: $e");
-    }
+  void validateStar() {
+    starError = Validation.validateStarSelection(selectedStar);
+    notifyListeners();
   }
 
   void navigateToQrScanner(BuildContext context) {

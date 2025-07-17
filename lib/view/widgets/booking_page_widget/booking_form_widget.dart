@@ -64,54 +64,68 @@ class BookingFormWidget extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            MaterialButton(
-              minWidth: SizeConfig.screenWidth,
-              height: 55,
-              shape: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              onPressed: () {
-                showDialog(
-                  context: context,
-                  builder: (context) => ResponsiveLayout(
-                    pinelabDevice: StarDialogBox(),
-                    mediumDevice: StarDialogBox(
-                      borderRadius: 25,
-                      mainAxisSpace: 30,
-                      crossAxisSpace: 45,
+            SizedBox(
+              height: 50,
+              width: SizeConfig.screenWidth,
+              child: MaterialButton(
+                shape: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(16),
+                ),
+                onPressed: () async {
+                  await showDialog(
+                    context: context,
+                    builder: (context) => ResponsiveLayout(
+                      pinelabDevice: StarDialogBox(),
+                      mediumDevice: StarDialogBox(
+                        borderRadius: 25,
+                        mainAxisSpace: 30,
+                        crossAxisSpace: 45,
+                      ),
+                      semiMediumDevice: StarDialogBox(
+                        borderRadius: 25,
+                        mainAxisSpace: 30,
+                        crossAxisSpace: 45,
+                        axisCount: 3,
+                      ),
+                      semiLargeDevice: StarDialogBox(
+                        borderRadius: 30,
+                        mainAxisSpace: 30,
+                        crossAxisSpace: 45,
+                        axisCount: 3,
+                      ),
+                      largeDevice: StarDialogBox(
+                        borderRadius: 35,
+                        mainAxisSpace: 30,
+                        crossAxisSpace: 45,
+                        axisCount: 4,
+                      ),
                     ),
-                    semiMediumDevice: StarDialogBox(
-                      borderRadius: 25,
-                      mainAxisSpace: 30,
-                      crossAxisSpace: 45,
-                      axisCount: 3,
-                    ),
-                    semiLargeDevice: StarDialogBox(
-                      borderRadius: 30,
-                      mainAxisSpace: 30,
-                      crossAxisSpace: 45,
-                      axisCount: 3,
-                    ),
-                    largeDevice: StarDialogBox(
-                      borderRadius: 35,
-                      mainAxisSpace: 30,
-                      crossAxisSpace: 45,
-                      axisCount: 4,
-                    ),
-                  ),
-                );
-              },
-              child: Text(
-                bookingViewmodel.selectedStar,
-                style: styles.blackRegular15,
+                  );
+                  bookingViewmodel.validateStar();
+                },
+                child: Text(
+                  bookingViewmodel.selectedStar,
+                  style: styles.blackRegular15,
+                ),
               ),
             ),
+            if (bookingViewmodel.starError != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 5.0),
+                child: Text(
+                  bookingViewmodel.starError!,
+                  style: const TextStyle(
+                    color: Colors.red,
+                    fontSize: 12,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
             const SizedBox(height: 15),
             GodWidget(),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-
                 Container(
                   width: SizeConfig.screenWidth * 0.253,
                   height: SizeConfig.screenHeight,

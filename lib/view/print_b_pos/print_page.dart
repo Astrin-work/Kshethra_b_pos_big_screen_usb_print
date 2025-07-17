@@ -43,7 +43,6 @@ class _PrintPageState extends State<PrintPage> {
     }
   }
 
-
   Future<bool> requestBluetoothPermissions() async {
     final statuses = await [
       Permission.bluetooth,

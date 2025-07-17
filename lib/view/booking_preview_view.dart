@@ -86,7 +86,7 @@ class PreViewWidget extends StatelessWidget {
                             text: booking.name.toString(),
                             // style: styles.blackSemi18,
                             textAlign: TextAlign.center,
-                            fromLang: fromLang,
+                            // fromLang: fromLang,
                           ),
                           const SizedBox(height: 4),
                           Text(

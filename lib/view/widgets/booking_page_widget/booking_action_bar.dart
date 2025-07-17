@@ -14,8 +14,8 @@ class BookingActionBar extends StatelessWidget {
   final double? width;
   final String title;
   final int noOfScreens;
-  final VoidCallback? onAddTap; // trigger when add icon is tapped
-  final VoidCallback? onAmountTap; // optional override for amount tap
+  final VoidCallback? onAddTap;
+  final VoidCallback? onAmountTap;
 
   const BookingActionBar({
     super.key,
@@ -39,7 +39,7 @@ class BookingActionBar extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            /// Amount Button
+
             InkWell(
               onTap: () {
                 if (onAmountTap != null) {
@@ -73,13 +73,55 @@ class BookingActionBar extends StatelessWidget {
                 ),
               ),
             ),
-
-            /// Add Button (formerly arrow)
+            // InkWell(
+            //   onTap: () {
+            //     if (onAddTap != null) {
+            //       onAddTap!();
+            //      bookingViewmodel.bookingAddNewDevottee,
+            //     } else {
+            //       Navigator.pop(context);
+            //     }
+            //   },
+            //   child: Container(
+            //     height: height ?? SizeConfig.screenWidth * 0.135,
+            //     width: width ?? SizeConfig.screenWidth * 0.15,
+            //     decoration: BoxDecoration(
+            //       borderRadius: BorderRadius.circular(12),
+            //       image: DecorationImage(
+            //         image: AssetImage(Assets.images.homeBackground.path),
+            //         fit: BoxFit.fill,
+            //       ),
+            //     ),
+            //     child: Padding(
+            //       padding: const EdgeInsets.all(3.0),
+            //       child: Container(
+            //         decoration: BoxDecoration(
+            //           borderRadius: BorderRadius.circular(12),
+            //           color: kWhite,
+            //         ),
+            //         child: const Icon(
+            //           Icons.add,
+            //           color: kDullPrimaryColor,
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            // ),
             InkWell(
               onTap: () {
                 if (onAddTap != null) {
-                  onAddTap!(); // trigger pop or form
+                  onAddTap!();
+
+                  // Get BookingViewmodel from Provider
+                  final bookingViewmodel = Provider.of<BookingViewmodel>(context, listen: false);
+
+                  // Clear the form fields
+                  bookingViewmodel.clearBookingForm();
                 } else {
+                  // If no custom action, pop and clear form
+                  final bookingViewmodel = Provider.of<BookingViewmodel>(context, listen: false);
+                  bookingViewmodel.clearBookingForm();
+
                   Navigator.pop(context);
                 }
               },

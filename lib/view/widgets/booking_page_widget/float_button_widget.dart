@@ -23,7 +23,7 @@ class FloatButtonWidget extends StatelessWidget {
     this.amount,
     required this.title,
     required this.noOfScreens,
-    this.payOnTap, // optional
+    this.payOnTap,
   });
 
   @override

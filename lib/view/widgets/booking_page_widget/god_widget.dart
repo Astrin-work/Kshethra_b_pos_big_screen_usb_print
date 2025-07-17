@@ -36,7 +36,7 @@ class _GodWidgetState extends State<GodWidget> {
         }
 
         return SizedBox(
-          height: SizeConfig.screenHeight*0.175,
+          height: SizeConfig.screenHeight*0.195,
           width: SizeConfig.screenWidth,
           child: ListView.builder(
             scrollDirection: Axis.horizontal,

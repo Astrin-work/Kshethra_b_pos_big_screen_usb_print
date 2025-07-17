@@ -43,19 +43,44 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
           ),
         ],
       ),
+      // floatingActionButton: FloatButtonWidget(
+      //   amount: total.toInt(),
+      //   height: 60,
+      //   title: 'Confirm',
+      //   noOfScreens: 1,
+      //   payOnTap: () {
+      //     if (_selectedMethod == 'UPI') {
+      //       bookingViewmodel.navigateToQrScanner(context);
+      //       // bookingViewmodel.handleUpiPayment(total.toInt());
+      //     } else {
+      //       ScaffoldMessenger.of(context).showSnackBar(
+      //         const SnackBar(content: Text('Unsupported payment method')),
+      //       );
+      //     }
+      //   },
+      // ),
       floatingActionButton: FloatButtonWidget(
         amount: total.toInt(),
         height: 60,
         title: 'Confirm',
         noOfScreens: 1,
         payOnTap: () {
-          if (_selectedMethod == 'UPI') {
-            bookingViewmodel.navigateToQrScanner(context);
-            // bookingViewmodel.handleUpiPayment(total.toInt());
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Unsupported payment method')),
-            );
+          switch (_selectedMethod) {
+            case 'UPI':
+              bookingViewmodel.navigateToQrScanner(context);
+              // bookingViewmodel.navigateToQrScanner(context);
+              break;
+            case 'Cash':
+              bookingViewmodel.navigateToCashPayment(context,total.toInt());
+              break;
+            // case 'Card':
+            //   bookingViewmodel.handleCardPayment(total.toInt());
+              // bookingViewmodel.navigateCardScreen(context);
+              break;
+            default:
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Unsupported payment method')),
+              );
           }
         },
       ),

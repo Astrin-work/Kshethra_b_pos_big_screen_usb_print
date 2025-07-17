@@ -12,6 +12,7 @@ import 'package:kshethra_mini/view_model/home_page_viewmodel.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
+import '../../../utils/logger.dart';
 
 class QrScannerComponentDonations extends StatelessWidget {
   final String amount;
@@ -33,130 +34,12 @@ class QrScannerComponentDonations extends StatelessWidget {
 
   static const MethodChannel _platform = MethodChannel('printer_channel');
 
-//   Future<void> _printReceipt(BuildContext context) async {
-//     String message;
-//
-//     final bookingViewmodel = Provider.of<BookingViewmodel>(context, listen: false);
-//     final bookings = bookingViewmodel.vazhipaduBookingList;
-//
-//     if (bookings.isEmpty) {
-//       _showSnackBar(context, "No vazhipadu data available.");
-//       return;
-//     }
-//
-//     final name = bookings.first.name ?? "-";
-//     final phone = bookings.first.phno ?? "-";
-//     final star = bookings.first.star ?? "-";
-//
-//     final temple = bookingViewmodel.templeList.isNotEmpty
-//         ? bookingViewmodel.templeList.first
-//         : null;
-//
-//     final templeName = temple?.templeName ?? "KSHEHTRA MINI TEMPLE";
-//     final templeAddress = temple?.address ?? "Main Street, Calicut";
-//     final templePhone = temple?.phoneNumber ?? "9876543210";
-//
-//     bool granted = await _requestBluetoothPermissions();
-//     if (!granted) {
-//       _showSnackBar(context, "Bluetooth permissions not granted.");
-//       return;
-//     }
-//
-//     const int lineWidth = 42;
-//     final buffer = StringBuffer();
-//     double total = 0.0;
-//
-//     // ESC/POS Control Codes
-// // ESC/POS Control Codes
-//     const esc = '\x1B';
-//     const boldOn = '$esc\x45\x01';
-//     const boldOff = '$esc\x45\x00';
-//     const doubleFontOn = '$esc\x21\x30';
-//     const doubleFontOff = '$esc\x21\x00';
-//     const alignCenter = '$esc\x61\x01';
-//     const alignLeft = '$esc\x61\x00';
-//
-// // Header
-//     buffer.write(alignCenter);
-//     buffer.write(boldOn); // smaller bold
-//     buffer.writeln(templeName.toUpperCase());
-//     buffer.write(boldOff);
-//     buffer.writeln(templeAddress);
-//     buffer.writeln(templePhone);
-//     buffer.writeln('-' * lineWidth);
-//
-//
-//     buffer.write(alignLeft);
-//     buffer.writeln("Receipt No: CB-B-2   Date: ${DateFormat('dd/MM/yyyy').format(DateTime.now())}");
-//     buffer.writeln("Name     : $name");
-//     buffer.writeln("Star     : $star");
-//     buffer.writeln("Phone    : $phone");
-//
-//     buffer.writeln('-' * lineWidth);
-//     buffer.writeln("No  Item Name            Qty    Amount");
-//     buffer.writeln('-' * lineWidth);
-//
-//     for (int i = 0; i < bookings.length; i++) {
-//       final item = bookings[i];
-//       final itemName = (item.vazhipadu ?? '').padRight(18).substring(0, 18);
-//       final qty = (item.count ?? '1').padLeft(3);
-//       final amt = double.tryParse(item.totalPrice ?? '0') ?? 0.0;
-//       total += amt;
-//
-//       buffer.writeln(
-//         "${(i + 1).toString().padLeft(2)}. $itemName $qty   ₹${amt.toStringAsFixed(2).padLeft(7)}",
-//       );
-//     }
-//
-//     buffer.writeln('-' * lineWidth);
-//     buffer.writeln("Total                       ₹${total.toStringAsFixed(2).padLeft(7)}");
-//     buffer.writeln('-' * lineWidth);
-//     buffer.writeln('');
-//     buffer.write(alignCenter);
-//     buffer.write(boldOn);
-//     buffer.writeln("Thank you! Visit again");
-//     buffer.write(boldOff);
-//     buffer.writeln('\n\n\n');
-//
-//     try {
-//       final result = await _platform.invokeMethod('printReceipt', {
-//         "text": buffer.toString(),
-//       });
-//       message = "Print result: $result";
-//     } on PlatformException catch (e) {
-//       message = "Print failed: ${e.message}";
-//     }
-//
-//     _showSnackBar(context, message);
-//   }
-  List<String> splitTempleName(String name, {int maxLineLength = 20}) {
-    final words = name.trim().split(RegExp(r'\s+'));
-    String line1 = '';
-    String line2 = '';
-
-    for (final word in words) {
-      if ((line1 + ' ' + word).trim().length <= maxLineLength) {
-        line1 = (line1 + ' ' + word).trim();
-      } else {
-        line2 = (line2 + ' ' + word).trim();
-      }
-    }
-
-    return [line1, line2];
-  }
-  Future<void> _printReceipt(BuildContext context) async {
-    String message;
-
+  Future<void> _printReceiptFromResponse(
+      BuildContext context, {
+        required String serialNumber,
+        required List<Map<String, dynamic>> receipts,
+      }) async {
     final bookingViewmodel = Provider.of<BookingViewmodel>(context, listen: false);
-    final bookings = bookingViewmodel.vazhipaduBookingList;
-
-    if (bookings.isEmpty) {
-      _showSnackBar(context, "No vazhipadu data available.");
-      return;
-    }
-
-    final name = bookings.first.name ?? "-";
-    final star = bookings.first.star ?? "-";
 
     final temple = bookingViewmodel.templeList.isNotEmpty
         ? bookingViewmodel.templeList.first
@@ -177,10 +60,6 @@ class QrScannerComponentDonations extends StatelessWidget {
     }
 
     const int lineWidth = 42;
-    final buffer = StringBuffer();
-    double total = 0.0;
-
-    // ESC/POS Control Codes
     const esc = '\x1B';
     const boldOn = '$esc\x45\x01';
     const boldOff = '$esc\x45\x00';
@@ -188,10 +67,12 @@ class QrScannerComponentDonations extends StatelessWidget {
     const alignLeft = '$esc\x61\x00';
     const doubleFontOn = '$esc\x21\x30';
     const doubleFontOff = '$esc\x21\x00';
+    const String leftIndent = '    ';
 
-    const String leftIndent = '    '; // 4 spaces for right shift
+    final buffer = StringBuffer();
+    double total = 0;
+    final Set<String> printedNames = {};
 
-    // Header
     buffer.write(alignCenter);
     buffer.write(boldOn);
     buffer.write(doubleFontOn);
@@ -204,33 +85,51 @@ class QrScannerComponentDonations extends StatelessWidget {
     buffer.writeln('-' * lineWidth);
 
     buffer.write(alignLeft);
-    buffer.writeln(leftIndent + "Receipt No: CB-B-2   Date: ${DateFormat('dd/MM/yyyy').format(DateTime.now())}");
-    buffer.writeln(leftIndent + "Name     : $name");
-    buffer.writeln(leftIndent + "Star     : $star");
-    buffer.writeln(leftIndent + '-' * (lineWidth - leftIndent.length));
+    buffer.writeln(
+      leftIndent +
+          "Receipt No: $serialNumber   Date: ${DateFormat('dd/MM/yyyy').format(DateTime.now())}",
+    );
 
-    // Table Header
+    buffer.writeln(leftIndent + '-' * (lineWidth - leftIndent.length));
     buffer.writeln(leftIndent + "No  Item Name            Qty    Amount");
     buffer.writeln(leftIndent + '-' * (lineWidth - leftIndent.length));
 
-    for (int i = 0; i < bookings.length; i++) {
-      final item = bookings[i];
-      final itemName = (item.vazhipadu ?? '').padRight(18).substring(0, 18);
-      final qty = (item.count ?? '1').padLeft(3);
-      final amt = double.tryParse(item.totalPrice ?? '0') ?? 0.0;
+    for (int i = 0; i < receipts.length; i++) {
+      final r = receipts[i];
+      final itemName = (r['offerName'] ?? 'Vazhipadu')
+          .toString()
+          .padRight(18)
+          .substring(0, 18);
+      final qty = r['quantity'].toString().padLeft(3);
+      final rate = (r['rate'] as int?) ?? 0;
+      final amt = rate * (r['quantity'] as int? ?? 1);
       total += amt;
 
+      final personName = (r['personName'] ?? "-").toString().trim();
+      final personStar = (r['personStar'] ?? "-").toString().trim();
+      final nameKey = "$personName-$personStar";
+
+      // Print vazhipadu row
       buffer.writeln(
-        leftIndent + "${(i + 1).toString().padLeft(2)}. $itemName $qty   ₹${amt.toStringAsFixed(2).padLeft(7)}",
+        leftIndent +
+            "${(i + 1).toString().padLeft(2)}. $itemName $qty   ₹${amt.toStringAsFixed(2).padLeft(7)}",
       );
+
+      // Print name/star only if not already printed
+      if (!printedNames.contains(nameKey)) {
+        buffer.writeln(leftIndent + "    $personName ($personStar)");
+        printedNames.add(nameKey);
+        buffer.writeln(''); // Small spacing
+      }
     }
 
     buffer.writeln(leftIndent + '-' * (lineWidth - leftIndent.length));
-    buffer.writeln(leftIndent + "Total                       ₹${total.toStringAsFixed(2).padLeft(7)}");
+    buffer.writeln(
+      leftIndent +
+          "Total                       ₹${total.toStringAsFixed(2).padLeft(7)}",
+    );
     buffer.writeln(leftIndent + '-' * (lineWidth - leftIndent.length));
     buffer.writeln('');
-
-    // Footer
     buffer.write(alignCenter);
     buffer.write(boldOn);
     buffer.writeln("Thank you! Visit again");
@@ -241,12 +140,125 @@ class QrScannerComponentDonations extends StatelessWidget {
       final result = await _platform.invokeMethod('printReceipt', {
         "text": buffer.toString(),
       });
-      message = "Print result: $result";
+      Logger.info("Print result: $result");
     } on PlatformException catch (e) {
-      message = "Print failed: ${e.message}";
+      Logger.error("Print failed: ${e.message}");
+      _showSnackBar(context, "Print failed: ${e.message}");
+    }
+  }
+
+
+  Future<void> _printReceiptAdvFromResponse(
+      BuildContext context, {
+        required String serialNumber,
+        required List<Map<String, dynamic>> receipts,
+      }) async {
+    final bookingViewmodel = Provider.of<BookingViewmodel>(context, listen: false);
+
+    final temple = bookingViewmodel.templeList.isNotEmpty
+        ? bookingViewmodel.templeList.first
+        : null;
+
+    final templeName = temple?.templeName ?? "KSHEHTRA MINI TEMPLE";
+    final templeAddress = temple?.address ?? "Main Street, Calicut";
+    final templePhone = temple?.phoneNumber ?? "9876543210";
+
+    final splitName = splitTempleName(templeName);
+    final line1 = splitName[0];
+    final line2 = splitName[1];
+
+    bool granted = await _requestBluetoothPermissions();
+    if (!granted) {
+      _showSnackBar(context, "Bluetooth permissions not granted.");
+      return;
     }
 
-    _showSnackBar(context, message);
+    const int lineWidth = 42;
+    const esc = '\x1B';
+    const boldOn = '$esc\x45\x01';
+    const boldOff = '$esc\x45\x00';
+    const alignCenter = '$esc\x61\x01';
+    const alignLeft = '$esc\x61\x00';
+    const doubleFontOn = '$esc\x21\x30';
+    const doubleFontOff = '$esc\x21\x00';
+    const String leftIndent = '    ';
+
+    final buffer = StringBuffer();
+    double total = 0;
+    final Set<String> printedNames = {};
+
+    buffer.write(alignCenter);
+    buffer.write(boldOn);
+    buffer.write(doubleFontOn);
+    buffer.writeln(line1.toUpperCase());
+    if (line2.isNotEmpty) buffer.writeln(line2.toUpperCase());
+    buffer.write(doubleFontOff);
+    buffer.write(boldOff);
+    buffer.writeln(templeAddress);
+    buffer.writeln(templePhone);
+    buffer.writeln('-' * lineWidth);
+
+    buffer.write(alignLeft);
+    buffer.writeln(
+      leftIndent +
+          "Receipt No: $serialNumber   Date: ${DateFormat('dd/MM/yyyy').format(DateTime.now())}",
+    );
+
+    buffer.writeln(leftIndent + '-' * (lineWidth - leftIndent.length));
+    buffer.writeln(leftIndent + "No  Item Name            Qty    Amount");
+    buffer.writeln(leftIndent + '-' * (lineWidth - leftIndent.length));
+
+    for (int i = 0; i < receipts.length; i++) {
+      final r = receipts[i];
+      final itemName = (r['offerName'] ?? 'Vazhipadu')
+          .toString()
+          .padRight(18)
+          .substring(0, 18);
+      final qty = r['quantity'].toString().padLeft(3);
+      final rate = (r['rate'] as int?) ?? 0;
+      final amt = rate * (r['quantity'] as int? ?? 1);
+      total += amt;
+
+      final personName = (r['personName'] ?? "-").toString().trim();
+      final personStar = (r['personStar'] ?? "-").toString().trim();
+      final nameKey = "$personName-$personStar";
+
+      // Print vazhipadu row
+      buffer.writeln(
+        leftIndent +
+            "${(i + 1).toString().padLeft(2)}. $itemName $qty   ₹${amt.toStringAsFixed(2).padLeft(7)}",
+      );
+
+      // Print name/star only if not already printed
+      if (!printedNames.contains(nameKey)) {
+        buffer.writeln(leftIndent + "    $personName ($personStar)");
+        printedNames.add(nameKey);
+        buffer.writeln(''); // Small spacing
+      }
+    }
+
+    buffer.writeln(leftIndent + '-' * (lineWidth - leftIndent.length));
+    buffer.writeln(
+      leftIndent +
+          "Total                       ₹${total.toStringAsFixed(2).padLeft(7)}",
+    );
+    buffer.writeln(leftIndent + '-' * (lineWidth - leftIndent.length));
+    buffer.writeln('');
+    buffer.write(alignCenter);
+    buffer.write(boldOn);
+    buffer.writeln("Thank you! Visit again");
+    buffer.write(boldOff);
+    buffer.writeln('\n\n\n');
+
+    try {
+      final result = await _platform.invokeMethod('printReceipt', {
+        "text": buffer.toString(),
+      });
+      Logger.info("Print result: $result");
+    } on PlatformException catch (e) {
+      Logger.error("Print failed: ${e.message}");
+      _showSnackBar(context, "Print failed: ${e.message}");
+    }
   }
 
 
@@ -254,27 +266,30 @@ class QrScannerComponentDonations extends StatelessWidget {
 
 
 
-  Future<bool> _requestBluetoothPermissions() async {
-    final bluetooth = await Permission.bluetooth.status;
-    final connect = await Permission.bluetoothConnect.status;
-    final scan = await Permission.bluetoothScan.status;
-    final location = await Permission.location.status;
+  List<String> splitTempleName(String name, {int maxLineLength = 20}) {
+    final words = name.trim().split(RegExp(r'\s+'));
+    String line1 = '';
+    String line2 = '';
 
-    if (bluetooth.isGranted &&
-        connect.isGranted &&
-        scan.isGranted &&
-        location.isGranted) {
-      return true;
+    for (final word in words) {
+      if ((line1 + ' ' + word).trim().length <= maxLineLength) {
+        line1 = (line1 + ' ' + word).trim();
+      } else {
+        line2 = (line2 + ' ' + word).trim();
+      }
     }
 
-    final result = await [
-      if (!bluetooth.isGranted) Permission.bluetooth,
-      if (!connect.isGranted) Permission.bluetoothConnect,
-      if (!scan.isGranted) Permission.bluetoothScan,
-      if (!location.isGranted) Permission.location,
-    ].request();
+    return [line1, line2];
+  }
 
-    return result.values.every((status) => status.isGranted);
+  Future<bool> _requestBluetoothPermissions() async {
+    final statuses = await [
+      Permission.bluetooth,
+      Permission.bluetoothConnect,
+      Permission.bluetoothScan,
+      Permission.location,
+    ].request();
+    return statuses.values.every((status) => status.isGranted);
   }
 
   void _showSnackBar(BuildContext context, String message) {
@@ -316,30 +331,107 @@ class QrScannerComponentDonations extends StatelessWidget {
                     data: homepageViewmodel.setQrAmount(amount),
                   ),
                   Text("demotemple@okicici", style: styles.blackRegular13),
-                  MaterialButton(
-                    color: Colors.blue,
-                    textColor: Colors.white,
-                    child: const Text("Print"),
-                    onPressed: () async {
-                      await _printReceipt(context);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => PaymentCompleteScreen(
-                            amount: amount,
-                            noOfScreen: noOfScreen,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      MaterialButton(
+                        color: Colors.blue,
+                        textColor: Colors.white,
+                        child: const Text("booking"),
+                        onPressed: () async {
+                          final viewmodel = context.read<BookingViewmodel>();
+                          final response = await viewmodel.submitVazhipadu();
+                          for (int index = 0; index < response.length; index++) {
+                            final group = response[index];
+                            final serial = group['serialNumber'];
+                            final receiptList = group['receipts'] as List<dynamic>;
+
+                            await _printReceiptFromResponse(
+                              context,
+                              serialNumber: serial.toString(),
+                              receipts: receiptList.cast<Map<String, dynamic>>(),
+                            );
+                          }
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => PaymentCompleteScreen(
+                                amount: amount,
+                                noOfScreen: noOfScreen,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      MaterialButton(
+                        color: Colors.redAccent,
+                        textColor: Colors.white,
+                        child: const Text("advance"),
+                        onPressed: () async {
+                          final viewmodel = context.read<BookingViewmodel>();
+                          final response = await viewmodel.submitVazhipadu();
+                          for (int index = 0; index < response.length; index++) {
+                            final group = response[index];
+                            final serial = group['serialNumber'];
+                            final receiptList = group['receipts'] as List<dynamic>;
+
+                            await _printReceiptFromResponse(
+                              context,
+                              serialNumber: serial.toString(),
+                              receipts: receiptList.cast<Map<String, dynamic>>(),
+                            );
+                          }
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => PaymentCompleteScreen(
+                                amount: amount,
+                                noOfScreen: noOfScreen,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      MaterialButton(
+                        color: Colors.orangeAccent,
+                        textColor: Colors.white,
+                        child: const Text("donation"),
+                        onPressed: () async {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => PaymentCompleteScreen(
+                                amount: amount,
+                                noOfScreen: noOfScreen,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                      MaterialButton(
+                        color: Colors.green,
+                        textColor: Colors.white,
+                        child: const Text("E-hundi"),
+                        onPressed: () async {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => PaymentCompleteScreen(
+                                amount: amount,
+                                noOfScreen: noOfScreen,
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  )
                 ],
               ),
-            ),
+            )
           ],
         ),
       ),
     );
   }
 }
-

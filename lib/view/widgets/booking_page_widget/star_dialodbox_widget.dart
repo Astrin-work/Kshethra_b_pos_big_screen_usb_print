@@ -33,7 +33,7 @@ class StarDialogBox extends StatelessWidget {
         builder:
             (context, bookingViewmodel, child) => SizedBox(
           height: SizeConfig.screenHeight * 0.7,
-          width: SizeConfig.screenWidth * 0.6,
+          width: SizeConfig.screenWidth * 0.7,
           child: Column(
             children: [
               Text("Select your Star".tr(), style: styles.blackRegular18),
@@ -51,7 +51,7 @@ class StarDialogBox extends StatelessWidget {
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     mainAxisSpacing: mainAxisSpace ?? 15,
                     crossAxisSpacing: crossAxisSpace ?? 10,
-                    childAspectRatio: 1.80,
+                    childAspectRatio: 1.85,
                     crossAxisCount: axisCount ?? 2,
                   ),
                   itemBuilder:
@@ -74,7 +74,7 @@ class StarDialogBox extends StatelessWidget {
                       ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(
-                          vertical: 3,
+                          vertical: 2.5,
                         ),
                         child: Container(
                           decoration: BoxDecoration(
