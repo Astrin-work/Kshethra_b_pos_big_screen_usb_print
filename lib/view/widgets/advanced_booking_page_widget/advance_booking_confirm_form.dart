@@ -313,11 +313,12 @@ class _AdvancedBookingConfirmFormState
                           child: CheckboxListTile(
                             activeColor:kDullPrimaryColor,
                             contentPadding: EdgeInsets.zero,
-                            title: Row(
-                              mainAxisSize: MainAxisSize.min,
+                            title: Wrap(
+                              spacing: 4,
+                              crossAxisAlignment: WrapCrossAlignment.center,
                               children: [
                                 BuildTextWidget(
-                                  text: "Need Prasadam? ",
+                                  text: 'need_prasadam'.tr(),
                                   fromLang: "en",
                                   size: 18,
                                   fontWeight: FontWeight.w500,
@@ -339,7 +340,6 @@ class _AdvancedBookingConfirmFormState
                                 ),
                               ],
                             ),
-
                             value: bookingViewmodel.prasadamSelected,
                             onChanged: (value) {
                               bookingViewmodel.togglePrasadam(value!);

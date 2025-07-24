@@ -92,5 +92,21 @@
   "Daily": "தினசரி",
   "Do you want to Logout ?": "நீங்கள் வெளியேற விரும்புகிறீர்களா?",
   "Logout": "வெளியேறு",
-  "Enter the amount to Donate": "நன்கு தொகையை உள்ளிடவும்"
+  "Enter the amount to Donate": "நன்கு தொகையை உள்ளிடவும்",
+  "Adavance": "அட்வான்ஸ்",
+  "E-Bhandaram": "இ-பண்டாரம்",
+  "All": "\nஅனைத்து",
+  "UPI": "யுபிஐ",
+  "Cash": "பணம்",
+  "give_amount_message": "தயவுசெய்து ₹{amount} எங்கள் பிரதிநிதிக்கு கொடுக்கவும்",
+  "confirm_after_receiving": "முழு தொகையை பெற்ற பிறகு உறுதிப்படுத்தவும்.",
+  "amount_with_currency": "தொகை ₹{amount}",
+  "scan_qr_to_pay": "பணம் செலுத்த இந்த QR குறியீட்டை ஸ்கேன் செய்யவும்",
+  "Cash_Payment": "ரொக்க பணப் பரிவர்த்தனை",
+  "need_prasadam": "பிரசாதம் வேண்டுமெனில் டிக் செய்யவும்",
+  "Vazhipadu": "வழிபாடு",
+  "vazhipadu_date": "வழிபாட்டு தேதி",
+  "God": "கடவன்",
+  "Postal Charges": "அஞ்சல் கட்டணம்",
+  "Amount": "தொகை"
 }

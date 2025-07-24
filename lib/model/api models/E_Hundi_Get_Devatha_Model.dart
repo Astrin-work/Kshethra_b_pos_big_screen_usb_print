@@ -10,28 +10,41 @@ String ehundigetdevathamodelToJson(List<Ehundigetdevathamodel> data) => json.enc
 
 class Ehundigetdevathamodel {
   int devathaId;
-  String devathaName;
   String devathaImage;
-  bool status;
+  int devathaNameId;
+  String devathaName;
 
   Ehundigetdevathamodel({
     required this.devathaId,
-    required this.devathaName,
     required this.devathaImage,
-    required this.status,
+    required this.devathaNameId,
+    required this.devathaName,
   });
+
+  Ehundigetdevathamodel copyWith({
+    int? devathaId,
+    String? devathaImage,
+    int? devathaNameId,
+    String? devathaName,
+  }) =>
+      Ehundigetdevathamodel(
+        devathaId: devathaId ?? this.devathaId,
+        devathaImage: devathaImage ?? this.devathaImage,
+        devathaNameId: devathaNameId ?? this.devathaNameId,
+        devathaName: devathaName ?? this.devathaName,
+      );
 
   factory Ehundigetdevathamodel.fromJson(Map<String, dynamic> json) => Ehundigetdevathamodel(
     devathaId: json["devathaId"],
-    devathaName: json["devathaName"],
     devathaImage: json["devathaImage"],
-    status: json["status"],
+    devathaNameId: json["devathaNameId"],
+    devathaName: json["devathaName"],
   );
 
   Map<String, dynamic> toJson() => {
     "devathaId": devathaId,
-    "devathaName": devathaName,
     "devathaImage": devathaImage,
-    "status": status,
+    "devathaNameId": devathaNameId,
+    "devathaName": devathaName,
   };
 }

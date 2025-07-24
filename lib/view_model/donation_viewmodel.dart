@@ -8,6 +8,7 @@ import 'package:kshethra_mini/view/widgets/donation_page_widgets/card_payment_do
 import 'package:kshethra_mini/view/widgets/donation_page_widgets/cash_payment_donation.dart';
 import 'package:kshethra_mini/view/widgets/donation_page_widgets/donation_dialogbox_widget.dart';
 import 'package:kshethra_mini/view/widgets/donation_page_widgets/payment_method_screen_donation.dart';
+import '../api_services/api_service.dart';
 import '../services/plutus_smart.dart';
 import '../utils/logger.dart';
 import '../view/widgets/donation_page_widgets/qr_scanner_component_donations.dart';
@@ -30,6 +31,7 @@ class DonationViewmodel extends ChangeNotifier {
     String name,
     String phone,
     String acctHeadName,
+      String address
   ) {
     bool valid = donationFormKey.currentState?.validate() ?? false;
     if (!valid) {
@@ -44,7 +46,7 @@ class DonationViewmodel extends ChangeNotifier {
           (context) => DonationDialogWidget(
             name: name,
             phone: phone,
-            acctHeadName: acctHeadName,
+            acctHeadName: acctHeadName, address: address,
           ),
     );
   }
@@ -126,6 +128,7 @@ class DonationViewmodel extends ChangeNotifier {
     String name,
     String phone,
     String acctHeadName,
+      String address,
   ) {
     Navigator.of(context).push(
       MaterialPageRoute(
@@ -135,13 +138,11 @@ class DonationViewmodel extends ChangeNotifier {
               name: name,
               phone: phone,
               acctHeadName: acctHeadName,
+              address:address
             ),
       ),
     );
   }
-
-
-
 
   void navigateToQrScanner(
     BuildContext context,
@@ -149,6 +150,7 @@ class DonationViewmodel extends ChangeNotifier {
     required String name,
     required String phone,
     required String acctHeadName,
+        required String address,
   }) {
     Navigator.push(
       context,
@@ -158,6 +160,7 @@ class DonationViewmodel extends ChangeNotifier {
               name: name,
               phone: phone,
               amount: amount,
+              address:address,
               acctHeadName: acctHeadName,
               noOfScreen: 1,
               title: "QR Scanner",
@@ -198,6 +201,7 @@ class DonationViewmodel extends ChangeNotifier {
       MaterialPageRoute(builder: (context) => CardPaymentDonationScreen()),
     );
   }
+
   Future<void> handleCardPayment(int amount) async {
     final payload = {
       "Header": {
@@ -210,7 +214,7 @@ class DonationViewmodel extends ChangeNotifier {
         "BillingRefNo": "TX98765432",
         "PaymentAmount": amount,
         "TransactionType": 4001,
-      }
+      },
     };
     final transactionDataJson = jsonEncode(payload);
     Logger.info("Card Sending: $transactionDataJson");
@@ -236,7 +240,7 @@ class DonationViewmodel extends ChangeNotifier {
         "BillingRefNo": "TX98765432",
         "PaymentAmount": amount,
         "TransactionType": 5120,
-      }
+      },
     };
     final transactionDataJson = jsonEncode(payload);
     Logger.info("UPI Sending: $transactionDataJson");
@@ -250,8 +254,52 @@ class DonationViewmodel extends ChangeNotifier {
     }
   }
 
+  Future<bool> postDonation(
+    BuildContext context,
+    String amount,
+    String name,
+    String phone,
+    String acctHeadName,
+  ) async {
+    print("---- Donation Details ----");
+    print("Name: $name");
+    print("Phone: $phone");
+    print("Amount: $amount");
+    print("Account Head Name: $acctHeadName");
 
+    final donationData = {
+      "name": name,
+      "phoneNumber": phone,
+      "acctHeadName": acctHeadName,
+      "amount": amount,
+      "address": '',
+      "paymentType": "Cash",
+      "transactionId": "txn_${DateTime.now().millisecondsSinceEpoch}",
+      "bankId": "CASH001",
+      "bankName": "Cash Payment",
+    };
 
+    try {
+      final response = await ApiService().postDonationDetails(donationData);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBarWidget(
+          msg: "Donation posted successfully!",
+          color: Colors.green,
+        ).build(context),
+      );
 
+      // Optional: trigger receipt print here
+      // await ReceiptForamteDonation.printDonationReceipt(...);
 
+      return true;
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBarWidget(
+          msg: "Failed to post donation: $e",
+          color: Colors.red,
+        ).build(context),
+      );
+      return false;
+    }
+  }
 }

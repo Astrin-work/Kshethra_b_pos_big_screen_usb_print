@@ -88,5 +88,13 @@
   "Select your Star": "Select your Star",
   "Vazhipaddu": "Vazhipadu",
   "Enter the Amount": "Enter the Amount",
-  "Enter your Name (optional)": "Enter your Name (optional)"
+  "Enter your Name (optional)": "Enter your Name (optional)",
+  "All": "All",
+  "give_amount_message": "Please give ₹{amount} to our representative",
+  "confirm_after_receiving": "Confirm after receiving the full amount.",
+  "amount_with_currency": "Amount ₹{amount}",
+  "scan_qr_to_pay": "Scan this QR Code to pay",
+  "Cash_Payment": "Cash Payment",
+  "need_prasadam": "If you want Prasadam, tick the checkbox"
+
 }

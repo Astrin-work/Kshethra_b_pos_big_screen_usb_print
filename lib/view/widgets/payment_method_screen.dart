@@ -59,30 +59,16 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreen> {
       //     }
       //   },
       // ),
+
       floatingActionButton: FloatButtonWidget(
         amount: total.toInt(),
         height: 60,
         title: 'Confirm',
         noOfScreens: 1,
         payOnTap: () {
-          switch (_selectedMethod) {
-            case 'UPI':
-              bookingViewmodel.navigateToQrScanner(context);
-              // bookingViewmodel.navigateToQrScanner(context);
-              break;
-            case 'Cash':
-              bookingViewmodel.navigateToCashPayment(context,total.toInt());
-              break;
-            // case 'Card':
-            //   bookingViewmodel.handleCardPayment(total.toInt());
-              // bookingViewmodel.navigateCardScreen(context);
-              break;
-            default:
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Unsupported payment method')),
-              );
-          }
+          bookingViewmodel.navigateToQrScannerBooking(context, total.toInt());
         },
+
       ),
     );
   }

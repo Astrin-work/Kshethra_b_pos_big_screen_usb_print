@@ -50,6 +50,7 @@ dependencies:
   dio: ^5.8.0+1
   intl: ^0.20.2
   jwt_decoder: ^2.0.1
+  device_info_plus: ^11.5.0
   #  razorpay_flutter: ^1.4.0
   #  flutter_razorpay_web: ^0.0.3
   #  razorpay_web: ^3.0.0

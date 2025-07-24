@@ -15,7 +15,7 @@ class EHundiView extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            AppBarWidget(title: "E- Bhandaram".tr()),
+            AppBarWidget(title: "E-Bhandaram".tr()),
             Padding(
               padding: const EdgeInsets.only(
                 left: 20.0,

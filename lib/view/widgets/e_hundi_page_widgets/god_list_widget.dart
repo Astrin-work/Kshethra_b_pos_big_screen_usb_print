@@ -60,7 +60,7 @@ class _GodListWidgetState extends State<GodListWidget> {
 
             return InkWell(
               onTap: () {
-                viewmodel.showEhundiDonationDialog(context);
+                viewmodel.showEhundiDonationDialog(context, selectedDevathaName: god.devathaName);
                 viewmodel.clearHundiAmount();
               },
               child: Column(

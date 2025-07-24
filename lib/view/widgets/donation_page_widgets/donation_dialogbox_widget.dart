@@ -11,12 +11,14 @@ class DonationDialogWidget extends StatelessWidget {
   final String name;
   final String phone;
   final String acctHeadName;
+  final String address;
 
   const DonationDialogWidget({
     super.key,
     required this.name,
     required this.phone,
     required this.acctHeadName,
+    required this.address,
   });
 
   // Future<bool> postDonation(BuildContext context) async {
@@ -125,6 +127,7 @@ class DonationDialogWidget extends StatelessWidget {
                             name,
                             phone,
                             acctHeadName,
+                            address,
                           );
                         }
                       },

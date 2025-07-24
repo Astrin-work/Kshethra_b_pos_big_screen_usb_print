@@ -1,9 +1,7 @@
-
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:kshethra_mini/utils/hive/constants.dart';
 import 'package:kshethra_mini/view/splash_screen_view.dart';
-import 'package:kshethra_mini/view/widgets/google_translator_service.dart';
 import 'package:kshethra_mini/view_model/auth_viewmodel.dart';
 import 'package:kshethra_mini/view_model/booking_viewmodel.dart';
 import 'package:kshethra_mini/view_model/donation_viewmodel.dart';
@@ -25,17 +23,9 @@ Future<void> main() async {
   await EasyLocalization.ensureInitialized();
   box = await Hive.openBox(Constants.BOX_NAME);
 
-  final translator = GoogleTranslatorService();
-  // try {
-  //   String result = await translator.translateText("Hello", "ta"); // to Tamil
-  //   print("Translated: $result");
-  // } catch (e) {
-  //   print("Translation error: $e");
-  // }
-
   runApp(
     EasyLocalization(
-      supportedLocales: [
+      supportedLocales: const [
         Locale('en'),
         Locale('ml'),
         Locale('hi'),
@@ -44,7 +34,8 @@ Future<void> main() async {
         Locale('kn'),
       ],
       path: 'assets/translations',
-      fallbackLocale: const Locale('en'),
+      fallbackLocale: Locale('en'),
+      startLocale: Locale('en'), // default to English
       child: MultiProvider(
         providers: [
           ChangeNotifierProvider(create: (_) => HomePageViewmodel()),
@@ -60,14 +51,13 @@ Future<void> main() async {
   );
 }
 
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home:SplashScreenView(),
+      home: const SplashScreenView(),
       debugShowCheckedModeBanner: false,
       locale: context.locale,
       supportedLocales: context.supportedLocales,
@@ -75,5 +65,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-

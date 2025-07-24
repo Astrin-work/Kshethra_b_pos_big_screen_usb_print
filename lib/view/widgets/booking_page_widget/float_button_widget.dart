@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -15,6 +14,7 @@ class FloatButtonWidget extends StatelessWidget {
   final String title;
   final int noOfScreens;
   final VoidCallback? payOnTap;
+  final String? type;
 
   const FloatButtonWidget({
     super.key,
@@ -24,6 +24,7 @@ class FloatButtonWidget extends StatelessWidget {
     required this.title,
     required this.noOfScreens,
     this.payOnTap,
+    this.type,
   });
 
   @override
@@ -32,78 +33,73 @@ class FloatButtonWidget extends StatelessWidget {
     SizeConfig().init(context);
 
     return Consumer<BookingViewmodel>(
-      builder:
-          (context, bookingViewmodel, child) => Padding(
-            padding: const EdgeInsets.only(left: 35.0, right: 5),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                InkWell(
-                  onTap: () {},
-                  child: Container(
-                    height: height ?? SizeConfig.screenWidth * 0.135,
-                    width: width ?? SizeConfig.screenWidth * 0.7,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      image: DecorationImage(
-                        image: AssetImage(Assets.images.homeBackground.path),
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-                    child: Center(
-                      child:
-                          amount != null
-                              ? Text("₹ $amount", style: styles.whiteRegular20)
-                              : Text(
-                                "₹ ${bookingViewmodel.totalVazhipaduAmt}",
-                                style: styles.whiteRegular20,
-                              ),
-                    ),
+      builder: (context, bookingViewmodel, child) => Padding(
+        padding: const EdgeInsets.only(left: 35.0, right: 5),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            InkWell(
+              onTap: () {},
+              child: Container(
+                height: height ?? SizeConfig.screenWidth * 0.135,
+                width: width ?? SizeConfig.screenWidth * 0.7,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  image: DecorationImage(
+                    image: AssetImage(Assets.images.homeBackground.path),
+                    fit: BoxFit.fill,
                   ),
                 ),
-
-
-                InkWell(
-                  onTap: () {
-                    if (payOnTap != null) {
-                      payOnTap!();
-                    } else {
-                      bookingViewmodel.bookingPreviewSecondFloatButton(
-                        context,
-                        amount,
-                        noOfScreens,
-                        title,
-                      );
-                    }
-                  },
-                  child: Container(
-                    height: height ?? SizeConfig.screenWidth * 0.135,
-                    width: width ?? SizeConfig.screenWidth * 0.15,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      image: DecorationImage(
-                        image: AssetImage(Assets.images.homeBackground.path),
-                        fit: BoxFit.fill,
-                      ),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(3.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(12),
-                          color: kWhite,
-                        ),
-                        child: Icon(
-                          Icons.arrow_forward,
-                          color: kDullPrimaryColor,
-                        ),
-                      ),
-                    ),
+                child: Center(
+                  child: Text(
+                    "₹ ${amount ?? bookingViewmodel.totalVazhipaduAmt}",
+                    style: styles.whiteRegular20,
                   ),
                 ),
-              ],
+              ),
             ),
-          ),
+            InkWell(
+              onTap: () {
+                if (payOnTap != null) {
+                  payOnTap!();
+                } else {
+                  bookingViewmodel.bookingPreviewSecondFloatButton(
+                    context,
+                    amount,
+                    noOfScreens,
+                    title,
+                    type ?? 'booking', // fallback to default type
+                  );
+                }
+              },
+              child: Container(
+                height: height ?? SizeConfig.screenWidth * 0.135,
+                width: width ?? SizeConfig.screenWidth * 0.15,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  image: DecorationImage(
+                    image: AssetImage(Assets.images.homeBackground.path),
+                    fit: BoxFit.fill,
+                  ),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(3.0),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      color: kWhite,
+                    ),
+                    child: Icon(
+                      Icons.arrow_forward,
+                      color: kDullPrimaryColor,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

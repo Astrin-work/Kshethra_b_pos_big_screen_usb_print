@@ -12,6 +12,7 @@ import 'package:kshethra_mini/view/home_view_users.dart';
 import 'package:kshethra_mini/view_model/auth_viewmodel.dart';
 import 'package:kshethra_mini/view_model/booking_viewmodel.dart';
 import 'package:provider/provider.dart';
+import '../api_services/api_service.dart';
 import '../model/api models/god_model.dart';
 
 class HomePageViewmodel extends ChangeNotifier {
@@ -46,8 +47,6 @@ class HomePageViewmodel extends ChangeNotifier {
   String _currentLanguage = "en";
   String get currentLanguage => _currentLanguage;
 
-
-
   void homePageNavigate(BuildContext context) {
     Navigator.push(
       context,
@@ -64,7 +63,6 @@ class HomePageViewmodel extends ChangeNotifier {
   }
 
   void updateLanguage(String languageCode) {
-
     _currentLanguage = languageCode;
     notifyListeners();
   }
@@ -85,11 +83,16 @@ class HomePageViewmodel extends ChangeNotifier {
   }
 
   void eHundiPageNavigate(BuildContext context) {
+    ApiService().getEbannaramDevetha();
+
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => EHundiView()),
+      MaterialPageRoute(
+        builder: (context) => EHundiView(),
+      ),
     );
   }
+
 
   void popFunction(BuildContext context) {
     Navigator.pop(context);
@@ -120,18 +123,19 @@ class HomePageViewmodel extends ChangeNotifier {
   void showLogoutDialog(BuildContext context) {
     showDialog(
       context: context,
-      builder: (context) => DialogBoxWidget(
-        title: 'Do you want to Logout?'.tr(),
-        fButton: 'Logout'.tr(),
-        fOnTap: () async {
-          final token = await AppHive().getToken();
-          print("Deleting token: $token");
-          await AppHive().clearHive();
-          AuthViewmodel().logout(context);
-        },
-        sButton: 'Cancel'.tr(),
-        sOnTap: () => Navigator.pop(context),
-      ),
+      builder:
+          (context) => DialogBoxWidget(
+            title: 'Do you want to Logout?'.tr(),
+            fButton: 'Logout'.tr(),
+            fOnTap: () async {
+              final token = await AppHive().getToken();
+              print("Deleting token: $token");
+              await AppHive().clearHive();
+              AuthViewmodel().logout(context);
+            },
+            sButton: 'Cancel'.tr(),
+            sOnTap: () => Navigator.pop(context),
+          ),
     );
   }
 

@@ -33,7 +33,7 @@ class AppBarWidget extends StatelessWidget {
           BackButtonComponent(),
           SizedBox(height: SizeConfig.screenHeight * 0.04),
           BuildTextWidget(
-            text: title,
+            text: title.tr(),
             style: TextStyle(fontSize: 30, fontWeight: FontWeight.w300,),
             fromLang: fromLang,
           ),

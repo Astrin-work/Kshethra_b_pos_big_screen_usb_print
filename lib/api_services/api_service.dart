@@ -1,9 +1,12 @@
 
+import 'dart:io';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:kshethra_mini/model/api%20models/get_temple_model.dart';
 import '../model/api models/E_Hundi_Get_Devatha_Model.dart';
 import '../model/api models/get_donation_model.dart';
+import '../model/api models/get_single_temple_model.dart';
 import '../model/api models/god_model.dart';
 import '../utils/hive/hive.dart';
 
@@ -31,34 +34,55 @@ class ApiService {
 
   Future<String> login(String username, String password) async {
     try {
+      final deviceInfo = DeviceInfoPlugin();
+      String deviceId = '';
+
+      if (Platform.isAndroid) {
+        final androidInfo = await deviceInfo.androidInfo;
+        deviceId = androidInfo.id ?? '';
+      } else if (Platform.isIOS) {
+        final iosInfo = await deviceInfo.iosInfo;
+        deviceId = iosInfo.identifierForVendor ?? '';
+      }
+
+      if (deviceId.isEmpty) {
+        throw Exception("Device ID is empty. Cannot proceed with login.");
+      }
+
+      print('Using DeviceId: $deviceId');
+
       final response = await _dio.post(
         '/Login',
         data: {
           'userUserName': username,
           'userPassword': password,
-          'deviceId': 'gujh',
+          'deviceId': deviceId,
         },
       );
 
       print('Response data: ${response.data}');
       final token = response.data['accessToken'];
       print('Token: $token');
+
       await AppHive().putToken(token: token);
       return token;
-
     } on DioException catch (e) {
       print('Error response: ${e.response}');
       print('Error data: ${e.response?.data}');
       print('Error message: ${e.message}');
       throw ('${e.response?.data ?? e.message}');
+    } catch (e) {
+      print('Unexpected error: $e');
+      rethrow;
     }
   }
 
   Future<List<Godmodel>> getDevatha() async {
     final token = await AppHive().getToken();
+    final lag = await appHive.getLanguage();
 
     final response = await _dio.get(
-      '/Devatha/DevathaVazhipadu',
+      '/Devatha/DevathaVazhipadu?lang=$lag',
       options: Options(headers: {'Authorization': 'Bearer $token'}),
     );
 
@@ -68,6 +92,7 @@ class ApiService {
     for (var item in dataList) {
       godList.add(Godmodel.fromJson(item));
     }
+
     return godList;
   }
 
@@ -76,12 +101,13 @@ class ApiService {
 
     try {
       final response = await _dio.post(
-        '/vazhipadu/vazhipadureceipt',
+        '/vazhipadu/vazhipadureceipt?lang=en',
         data: data,
         options: Options(
           headers: {'Authorization': 'Bearer $token'},
         ),
       );
+      print(response.headers);
       print(response.data);
       print(response.statusCode);
       print(response.statusMessage);
@@ -92,12 +118,12 @@ class ApiService {
     }
   }
 
-
   Future<List<Getdonationmodel>> getDonation() async {
     final token = await AppHive().getToken();
+    final lag = await appHive.getLanguage();
 
     final response = await _dio.get(
-      '/Donation',
+      '/Donation?lang=$lag',
       options: Options(headers: {'Authorization': 'Bearer $token'}),
     );
 
@@ -111,7 +137,7 @@ class ApiService {
   }
 
 
-  Future<void> postDonationDetails(Map<String, dynamic> donationData) async {
+  Future<Map<String, dynamic>> postDonationDetails(Map<String, dynamic> donationData) async {
     final token = await AppHive().getToken();
 
     try {
@@ -128,26 +154,27 @@ class ApiService {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        print("Donation posted successfully.");
-        print(response.data);
-        print(response.statusMessage);
+        print(" Donation posted successfully.");
+        print(" Response Data: ${response.data}");
+        return response.data as Map<String, dynamic>;
       } else if (response.statusCode == 409) {
-        throw Exception("Donation already exists.");
+        throw Exception("⚠️ Donation already exists.");
       } else {
-        throw Exception("Failed with status: ${response.statusCode}");
+        throw Exception("❌ Failed with status: ${response.statusCode}");
       }
     } catch (e) {
-      print("Error posting donation: $e");
+      print("❌ Error posting donation: $e");
       rethrow;
     }
   }
 
 
+
   Future<List<Ehundigetdevathamodel>> getEbannaramDevetha() async {
     final token = await AppHive().getToken();
-
+    final lag = await appHive.getLanguage();
     final response = await _dio.get(
-      '/Devatha',
+      '/Devatha?lang=$lag',
       options: Options(headers: {'Authorization': 'Bearer $token'}),
     );
 
@@ -161,7 +188,7 @@ class ApiService {
   }
 
 
-  Future<void> postEHundiDetails(Map<String, dynamic> eHundiData) async {
+  Future<Map<String, dynamic>?> postEHundiDetails(Map<String, dynamic> eHundiData) async {
     final token = await AppHive().getToken();
 
     try {
@@ -177,29 +204,31 @@ class ApiService {
         ),
       );
 
+      print("📤 Request Data: $eHundiData");
+      print("📥 Response Status: ${response.statusCode}");
+      print("📥 Response Body: ${response.data}");
+
       if (response.statusCode == 200 || response.statusCode == 201) {
-        print(" E-Hundi posted successfully.");
-        print(response.data);
-        print(response.realUri);
-        print(response.statusMessage);
-        print(response.statusCode);
+        print("✅ E-Hundi posted successfully.");
+        return response.data;
       } else if (response.statusCode == 409) {
-        throw Exception(" E-Hundi entry already exists.");
+        throw Exception("⚠️ E-Hundi entry already exists.");
       } else {
-        throw Exception(" Failed with status: ${response.statusCode}");
+        throw Exception("❌ Failed with status: ${response.statusCode}, body: ${response.data}");
       }
     } catch (e) {
-      print(" Error posting E-Hundi: $e");
-      rethrow;
+      print("🚨 Error posting E-Hundi: $e");
+      return null;
     }
   }
 
-  Future<dynamic> postAdvVazhipaduDetails(Map<String, dynamic> data) async {
+
+  Future<dynamic> postAdvVazhipaduDetails(Map<String, dynamic> data) async    {
     final token = await AppHive().getToken();
 
     try {
       final response = await _dio.post(
-        '/vazhipadu/AdvanceVazhipadureceipt',
+        '/vazhipadu/AdvanceVazhipadureceipt?lang=en',
         data: data,
         options: Options(
           headers: {'Authorization': 'Bearer $token'},
@@ -208,7 +237,7 @@ class ApiService {
       print(response.data);
       print(response.statusCode);
       print(response.statusMessage);
-      // Return the full JSON response
+      print("----------response from api-------------");
       return response.data;
     } catch (e) {
       print('API call error: $e');
@@ -244,6 +273,33 @@ class ApiService {
     }
   }
 
+  Future<GetSingleTemplemodel?> getSingleTempleName() async {
+    try {
+      final token = await AppHive().getToken();
+      final templeId = await getTempleIdFromToken();
+      final lag = await appHive.getLanguage();
+
+      if (templeId == null) return null;
+
+      final response = await _dio.post(
+        '/Translator/get-temple-names?templeId=$templeId&lang=$lag',
+        options: Options(headers: {'Authorization': 'Bearer $token'}),
+      );
+
+      final data = response.data;
+
+      if (data is Map<String, dynamic> && data.containsKey('templeName')) {
+        return GetSingleTemplemodel.fromJson(data);
+      }
+
+      return null;
+    } catch (e) {
+      print("Error: $e");
+      return null;
+    }
+  }
+
+
   Future<String?> getDatabaseNameFromToken() async {
     try {
       final token = await AppHive().getToken();
@@ -268,6 +324,64 @@ class ApiService {
     return null;
   }
 
+  Future<int?> getTempleIdFromToken() async {
+    try {
+      final token = await AppHive().getToken();
 
+      if (token.isNotEmpty) {
+        final decoded = JwtDecoder.decode(token);
+
+        print("🔓 Decoded Token: $decoded");
+
+        if (decoded.containsKey('TempleId')) {
+          final templeId = decoded['TempleId'];
+          print("🏛️ Temple ID from token: $templeId");
+
+          if (templeId is int) {
+            return templeId;
+          } else if (templeId is String) {
+            return int.tryParse(templeId);
+          } else {
+            print("⚠️ Temple ID is of unexpected type: ${templeId.runtimeType}");
+          }
+        } else {
+          print("❌ 'TempleId' key not found in token.");
+        }
+      } else {
+        print("❌ Token is empty or null.");
+      }
+    } catch (e) {
+      print("❌ Error decoding token for TempleId: $e");
+    }
+
+    return null;
+  }
+
+  Future<void> printDeviceDetails() async {
+    final DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+
+    try {
+      if (Platform.isAndroid) {
+        AndroidDeviceInfo android = await deviceInfo.androidInfo;
+        print('Device Info [Android]:');
+        print('Brand: ${android.brand}');
+        print('Device: ${android.device}');
+        print('Model: ${android.model}');
+        print('Android Version: ${android.version.release}');
+        print('Android SDK: ${android.version.sdkInt}');
+        print('serial number: ${android.serialNumber}');
+        print('id: ${android.id}');
+      } else if (Platform.isIOS) {
+        IosDeviceInfo ios = await deviceInfo.iosInfo;
+        print('Device Info [iOS]:');
+        print('Name: ${ios.name}');
+        print('Model: ${ios.model}');
+        print('System Version: ${ios.systemVersion}');
+        print('Identifier for Vendor: ${ios.identifierForVendor}');
+      }
+    } catch (e) {
+      print('Failed to get device info: $e');
+    }
+  }
 
 }

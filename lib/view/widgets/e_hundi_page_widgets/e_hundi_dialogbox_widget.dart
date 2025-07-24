@@ -14,7 +14,9 @@ import '../../../utils/components/responsive_layout.dart';
 import '../../../view_model/booking_viewmodel.dart';
 
 class EHundiDialogWidget extends StatefulWidget {
-  const EHundiDialogWidget({super.key});
+  final String selectedGod;
+  const EHundiDialogWidget({super.key,
+    required this.selectedGod});
 
   @override
   State<EHundiDialogWidget> createState() => _EHundiDialogWidgetState();
@@ -38,7 +40,6 @@ class _EHundiDialogWidgetState extends State<EHundiDialogWidget> {
   Widget build(BuildContext context) {
     AppStyles styles = AppStyles();
     SizeConfig().init(context);
-
     return AlertDialog(
       content: Consumer<EHundiViewmodel>(
         builder:
@@ -204,34 +205,33 @@ class _EHundiDialogWidgetState extends State<EHundiDialogWidget> {
                       children: [
                         MaterialButton(
                           onPressed: () {
-                            final eHundiViewModel =
-                                Provider.of<EHundiViewmodel>(
-                                  context,
-                                  listen: false,
-                                );
+                            final eHundiViewModel = Provider.of<EHundiViewmodel>(
+                              context,
+                              listen: false,
+                            );
 
-                            if (eHundiViewModel.eHundiKey.currentState
-                                    ?.validate() ??
-                                false) {
-                              final amount =
-                                  eHundiViewModel.eHundiAmountController.text
-                                      .trim();
+                            if (eHundiViewModel.eHundiKey.currentState?.validate() ?? false) {
+                              final amount = eHundiViewModel.eHundiAmountController.text.trim();
                               final name = nameController.text.trim();
                               final phone = phoneController.text.trim();
+
 
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder:
-                                      (context) => PaymentMethodScreenEHundi(
-                                        amount: amount,
-                                        name: name,
-                                        phone: phone,
-                                      ),
+                                  builder: (context) => PaymentMethodScreenEHundi(
+                                    amount: amount,
+                                    name: name,
+                                    phone: phone,
+                                    devathaName: widget.selectedGod,
+
+
+                                  ),
                                 ),
                               );
                             }
                           },
+
                           shape: RoundedRectangleBorder(
                             side: const BorderSide(
                               color: kDullPrimaryColor,

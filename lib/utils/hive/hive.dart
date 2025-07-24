@@ -64,7 +64,7 @@ class AppHive {
   }
 
   /// Name
-  Future<void> putName(String? name) async {
+  Future<void> putName(String? name, String languageCode) async {
     await hivePut(key: _NAME, value: name);
   }
 
@@ -94,7 +94,7 @@ class AppHive {
   }
 
   /// Language
-  Future<void> putLanguage(String? language) async {
+  Future<void> putLanguage(String? language, String languageCode) async {
     await hivePut(key: _LANGUAGE, value: language);
   }
 

@@ -19,10 +19,10 @@ class HomeWidget extends StatelessWidget {
     final fromLang = "en";
     return Consumer2<HomePageViewmodel, BookingViewmodel>(
       builder: (context, homepageViewmodel, bookingViewmodel, child) {
-        final templeList = bookingViewmodel.templeList;
-        final String welcomeText = templeList.isNotEmpty
-            ? " ${templeList.last.templeName}"
-            : "Welcome";
+        final templeList = bookingViewmodel.templeNameList;
+        final templeName = templeList.isNotEmpty
+            ? templeList.last
+            : 'Temple name not available';
         return SizedBox(
           width: SizeConfig.screenWidth,
           child: Column(
@@ -30,17 +30,17 @@ class HomeWidget extends StatelessWidget {
             children: [
               SizedBox(height: SizeConfig.screenHeight * 0.025),
               BuildTextWidget(
-                text: 'Welcome',
+                text: 'Welcome'.tr(),
                 color: Colors.black,
                 size: 28,
                 fontWeight: FontWeight.w500,
                 maxLines: 2,
                 textAlign: TextAlign.center,
                 style: AppStyles().blackRegular25,
-                fromLang: fromLang,
+                // fromLang: fromLang,
               ),
               BuildTextWidget(
-                text: welcomeText,
+                text: templeName,
                 color: Colors.black,
                 size: 28,
                 fontWeight: FontWeight.w500,
@@ -81,7 +81,7 @@ class HomeWidget extends StatelessWidget {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         BuildTextWidget(
-                          text: 'Adavance',
+                          text:'Adavance'.tr(),
                           color: Colors.black,
                           size: 16,
                           fontWeight: FontWeight.w500,
@@ -90,7 +90,7 @@ class HomeWidget extends StatelessWidget {
                           fromLang: fromLang,
                         ),
                         BuildTextWidget(
-                          text: 'Booking',
+                          text: 'Booking'.tr(),
                           color: Colors.black,
                           size: 16,
                           fontWeight: FontWeight.w500,
@@ -142,14 +142,14 @@ class HomeWidget extends StatelessWidget {
                       child: Image.asset(Assets.icons.eHundi.path),
                     ),
                     titleWidget: BuildTextWidget(
-                      text: 'E-Bhandaram',
+                      text: 'E-Bhandaram'.tr(),
                       color: Colors.black,
                       size: 16,
                       fontWeight: FontWeight.w500,
                       maxLines: 1,
                       textAlign: TextAlign.center,
                       style:AppStyles().blackSemi15 ,
-                      fromLang: fromLang,
+                      // fromLang: fromLang,
                     ),
                     onTap: () {
                       homepageViewmodel.eHundiPageNavigate(context);

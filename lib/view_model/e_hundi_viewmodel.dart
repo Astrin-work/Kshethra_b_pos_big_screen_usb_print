@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:kshethra_mini/model/api%20models/E_Hundi_Get_Devatha_Model.dart';
 import 'package:kshethra_mini/view/widgets/e_hundi_page_widgets/e_hundi_dialogbox_widget.dart';
 import 'package:kshethra_mini/view/widgets/e_hundi_page_widgets/qr_scanner_component_e_hundi.dart';
+import 'package:provider/provider.dart';
 import '../api_services/api_service.dart';
-
+import '../utils/components/snack_bar_widget.dart';
+import 'booking_viewmodel.dart';
 
 class EHundiViewmodel extends ChangeNotifier {
   TextEditingController eHundiAmountController = TextEditingController();
@@ -18,7 +20,6 @@ class EHundiViewmodel extends ChangeNotifier {
   String? get selectedStar => _selectedStar;
   List<Ehundigetdevathamodel> get gods => _gods;
   bool get isLoading => _isLoading;
-
 
   Future<void> fetchEhundiGods() async {
     _isLoading = true;
@@ -56,8 +57,11 @@ class EHundiViewmodel extends ChangeNotifier {
     return value;
   }
 
-  void showEhundiDonationDialog(BuildContext context) {
-    showDialog(context: context, builder: (context) => EHundiDialogWidget());
+  void showEhundiDonationDialog(
+    BuildContext context, {
+    required String selectedDevathaName,
+  }) {
+    showDialog(context: context, builder: (context) => EHundiDialogWidget(selectedGod:selectedDevathaName));
   }
 
   // void navigateScannerPage(BuildContext context, String amount, {required String name, required String phone}) {
@@ -86,21 +90,76 @@ class EHundiViewmodel extends ChangeNotifier {
   //     ),
   //   );
   // }
-  void navigateToQrScanner(BuildContext context, String amount, {required String name, required String phone}) {
+  void navigateToQrScanner(
+    BuildContext context,
+    String amount, {
+    required String name,
+    required String phone,
+        required   String? DevathaName,
+  }) {
     Navigator.push(
       context,
       MaterialPageRoute(
         builder:
             (context) => QrScannerComponentEHundi(
-          name: name,
-          phone: phone,
-          amount: amount,
-          noOfScreen: 1,
-          title: "QR Scanner",
-        ),
+              name: name,
+              phone: phone,
+              amount: amount,
+              devathaName:DevathaName.toString(),
+              noOfScreen: 1,
+              title: "QR Scanner",
+            ),
       ),
     );
   }
+
+  Future<bool> postEbannaramiDonation(
+    BuildContext context,
+    int index,
+    String amount,
+    String, {
+    required String name,
+    required String phone,
+  }) async {
+    final data = {
+      "devathaName": gods[index].devathaName ?? '',
+      "amount": int.tryParse(amount) ?? 0,
+      "personName": name,
+      "phoneNumber": phone,
+      "personStar": selectedStar ?? '',
+      "paymentType": "cash",
+      "transactionId": "asdf",
+      "bankId": "asd",
+      "bankName": "asdf",
+    };
+
+    try {
+      await ApiService().postEHundiDetails(data);
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBarWidget(
+            msg: "Donation posted successfully!",
+            color: Colors.green,
+          ).build(context),
+        );
+      }
+      return true;
+    } catch (e) {
+      final errorMessage = e.toString();
+      debugPrint("❌ Error posting E-Hundi: $errorMessage");
+
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBarWidget(
+            msg: "Failed to post donation: $errorMessage",
+            color: Colors.red,
+          ).build(context),
+        );
+      }
+      return false;
+    }
+  }
+
   void setStar(String star, BuildContext context) {
     _selectedStar = star.tr();
     popFunction(context);
@@ -111,18 +170,4 @@ class EHundiViewmodel extends ChangeNotifier {
     _selectedStar = null;
     notifyListeners();
   }
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-

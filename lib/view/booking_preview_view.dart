@@ -29,6 +29,7 @@ class BookingPreviewView extends StatelessWidget {
           title: 'Booking',
           noOfScreens: 4,
           height: 65,
+          type: 'booking',
         ),
         largeDevice: FloatButtonWidget(
           title: 'Booking',

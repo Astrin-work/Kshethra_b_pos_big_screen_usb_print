@@ -2,6 +2,7 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:kshethra_mini/view/widgets/donation_page_widgets/cash_payment_donation.dart';
 import 'package:kshethra_mini/view_model/donation_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:kshethra_mini/utils/components/choose_payment_method_widget.dart';
@@ -13,13 +14,13 @@ class PaymentMethodScreenDonation extends StatefulWidget {
   final String? name;
   final String? phone;
   final String? acctHeadName;
-
+  final String? address;
   const PaymentMethodScreenDonation({
     super.key,
     this.amount,
     this.name,
-    this.phone,
-    this.acctHeadName,
+    this.phone, this.acctHeadName, this.address,
+
   });
 
   @override
@@ -125,40 +126,51 @@ class _PaymentMethodScreenDonationState
         height: 60,
         title: 'Confirm',
         noOfScreens: 1,
-        payOnTap: () {
-          final donationViewmodel = Provider.of<DonationViewmodel>(context, listen: false);
+          payOnTap: () {
+            final donationViewmodel = Provider.of<DonationViewmodel>(context, listen: false);
 
-          final amountStr = widget.amount;
-          final name = widget.name ?? '';
-          final phone = widget.phone ?? '';
-          final acctHeadName = widget.acctHeadName ?? '';
+            final amountStr = widget.amount;
+            final name = widget.name ?? '';
+            final phone = widget.phone ?? '';
+            final acctHeadName = widget.acctHeadName ?? '';
+            final address = widget.address ?? '';
 
-          if (amountStr == null || int.tryParse(amountStr) == null) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Invalid amount')),
-            );
-            return;
+            if (amountStr == null || int.tryParse(amountStr) == null) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Invalid amount')),
+              );
+              return;
+            }
+
+            if (_selectedMethod == 'UPI') {
+              donationViewmodel.navigateToQrScanner(
+                context,
+                amountStr,
+                name: name,
+                phone: phone,
+                acctHeadName: acctHeadName, address:address,
+              );
+              print("UPI Payment Clicked");
+            } else if (_selectedMethod == 'Cash') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CashPaymentDonation(
+                    amount: amountStr,
+                    name: name,
+                    phone: phone,
+                    acctHeadName: acctHeadName,
+                  ),
+                ),
+              );
+              print("Cash Payment Clicked");
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Unsupported payment method')),
+              );
+            }
           }
 
-          if (_selectedMethod == 'UPI') {
-            donationViewmodel.navigateToQrScanner(
-              context,
-              amountStr,
-              name: name,
-              phone: phone,
-              acctHeadName: acctHeadName,
-            );
-
-            // Optional: print receipt after scan
-            // _printReceipt();
-
-            print("------clicked--------");
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Unsupported payment method')),
-            );
-          }
-        },
 
       ),
     );

@@ -42,6 +42,7 @@
   "durga": "ദുര്‍ഗ്ഗ",
   "abhishekam": "അഭിഷേകം",
   "archana": "അർച്ചന",
+  "Adavance":"മുൻകൂർ ",
   "rudrabhishekam": "രുദ്രാഭിഷേകം",
   "neyvilakku": "നെയ് വിളക്ക്",
   "annadanam": "അന്നദാനം",
@@ -119,7 +120,24 @@
   "Count": "എണ്ണം",
   "amt": "തുക",
   "Select Payment Method": "പേയ്\u200Cമെൻ്റ് രീതി തിരഞ്ഞെടുക്കുക",
-  "'Please give ₹$amount to our representative": "ദയവായി ഞങ്ങളുടെ പ്രതിനിധിക്ക് നൽകുക."
-
-
+  "'Please give ₹$amount to our representative": "ദയവായി ഞങ്ങളുടെ പ്രതിനിധിക്ക് നൽകുക.",
+  "All": "എല്ലാം",
+  "UPI": "യുപിഐ",
+  "Cash": "പണം",
+  "give_amount_message": "ദയവായി ₹{amount} ഞങ്ങളുടെ പ്രതിനിധിക്കു നൽകുക",
+  "amount_with_currency": "തുക ₹{amount}",
+  "scan_qr_to_pay": "പണമടയ്ക്കാൻ ഈ QR കോഡ് സ്‌കാൻ ചെയ്യുക",
+  "Cash_Payment": "പണമായുള്ള പേയ്മെന്റ്",
+  "need_prasadam": "പ്രസാദം വേണമെങ്കിൽ ✔️ചെയ്യുക",
+  "Vazhipadu": "വഴിപാട്",
+  "vazhipadu_date": "വഴിപാട് തീയതി",
+  "Devatha": "ദേവത",
+  "Repeat": "ആവർത്തനം",
+  "Once": "ഒരിക്കൽ",
+  "Times": "വട്ടം",
+  "Postal Charges": "തപാൽ ചെലവ്",
+  "confirm_after_receiving": "മുഴുവൻ തുകയും ലഭിച്ചശേഷം സ്ഥിരീകരിക്കുക."
 }
+
+
+

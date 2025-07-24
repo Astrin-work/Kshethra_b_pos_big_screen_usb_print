@@ -16,6 +16,7 @@ class BookingActionBar extends StatelessWidget {
   final int noOfScreens;
   final VoidCallback? onAddTap;
   final VoidCallback? onAmountTap;
+  final String? type;
 
   const BookingActionBar({
     super.key,
@@ -26,6 +27,7 @@ class BookingActionBar extends StatelessWidget {
     required this.noOfScreens,
     this.onAddTap,
     this.onAmountTap,
+    this.type,
   });
 
   @override
@@ -39,7 +41,6 @@ class BookingActionBar extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-
             InkWell(
               onTap: () {
                 if (onAmountTap != null) {
@@ -50,6 +51,7 @@ class BookingActionBar extends StatelessWidget {
                     amount,
                     noOfScreens,
                     title,
+                    type?.trim().toLowerCase(),
                   );
                 }
               },
@@ -73,55 +75,17 @@ class BookingActionBar extends StatelessWidget {
                 ),
               ),
             ),
-            // InkWell(
-            //   onTap: () {
-            //     if (onAddTap != null) {
-            //       onAddTap!();
-            //      bookingViewmodel.bookingAddNewDevottee,
-            //     } else {
-            //       Navigator.pop(context);
-            //     }
-            //   },
-            //   child: Container(
-            //     height: height ?? SizeConfig.screenWidth * 0.135,
-            //     width: width ?? SizeConfig.screenWidth * 0.15,
-            //     decoration: BoxDecoration(
-            //       borderRadius: BorderRadius.circular(12),
-            //       image: DecorationImage(
-            //         image: AssetImage(Assets.images.homeBackground.path),
-            //         fit: BoxFit.fill,
-            //       ),
-            //     ),
-            //     child: Padding(
-            //       padding: const EdgeInsets.all(3.0),
-            //       child: Container(
-            //         decoration: BoxDecoration(
-            //           borderRadius: BorderRadius.circular(12),
-            //           color: kWhite,
-            //         ),
-            //         child: const Icon(
-            //           Icons.add,
-            //           color: kDullPrimaryColor,
-            //         ),
-            //       ),
-            //     ),
-            //   ),
-            // ),
             InkWell(
               onTap: () {
                 if (onAddTap != null) {
                   onAddTap!();
-
-                  // Get BookingViewmodel from Provider
-                  final bookingViewmodel = Provider.of<BookingViewmodel>(context, listen: false);
-
-                  // Clear the form fields
+                  final bookingViewmodel =
+                  Provider.of<BookingViewmodel>(context, listen: false);
                   bookingViewmodel.clearBookingForm();
                 } else {
-                  // If no custom action, pop and clear form
-                  final bookingViewmodel = Provider.of<BookingViewmodel>(context, listen: false);
+                  final bookingViewmodel =
+                  Provider.of<BookingViewmodel>(context, listen: false);
                   bookingViewmodel.clearBookingForm();
-
                   Navigator.pop(context);
                 }
               },

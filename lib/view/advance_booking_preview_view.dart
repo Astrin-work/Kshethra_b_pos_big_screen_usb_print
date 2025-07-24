@@ -11,7 +11,7 @@ import '../utils/components/responsive_layout.dart';
 import '../utils/components/size_config.dart';
 
 
-class AdvancedBookingPreviewView extends StatelessWidget  {
+class AdvancedBookingPreviewView extends StatelessWidget {
   final String selectedRepMethod;
   final List<String> selectedDays;
   final int totalAmount;
@@ -25,35 +25,35 @@ class AdvancedBookingPreviewView extends StatelessWidget  {
 
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
       floatingActionButton: Consumer<BookingViewmodel>(
         builder: (context, bookingViewmodel, child) {
-          final total = bookingViewmodel.combinedTotalAmount+bookingViewmodel.postalAmount;
+          final total = bookingViewmodel.combinedTotalAmount + bookingViewmodel.postalAmount;
 
           return ResponsiveLayout(
             pinelabDevice: BookingActionBar(
               amount: total.toInt(),
               title: 'Advanced Booking',
               noOfScreens: 4,
+              type: 'advance',
             ),
             mediumDevice: FloatButtonWidget(
               height: 65,
               amount: total.toInt(),
               title: 'Advanced Booking',
               noOfScreens: 4,
+              type: 'advance',
             ),
             largeDevice: FloatButtonWidget(
               height: 75,
               amount: total.toInt(),
               title: 'Advanced Booking',
               noOfScreens: 4,
+              type: 'advance',
             ),
           );
         },
       ),
-
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -71,6 +71,7 @@ class AdvancedBookingPreviewView extends StatelessWidget  {
     );
   }
 }
+
 
 class AdvPreViewWidget extends StatelessWidget {
   final String page;
@@ -134,7 +135,7 @@ class AdvPreViewWidget extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               BuildTextWidget(
-                                text: "Vazhipadu : ${booking.vazhipadu?.tr() ?? ''}",
+                                text: "${"Vazhipadu".tr()} : ${booking.vazhipadu ?? ''}",
                                 style: styles.blackRegular13,
                                 fromLang: fromLang,
                               ),
@@ -153,7 +154,7 @@ class AdvPreViewWidget extends StatelessWidget {
                             fromLang: fromLang,
                           ),
                           BuildTextWidget(
-                            text: "Name : ${booking.name ?? ''}",
+                            text: "${"Name".tr()} : ${booking.name ?? ''}",
                             style: styles.blackRegular13,
                             fromLang: fromLang,
                           ),
@@ -161,36 +162,33 @@ class AdvPreViewWidget extends StatelessWidget {
                           const SizedBox(height: 10),
 
                           BuildTextWidget(
-                            text: "Star : ${booking.star ?? ''}",
+                            text: "${"Star".tr()} : ${booking.star ?? ''}",
                             style: styles.blackRegular13,
                             fromLang: fromLang,
                           ),
                           const SizedBox(height: 10),
                           BuildTextWidget(
-                            text:
-                            "Vazhipadu Date : ${booking.date ?? DateFormat('dd-MM-yyyy').format(DateTime.now())}",
+                            text: "${'vazhipadu_date'.tr()} : ${booking.date ?? DateFormat('dd-MM-yyyy').format(DateTime.now())}",
                             style: styles.blackRegular13,
                             fromLang: fromLang,
                           ),
-
                           const SizedBox(height: 6),
-
                           BuildTextWidget(
-                            text: "God : ${booking.godname ?? ''}",
+                            text: "${'Devatha'.tr()} : ${booking.godname ?? ''}",
                             style: styles.blackRegular13,
                             fromLang: fromLang,
                           ),
                           const SizedBox(height: 6),
                           BuildTextWidget(
                             text: booking.repMethode == "Once"
-                                ? "Repeat : Once"
-                                : "Repeat : ${booking.repMethode} ${booking.day} (${bookingViewmodel.repeatDays} times)",
+                                ? '${'Repeat'.tr()} : ${'Once'.tr()}'
+                                : '${'Repeat'.tr()} : ${booking.repMethode} ${booking.day} (${bookingViewmodel.repeatDays} ${'TIMES'.tr()})',
                             style: styles.blackRegular13,
                             fromLang: fromLang,
                           ),
                           const SizedBox(height: 6),
                           BuildTextWidget(
-                            text: "Postal Charges : ₹${bookingViewmodel.postalAmount}",
+                            text: "${"Postal Charges".tr()} : ₹${bookingViewmodel.postalAmount}",
                             style: styles.blackRegular13,
                             fromLang: fromLang,
                           ),
@@ -200,7 +198,7 @@ class AdvPreViewWidget extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               BuildTextWidget(
-                                text: "Amount : ₹ $total",
+                                text: "${'Amount'.tr()} : ₹ $total",
                                 style: styles.blackRegular13,
                                 fromLang: fromLang,
                               ),
