@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kshethra_mini/model/api%20models/god_model.dart';
 import 'package:kshethra_mini/utils/app_styles.dart';
-import 'package:kshethra_mini/utils/components/snack_bar_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:kshethra_mini/utils/app_color.dart';
 import 'package:kshethra_mini/utils/asset/assets.gen.dart';
@@ -73,7 +72,7 @@ class VazhipadduWidget extends StatelessWidget {
 
               return InkWell(
                 onTap: () {
-                  if (item.limit != null && item.limit >= 1) {
+                  if (item.limit >= 1) {
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
                         content: Text(
