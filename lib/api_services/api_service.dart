@@ -92,7 +92,8 @@ class ApiService {
     for (var item in dataList) {
       godList.add(Godmodel.fromJson(item));
     }
-
+    print('--------api respons-------');
+    print(response.data);
     return godList;
   }
 
@@ -108,6 +109,7 @@ class ApiService {
         ),
       );
       print(response.headers);
+      print('-------response data------');
       print(response.data);
       print(response.statusCode);
       print(response.statusMessage);
@@ -212,9 +214,9 @@ class ApiService {
         print("✅ E-Hundi posted successfully.");
         return response.data;
       } else if (response.statusCode == 409) {
-        throw Exception("⚠️ E-Hundi entry already exists.");
+        throw Exception(" E-Hundi entry already exists.");
       } else {
-        throw Exception("❌ Failed with status: ${response.statusCode}, body: ${response.data}");
+        throw Exception(" Failed with status: ${response.statusCode}, body: ${response.data}");
       }
     } catch (e) {
       print("🚨 Error posting E-Hundi: $e");

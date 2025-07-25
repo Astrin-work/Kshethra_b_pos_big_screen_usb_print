@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:kshethra_mini/utils/components/size_config.dart';
 import 'package:kshethra_mini/view/widgets/booking_page_widget/god_widget.dart';
@@ -61,7 +62,7 @@ class AdvancedBookingFormWidget extends StatelessWidget {
                         final isSelected = selectedCategoryIndex == index;
                         final counterName =
                             index == 0
-                                ? 'All'
+                                ? 'All'.tr()
                                 : counterListWithAll[index].counterName;
 
                         return GestureDetector(
@@ -74,33 +75,29 @@ class AdvancedBookingFormWidget extends StatelessWidget {
                               bookingViewmodel.clearSelectedCounter();
                             }
                           },
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 6),
-                            child: Container(
-                              margin: const EdgeInsets.symmetric(horizontal: 8),
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 12,
-                                horizontal: 10,
-                              ),
-                              decoration: BoxDecoration(
+                          child: Container(
+                            margin: const EdgeInsets.only(left: 1, right: 6),
+                            padding: const EdgeInsets.fromLTRB(6, 10, 10, 10), // Reduced left padding
+                            decoration: BoxDecoration(
+                              color:
+                                  isSelected
+                                      ? Colors.orangeAccent
+                                      : Colors.transparent,
+                              borderRadius: BorderRadius.circular(8),
+
+                            ),
+                            child: BuildTextWidget(
+                              text: counterName,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
                                 color:
                                     isSelected
-                                        ? Colors.orangeAccent
-                                        : Colors.transparent,
-                                borderRadius: BorderRadius.circular(8),
+                                        ? Colors.white
+                                        : Colors.black87,
                               ),
-                              child: BuildTextWidget(
-                                text: counterName,
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color:
-                                      isSelected
-                                          ? Colors.white
-                                          : Colors.black87,
-                                ),
-                                fromLang: fromLang,
-                              ),
+                              maxLines: 2,
+                              fromLang: fromLang,
                             ),
                           ),
                         );

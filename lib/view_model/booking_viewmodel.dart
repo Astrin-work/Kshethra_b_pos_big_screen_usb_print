@@ -140,7 +140,7 @@ class BookingViewmodel extends ChangeNotifier {
     _selectedCounterIndex = index;
 
     if (index == 0) {
-      selectedCategory = 'All'.tr();
+      selectedCategory = 'All';
 
       _filteredVazhipadus = [];
       if (selectedGods != null) {
@@ -157,6 +157,7 @@ class BookingViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
+
   void setSelectedAdvancedBookingCategoryIndex(int index) {
     _selectedAdvancedBookingCategoryIndex = index;
     notifyListeners();
@@ -171,6 +172,12 @@ class BookingViewmodel extends ChangeNotifier {
     _selectedCounterIndex = index;
     notifyListeners();
   }
+
+
+
+
+
+
 
   // Future<void> submitVazhipadu() async {
   //   if (vazhipaduBookingList.isEmpty) {
