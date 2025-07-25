@@ -10,11 +10,9 @@ import 'package:kshethra_mini/utils/components/snack_bar_widget.dart';
 import 'package:kshethra_mini/view/advance_booking_preview_view.dart';
 import 'package:kshethra_mini/view/booking_preview_view.dart';
 import 'package:kshethra_mini/view/card_payment_screen.dart';
-import 'package:kshethra_mini/view/cash_payment.dart';
 import 'package:kshethra_mini/view/widgets/advanced_booking_page_widget/cash_payment_advance_booking.dart';
 import 'package:kshethra_mini/view/widgets/advanced_booking_page_widget/payment_method_screen_advance_booking.dart';
 import 'package:kshethra_mini/view/widgets/advanced_booking_page_widget/qr_scanner_component_advance_booking.dart';
-import 'package:kshethra_mini/view/widgets/booking_page_widget/cash_payment_booking.dart';
 import 'package:kshethra_mini/view/widgets/booking_page_widget/vazhipaddu_dialogbox_widget.dart';
 import 'package:kshethra_mini/view/widgets/donation_page_widgets/payment_method_screen_donation.dart';
 import 'package:kshethra_mini/view/widgets/donation_page_widgets/qr_scanner_component_donations.dart';
@@ -25,9 +23,7 @@ import '../api_services/api_service.dart';
 import '../model/api models/get_donation_model.dart';
 import '../model/api models/get_temple_model.dart';
 import '../model/api models/god_model.dart';
-import '../services/plutus_smart.dart';
 import '../utils/components/qr_code_component.dart';
-import '../utils/logger.dart';
 import '../utils/validation.dart';
 import '../view/advanced_booking_confirm_view.dart';
 import '../view/widgets/advanced_booking_page_widget/advanced_vazhipaddu_dialog_BoxWidget.dart';
@@ -1010,20 +1006,10 @@ class BookingViewmodel extends ChangeNotifier {
       ) {
     bool valid = advBookingKey.currentState?.validate() ?? false;
     if (!valid) return;
-    if (_selectedStar == null || _selectedStar!.isEmpty) {
+    if (_selectedStar.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBarWidget(
           msg: "Please select a Star",
-          color: kGrey,
-        ).build(context),
-      );
-      return;
-    }
-
-    if (_selectedDate == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBarWidget(
-          msg: "Please select a Date",
           color: kGrey,
         ).build(context),
       );
@@ -1298,7 +1284,7 @@ class BookingViewmodel extends ChangeNotifier {
     }
 
     // Validate star
-    bool isStarSelected = _selectedStar!.isNotEmpty &&
+    bool isStarSelected = _selectedStar.isNotEmpty &&
         _selectedStar != "Star";
 
     // Validate date
@@ -1353,7 +1339,7 @@ class BookingViewmodel extends ChangeNotifier {
     notifyListeners();
   }
   void validateStarField() {
-    hasStarError = selectedStar == null || selectedStar!.isEmpty;
+    hasStarError = selectedStar.isEmpty;
     notifyListeners();
   }
 

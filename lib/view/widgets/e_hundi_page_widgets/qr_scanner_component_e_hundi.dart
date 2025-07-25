@@ -1,11 +1,9 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:kshethra_mini/model/api%20models/E_Hundi_Get_Devatha_Model.dart';
 import 'package:kshethra_mini/utils/app_color.dart';
 import 'package:kshethra_mini/utils/app_styles.dart';
 import 'package:kshethra_mini/utils/components/app_bar_widget.dart';
 import 'package:kshethra_mini/utils/components/size_config.dart';
-import 'package:kshethra_mini/view/payment_complete_screen.dart';
 import 'package:kshethra_mini/view/widgets/build_text_widget.dart';
 import 'package:kshethra_mini/view_model/home_page_viewmodel.dart';
 import 'package:provider/provider.dart';
@@ -15,7 +13,6 @@ import '../../../api_services/api_service.dart';
 import '../../../utils/components/snack_bar_widget.dart';
 import '../../../view_model/booking_viewmodel.dart';
 import '../../../view_model/e_hundi_viewmodel.dart';
-import '../receipt_widget/receipt_foramte_donation.dart';
 import '../receipt_widget/receipt_foramte_e_bhandaram.dart';
 
 class QrScannerComponentEHundi extends StatefulWidget {
@@ -56,7 +53,6 @@ class _QrScannerComponentEHundiState extends State<QrScannerComponentEHundi> {
         required String phone,
       }) async {
     try {
-      // Safely access devathaName from gods list
 
       final bookingViewmodel = Provider.of<BookingViewmodel>(context, listen: false);
       final star = bookingViewmodel.selectedStar ?? '';
