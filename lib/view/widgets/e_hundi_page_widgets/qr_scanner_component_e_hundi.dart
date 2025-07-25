@@ -59,7 +59,7 @@ class _QrScannerComponentEHundiState extends State<QrScannerComponentEHundi> {
       // Safely access devathaName from gods list
 
       final bookingViewmodel = Provider.of<BookingViewmodel>(context, listen: false);
-      final star = bookingViewmodel.storedSelectedStar ?? '';
+      final star = bookingViewmodel.selectedStar ?? '';
       final data = {
         "devathaName":widget.devathaName,
         "amount": int.tryParse(amount) ?? 0,

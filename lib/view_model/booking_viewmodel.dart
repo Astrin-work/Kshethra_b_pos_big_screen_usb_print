@@ -56,6 +56,7 @@ class BookingViewmodel extends ChangeNotifier {
   String selectedCategory = 'All'.tr();
   List<String> templeNameList = [];
   String? starError;
+  bool hasStarError = false;
   List<UserBookingModel> _vazhipaduBookingList = [];
   List<UserBookingModel> get vazhipaduBookingList => _vazhipaduBookingList;
   List<Godmodel> _gods = [];
@@ -69,7 +70,6 @@ class BookingViewmodel extends ChangeNotifier {
   Map<String, dynamic> _fullSubmittedData = {};
   Map<String, dynamic> get fullSubmittedData => _fullSubmittedData;
   int selectedIndex = 0;
-
   int _noOfBookingVazhipaddu = 1;
   int get noOfBookingVazhipaddu => _noOfBookingVazhipaddu;
   int _advBookingAmt = 0;
@@ -110,7 +110,7 @@ class BookingViewmodel extends ChangeNotifier {
   List<Vazhipadus> get filteredVazhipadus => _filteredVazhipadus;
   Vazhipadus? _selectedVazhipadu;
   Vazhipadus? get selectedVazhipadu => _selectedVazhipadu;
-  String? storedSelectedStar;
+
   @override
   void dispose() {
     bookingNameController.dispose();
@@ -742,6 +742,11 @@ class BookingViewmodel extends ChangeNotifier {
   }
 
   void navigateAdvBookingPreview(BuildContext context) {
+    // Print current values for debugging
+    print("DEBUG: selectedStar = $_selectedStar");
+    print("DEBUG: selectedDate = $selectedDate");
+
+    // Validate Vazhippadu selected
     if (_totalVazhipaduAmt == 0) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBarWidget(
@@ -752,26 +757,48 @@ class BookingViewmodel extends ChangeNotifier {
       return;
     }
 
+    // Validate Star
+    if (_selectedStar.isEmpty || _selectedStar == "Star") {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBarWidget(
+          msg: "Please select a Star",
+          color: kRed,
+        ).build(context),
+      );
+      return;
+    }
+
+    // Validate Date
+    if (selectedDate.isEmpty || selectedDate == "Select Date") {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBarWidget(
+          msg: "Please select a Date",
+          color: kRed,
+        ).build(context),
+      );
+      return;
+    }
+
+    // If all validations pass
     selectedGods = gods[0];
     _selectedStar = "Star".tr();
     bookingNameController.clear();
     _isExistedDevotee = false;
-
-    final selectedDays = selectedWeeklyDays;
 
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
         builder: (context) => AdvancedBookingPreviewView(
           selectedRepMethod: selectedRepMethod,
-          selectedDays: selectedDays,
-          totalAmount:_amtOfBookingVazhipaddu,
+          selectedDays: selectedWeeklyDays,
+          totalAmount: _amtOfBookingVazhipaddu,
         ),
       ),
     );
 
     notifyListeners();
   }
+
 
 
   void navigateBookingPreviewView(BuildContext context) {
@@ -942,15 +969,14 @@ class BookingViewmodel extends ChangeNotifier {
     print(_totalVazhipaduAmt);
   }
 
-
   // void advBookingAddVazhipadu(
-  //     Map<String, dynamic> selectedVazhipaadu,
-  //     BuildContext context,
-  //     ) {
+  //   Vazhipadus selectedVazhipaadu,
+  //   BuildContext context,
+  // ) {
   //   bool valid = advBookingKey.currentState?.validate() ?? false;
   //   if (!valid) return;
   //
-  //   if (_advBookOption == "") {
+  //   if (_advBookOption.isEmpty) {
   //     ScaffoldMessenger.of(context).showSnackBar(
   //       SnackBarWidget(
   //         msg: "Select one option from Star or Date",
@@ -960,47 +986,56 @@ class BookingViewmodel extends ChangeNotifier {
   //     return;
   //   }
   //
-  //   final int repeatCount = selectedRepMethod == "Once"
-  //       ? 1
-  //       : int.tryParse(bookingRepController.text) ?? 1;
+  //   final int repeatCount =
+  //       selectedRepMethod == "Once"
+  //           ? 1
+  //           : int.tryParse(bookingRepController.text.trim()) ?? 1;
   //
-  //   final double itemPrice = selectedVazhipaadu["price"] ?? 0.0;
+  //   final double itemPrice = selectedVazhipaadu.cost.toDouble(); // from model
   //   final double postalAmt = prasadamSelected ? postalAmount : 0.0;
   //
-  //
-  //   _totalVazhipaduAmt = ((itemPrice * repeatCount) + postalAmt) as int;
+  //   _totalVazhipaduAmt = ((itemPrice * repeatCount) + postalAmt).toInt();
   //   _advBookingSavedAmt = _totalVazhipaduAmt;
-  //   print(totalVazhipaduAmt);
-  //   print(totalAdvBookingAmt);
   //
+  //   print(_totalVazhipaduAmt);
+  //   print(_totalAdvBookingAmt);
   //
   //   setVazhipaduAdvBookingList(selectedVazhipaadu, context);
   //   bookingAddNewDevottee();
   //   popFunction(context);
   // }
   void advBookingAddVazhipadu(
-    Vazhipadus selectedVazhipaadu,
-    BuildContext context,
-  ) {
+      Vazhipadus selectedVazhipaadu,
+      BuildContext context,
+      ) {
     bool valid = advBookingKey.currentState?.validate() ?? false;
     if (!valid) return;
-
-    if (_advBookOption.isEmpty) {
+    if (_selectedStar == null || _selectedStar!.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBarWidget(
-          msg: "Select one option from Star or Date",
+          msg: "Please select a Star",
           color: kGrey,
         ).build(context),
       );
       return;
     }
 
+    if (_selectedDate == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBarWidget(
+          msg: "Please select a Date",
+          color: kGrey,
+        ).build(context),
+      );
+      return;
+    }
     final int repeatCount =
-        selectedRepMethod == "Once"
-            ? 1
-            : int.tryParse(bookingRepController.text.trim()) ?? 1;
+    selectedRepMethod == "Once"
+        ? 1
+        : int.tryParse(bookingRepController.text.trim()) ?? 1;
 
-    final double itemPrice = selectedVazhipaadu.cost.toDouble(); // from model
+    // Price + postal
+    final double itemPrice = selectedVazhipaadu.cost.toDouble();
     final double postalAmt = prasadamSelected ? postalAmount : 0.0;
 
     _totalVazhipaduAmt = ((itemPrice * repeatCount) + postalAmt).toInt();
@@ -1013,6 +1048,7 @@ class BookingViewmodel extends ChangeNotifier {
     bookingAddNewDevottee();
     popFunction(context);
   }
+
 
   void updateTotalAmount(double value) {
     _totalAmount = value;
@@ -1131,11 +1167,10 @@ class BookingViewmodel extends ChangeNotifier {
     notifyListeners();
   }
   void setStar(String star, BuildContext context) {
-    _selectedStar = star;             // This is your UI selection state
-    storedSelectedStar = star;        // This stores the selected star separately
-    popFunction(context);             // Close the dialog
-    notifyListeners();                // Notify UI
-    print("Stored Star: $storedSelectedStar");
+    _selectedStar = star;
+    popFunction(context);
+    notifyListeners();
+    print("Stored Star: $_selectedStar");
   }
 
 
@@ -1255,21 +1290,37 @@ class BookingViewmodel extends ChangeNotifier {
       Vazhipadus selectedVazhipaadu,
       BuildContext context,
       ) {
-    bool valid = advBookingKey.currentState?.validate() ?? false;
-    if (!valid) return;
+    // First validate the form
+    final formState = advBookingKey.currentState;
+    if (formState == null || !formState.validate()) {
+      // Form validation failed
+      return;
+    }
 
+    // Validate star
+    bool isStarSelected = _selectedStar!.isNotEmpty &&
+        _selectedStar != "Star";
 
-    if (_selectedStar.isEmpty || _selectedStar == "Star" ||
-        _selectedDate.isEmpty || _selectedDate == "Date") {
+    // Validate date
+    bool isDateSelected = selectedDate.isNotEmpty &&
+        selectedDate != "Select Date";
+
+    if (!isStarSelected || !isDateSelected) {
+      String missingFields = '';
+      if (!isStarSelected) missingFields += 'Star';
+      if (!isStarSelected && !isDateSelected) missingFields += ' and ';
+      if (!isDateSelected) missingFields += 'Date';
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBarWidget(
-          msg: "Please select both Star and Date",
+          msg: "Please select $missingFields",
           color: kRed,
         ).build(context),
       );
       return;
     }
 
+    // Validation passed, now proceed
     int repetitions = int.tryParse(bookingRepController.text.trim()) ?? 1;
     if (repetitions == 0) repetitions = 1;
 
@@ -1280,9 +1331,9 @@ class BookingViewmodel extends ChangeNotifier {
       UserBookingModel(
         name: bookingNameController.text.trim(),
         phno: bookingPhnoController.text.trim(),
-        star: _selectedStar.tr(),
-        date: _selectedDate,
-        option: _selectedStar,
+        star: selectedStar,
+        date: selectedDate,
+        option: selectedStar,
         repMethode: _selectedRepMethod,
         day: _selectedRepMethod == "Weekly" ? _selectedWeeklyDay : '',
         godname: selectedGods?.devathaName.toString(),
@@ -1296,10 +1347,18 @@ class BookingViewmodel extends ChangeNotifier {
     _totalAdvBookingAmt += totalAmount;
     log(_totalAdvBookingAmt.toString(), name: "adv booking");
 
+    // Now navigate to preview
     popFunction(context);
     navigateAdvBookingPreview(context);
     notifyListeners();
   }
+  void validateStarField() {
+    hasStarError = selectedStar == null || selectedStar!.isEmpty;
+    notifyListeners();
+  }
+
+
+
   int calculateBookingTotalAmt() {
     if (_vazhipaduBookingList.isEmpty) return 0;
 

@@ -129,67 +129,69 @@ class _AdvancedBookingConfirmFormState
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
+                      // 🔹 Star Selection
                       InkWell(
                         onTap: () {
                           bookingViewmodel.setAdvBookOption("star".tr());
                           showDialog(
                             context: context,
-                            builder:
-                                (context) => ResponsiveLayout(
-                                  pinelabDevice: StarDialogBox(),
-                                  mediumDevice: StarDialogBox(
-                                    borderRadius: 25,
-                                    mainAxisSpace: 30,
-                                    crossAxisSpace: 45,
-                                  ),
-                                  semiMediumDevice: StarDialogBox(
-                                    borderRadius: 25,
-                                    mainAxisSpace: 30,
-                                    crossAxisSpace: 45,
-                                    axisCount: 3,
-                                  ),
-                                  semiLargeDevice: StarDialogBox(
-                                    borderRadius: 30,
-                                    mainAxisSpace: 30,
-                                    crossAxisSpace: 45,
-                                    axisCount: 3,
-                                  ),
-                                  largeDevice: StarDialogBox(
-                                    borderRadius: 35,
-                                    mainAxisSpace: 30,
-                                    crossAxisSpace: 45,
-                                    axisCount: 4,
-                                  ),
-                                ),
+                            builder: (context) => ResponsiveLayout(
+                              pinelabDevice: StarDialogBox(),
+                              mediumDevice: StarDialogBox(
+                                borderRadius: 25,
+                                mainAxisSpace: 30,
+                                crossAxisSpace: 45,
+                              ),
+                              semiMediumDevice: StarDialogBox(
+                                borderRadius: 25,
+                                mainAxisSpace: 30,
+                                crossAxisSpace: 45,
+                                axisCount: 3,
+                              ),
+                              semiLargeDevice: StarDialogBox(
+                                borderRadius: 30,
+                                mainAxisSpace: 30,
+                                crossAxisSpace: 45,
+                                axisCount: 3,
+                              ),
+                              largeDevice: StarDialogBox(
+                                borderRadius: 35,
+                                mainAxisSpace: 30,
+                                crossAxisSpace: 45,
+                                axisCount: 4,
+                              ),
+                            ),
                           );
                         },
                         child: Container(
                           height: 55,
                           width: 125,
-                          decoration:
-                              bookingViewmodel.selectedStar.isNotEmpty
-                                  ? BoxDecoration(
-                                    color: kDullPrimaryColor,
-                                    borderRadius: BorderRadius.circular(15),
-                                  )
-                                  : BoxDecoration(
-                                    color: kScaffoldColor,
-                                    border: Border.all(color: kBlack, width: 1),
-                                    borderRadius: BorderRadius.circular(15),
-                                  ),
+                          decoration: BoxDecoration(
+                            color: bookingViewmodel.selectedStar.isNotEmpty
+                                ? kDullPrimaryColor
+                                : kScaffoldColor,
+                            borderRadius: BorderRadius.circular(15),
+                            border: Border.all(
+                              color: bookingViewmodel.selectedStar.isEmpty
+                                  ? Colors.red // show red border if empty
+                                  : kRed, // normal border
+                              width: 1,
+                            ),
+                          ),
                           child: Center(
                             child: Text(
                               bookingViewmodel.selectedStar.isNotEmpty
                                   ? bookingViewmodel.selectedStar
                                   : "Star",
-                              style:
-                                  bookingViewmodel.selectedStar.isNotEmpty
-                                      ? styles.whiteSemi15
-                                      : styles.blackSemi15,
+                              style: bookingViewmodel.selectedStar.isNotEmpty
+                                  ? styles.whiteSemi15
+                                  : styles.blackSemi15.copyWith(color: Colors.red), // red text if not selected
                             ),
                           ),
                         ),
                       ),
+
+                      // 🔹 Date Selection
                       InkWell(
                         onTap: () {
                           bookingViewmodel.setAdvBookOption("date".tr());
@@ -198,15 +200,15 @@ class _AdvancedBookingConfirmFormState
                         child: Container(
                           height: 55,
                           width: 125,
-                          decoration: bookingViewmodel.selectedDate.isNotEmpty
-                              ? BoxDecoration(
-                            color: kDullPrimaryColor,
+                          decoration: BoxDecoration(
+                            color: bookingViewmodel.selectedDate.isNotEmpty
+                                ? kDullPrimaryColor
+                                : kScaffoldColor,
                             borderRadius: BorderRadius.circular(15),
-                          )
-                              : BoxDecoration(
-                            color: kScaffoldColor,
-                            border: Border.all(color: kBlack, width: 1),
-                            borderRadius: BorderRadius.circular(15),
+                            border: Border.all(
+                              color: kRed,
+                              width: 1,
+                            ),
                           ),
                           alignment: Alignment.center,
                           child: Text(

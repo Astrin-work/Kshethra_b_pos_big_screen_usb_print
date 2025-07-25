@@ -21,22 +21,75 @@ class AdvancedBookingConfirmView extends StatelessWidget {
   });
 
   void _handlePayTap(BuildContext context, BookingViewmodel viewmodel) {
-    final isValid = viewmodel.advBookingKey.currentState?.validate() ?? false;
+    final isFormValid = viewmodel.advBookingKey.currentState?.validate() ?? false;
 
-    if (!isValid) {
+    final selectedStar = viewmodel.selectedStar.trim();
+    final selectedDate = viewmodel.selectedDate.trim();
+    final name = viewmodel.bookingNameController.text.trim();
+    final phone = viewmodel.bookingPhnoController.text.trim();
+
+    if (name.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBarWidget(
-          msg: "Please fill all required fields",
-          color: Colors.grey,
+          msg: "Please enter a name",
+          color: Colors.redAccent,
         ).build(context),
       );
       return;
     }
 
+    if (phone.isEmpty || phone.length < 10) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBarWidget(
+          msg: "Please enter a valid phone number",
+          color: Colors.redAccent,
+        ).build(context),
+      );
+      return;
+    }
+
+    if (selectedStar.isEmpty || selectedStar == "Star" || selectedStar == "നക്ഷത്രം") {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBarWidget(
+          msg: "Please select a star",
+          color: Colors.redAccent,
+        ).build(context),
+      );
+      return;
+    }
+
+    // Validate date
+    if (selectedDate.isEmpty || selectedDate == "Date" || selectedDate == "തീയതി") {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBarWidget(
+          msg: "Please select a date",
+          color: Colors.redAccent,
+        ).build(context),
+      );
+      return;
+    }
+
+    // Validate form fields (if any are in the form widget)
+    if (!isFormValid) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBarWidget(
+          msg: "Please fill all required fields",
+          color: Colors.redAccent,
+        ).build(context),
+      );
+      return;
+    }
+
+    // Proceed if everything is valid
     viewmodel.popFunction(context);
     viewmodel.setVazhipaduAdvBookingList(selectedVazhipaadu, context);
-    // viewmodel.navigateAdvBookingPreview(context);
   }
+
+
+
+
+
+
 
   void _handleAddTap(BuildContext context, BookingViewmodel viewmodel) {
     final isValid = viewmodel.advBookingKey.currentState?.validate() ?? false;

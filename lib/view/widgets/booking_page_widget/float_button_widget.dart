@@ -68,7 +68,7 @@ class FloatButtonWidget extends StatelessWidget {
                     amount,
                     noOfScreens,
                     title,
-                    type ?? 'booking', // fallback to default type
+                    type ?? 'booking',
                   );
                 }
               },
