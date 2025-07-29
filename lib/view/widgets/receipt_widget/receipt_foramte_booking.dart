@@ -3,8 +3,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
-import 'package:kshethra_mini/model/demo_model/temple_model.dart';
-import 'package:kshethra_mini/view_model/booking_viewmodel.dart';
+
 
 class ReceiptFormatterBooking {
   static const MethodChannel _platform = MethodChannel(

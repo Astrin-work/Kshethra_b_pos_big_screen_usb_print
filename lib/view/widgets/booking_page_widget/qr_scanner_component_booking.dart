@@ -13,7 +13,6 @@ import 'package:kshethra_mini/view_model/booking_viewmodel.dart';
 import 'package:kshethra_mini/view_model/home_page_viewmodel.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import '../receipt_widget/receipt_printer.dart';
 
 class QrScannerComponentBooking extends StatelessWidget {
   final String amount;
@@ -101,9 +100,9 @@ class QrScannerComponentBooking extends StatelessWidget {
 
                                 if (templeList.isNotEmpty) {
                                   final lastTemple = templeList.last;
-                                  templeName = lastTemple.templeName ?? templeName;
-                                  templeAddress = lastTemple.address ?? templeAddress;
-                                  templePhone = lastTemple.phoneNumber ?? templePhone;
+                                  templeName = lastTemple.templeName;
+                                  templeAddress = lastTemple.address;
+                                  templePhone = lastTemple.phoneNumber;
                                 }
 
                                 final Map<String, Map<String, dynamic>> groupedMap = {};

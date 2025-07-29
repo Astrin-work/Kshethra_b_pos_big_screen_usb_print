@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:kshethra_mini/utils/app_color.dart';
-import 'package:kshethra_mini/utils/app_styles.dart';
 import 'package:kshethra_mini/utils/asset/assets.gen.dart';
 import 'package:kshethra_mini/utils/components/responsive_layout.dart';
 import 'package:kshethra_mini/utils/components/size_config.dart';
-import 'package:kshethra_mini/utils/validation.dart';
 import 'package:kshethra_mini/view/widgets/login_widget.dart';
-import 'package:kshethra_mini/view_model/auth_viewmodel.dart';
-import 'package:provider/provider.dart';
 
 class LoginView extends StatelessWidget {
   const LoginView({super.key});

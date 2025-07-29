@@ -1,4 +1,3 @@
-import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:kshethra_mini/utils/components/size_config.dart';
 import 'package:kshethra_mini/view/widgets/booking_page_widget/god_widget.dart';

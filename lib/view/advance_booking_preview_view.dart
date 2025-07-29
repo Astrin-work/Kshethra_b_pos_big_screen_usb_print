@@ -2,7 +2,6 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:kshethra_mini/model/user_booking_model.dart';
 import 'package:kshethra_mini/utils/components/app_bar_widget.dart';
-import 'package:kshethra_mini/view/widgets/booking_page_widget/booking_action_bar.dart';
 import 'package:kshethra_mini/view/widgets/booking_page_widget/float_button_widget.dart';
 import 'package:kshethra_mini/view/widgets/build_text_widget.dart';
 import 'package:kshethra_mini/view_model/booking_viewmodel.dart';

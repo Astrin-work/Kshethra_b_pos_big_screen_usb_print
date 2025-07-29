@@ -168,7 +168,7 @@ class BookingFormWidget extends StatelessWidget {
                       itemCount: counterList.length,
                       itemBuilder: (context, index) {
                         final item = counterList[index];
-                        final String categoryName = item.counterName ?? '';
+                        final String categoryName = item.counterName;
                         final bool isSelected = index == bookingViewmodel.selectedCounterIndex;
 
                         return GestureDetector(
