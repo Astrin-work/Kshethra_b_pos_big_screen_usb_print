@@ -11,6 +11,7 @@ import 'package:kshethra_mini/view_model/e_hundi_viewmodel.dart';
 import 'package:provider/provider.dart';
 
 import '../../../utils/components/responsive_layout.dart';
+import '../../../utils/upper_case_text_formatter.dart';
 import '../../../view_model/booking_viewmodel.dart';
 
 class EHundiDialogWidget extends StatefulWidget {
@@ -100,6 +101,10 @@ class _EHundiDialogWidgetState extends State<EHundiDialogWidget> {
                           TextFormField(
                             controller: nameController,
                             style: styles.blackRegular13,
+                            textCapitalization: TextCapitalization.characters,
+                            inputFormatters: [
+                              UpperCaseTextFormatter(),
+                            ],
                             decoration: InputDecoration(
                               hintText: "Enter your Name (optional)".tr(),
                               border: OutlineInputBorder(

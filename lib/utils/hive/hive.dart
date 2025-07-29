@@ -50,8 +50,11 @@ class AppHive {
     return Hive.box(Constants.BOX_NAME).get(_ISLOGGEDIN) ?? false;
   }
 
-  Future<void> putIsUserLoggedIn(bool isLoggedIn) async {
-    await hivePutBool(key: _ISLOGGEDIN, value: isLoggedIn);
+  Future<void> putIsUserLoggedIn({required bool isLoggedIn}) async {
+    await Hive.box(Constants.BOX_NAME).put(
+      _ISLOGGEDIN,
+      isLoggedIn,
+    );
   }
 
   /// Video Audio Status

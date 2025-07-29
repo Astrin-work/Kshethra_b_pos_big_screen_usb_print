@@ -16,7 +16,7 @@ class AppBarWidget extends StatelessWidget {
     AppStyles styles = AppStyles();
     SizeConfig().init(context);
     return Container(
-      height: SizeConfig.screenHeight * 0.2,
+      height: SizeConfig.screenHeight * 0.150,
       width: SizeConfig.screenWidth,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.only(

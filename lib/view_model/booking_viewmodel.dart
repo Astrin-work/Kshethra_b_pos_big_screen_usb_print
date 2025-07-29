@@ -47,6 +47,7 @@ class BookingViewmodel extends ChangeNotifier {
   bool get prasadamSelected => _prasadamSelected;
   bool _isPrasadamSelected = false;
   bool get isPrasadamSelected => _isPrasadamSelected;
+  bool get isAdvanceBooking => _advBookOption.isNotEmpty;
   bool _shouldResetPrasadam = false;
   Counter? selectedCounter;
   String selectedCategory = 'All'.tr();
@@ -507,6 +508,8 @@ class BookingViewmodel extends ChangeNotifier {
     };
 
     print("🧾 Final POST Data:\n${jsonEncode(postData)}");
+    print('hi'*100);
+    print( int.tryParse(bookingRepController.text.trim()));
 
     try {
       final response = await ApiService().postAdvVazhipaduDetails(postData);
@@ -795,6 +798,7 @@ class BookingViewmodel extends ChangeNotifier {
           selectedRepMethod: selectedRepMethod,
           selectedDays: selectedWeeklyDays,
           totalAmount: _amtOfBookingVazhipaddu,
+          bookingList: _vazhipaduBookingList,
         ),
       ),
     );
@@ -956,7 +960,10 @@ class BookingViewmodel extends ChangeNotifier {
     int unitPrice = selectedVazhipaadu.cost;
     int quantity = bookingViewmodel.noOfBookingVazhipaddu;
     _totalVazhipaduAmt = _advBookingSavedAmt + (quantity * unitPrice);
-
+    print("DEBUG: Total Vazhipaddu in list: ${vazhipaduBookingList.length}");
+    for (var item in vazhipaduBookingList) {
+      print("  - ${item.name} | Qty: ${item.count} | Amt: ${item.totalPrice}");
+    }
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
@@ -964,6 +971,7 @@ class BookingViewmodel extends ChangeNotifier {
             (context) => AdvancedBookingConfirmView(
           selectedVazhipaadu: selectedVazhipaadu,
           totalAmount: _totalVazhipaduAmt,
+
         ),
       ),
     );
@@ -1345,6 +1353,12 @@ class BookingViewmodel extends ChangeNotifier {
     navigateAdvBookingPreview(context);
     notifyListeners();
   }
+
+
+
+
+
+
   void validateStarField() {
     hasStarError = selectedStar.isEmpty;
     notifyListeners();
@@ -1360,10 +1374,10 @@ class BookingViewmodel extends ChangeNotifier {
   }
 
   void addVazhipaddToExisting(
-    String vazhipaduName,
-    int price,
-    BuildContext context,
-  ) {
+      String vazhipaduName,
+      int price,
+      BuildContext context,
+      ) {
     final lastDevotee = _vazhipaduBookingList.last;
     final newBooking = UserBookingModel(
       name: lastDevotee.name,

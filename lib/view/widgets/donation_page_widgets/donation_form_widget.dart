@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 
 import '../../../api_services/api_service.dart';
 import '../../../model/api models/get_donation_model.dart';
+import '../../../utils/upper_case_text_formatter.dart';
 
 class DonationFormWidget extends StatefulWidget {
   final double crossAxisSpacing;
@@ -89,6 +90,10 @@ class _DonationFormWidgetState extends State<DonationFormWidget> {
                 controller: donationNameController,
                 textAlign: TextAlign.center,
                 style: styles.blackRegular15,
+                textCapitalization: TextCapitalization.characters,
+                inputFormatters: [
+                  UpperCaseTextFormatter(),
+                ],
                 decoration: InputDecoration(
                   hintText: "Name".tr(),
                   border: OutlineInputBorder(
@@ -132,6 +137,10 @@ class _DonationFormWidgetState extends State<DonationFormWidget> {
                 controller: donationAddressController,
                 textAlign: TextAlign.center,
                 style: styles.blackRegular15,
+                textCapitalization: TextCapitalization.characters,
+                inputFormatters: [
+                  UpperCaseTextFormatter(),
+                ],
                 decoration: InputDecoration(
                   hintText: "Address".tr(),
                   border: OutlineInputBorder(

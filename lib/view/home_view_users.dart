@@ -46,15 +46,18 @@ class HomeViewUsers extends StatelessWidget {
                               child: Row(
                                 children: [
                                   5.kW,
-                                  IconButton(
-                                    iconSize: 40,
-                                    onPressed: () {
-                                      print('-----taped-----');
-                                      homePageViewmodel.showLogoutDialog(
-                                        context,
-                                      );
-                                    },
-                                    icon: Icon(Icons.logout),
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 10),
+                                    child: IconButton(
+                                      iconSize: 40,
+                                      onPressed: () {
+                                        print('-----taped-----');
+                                        homePageViewmodel.showLogoutDialog(
+                                          context,
+                                        );
+                                      },
+                                      icon: Icon(Icons.logout),
+                                    ),
                                   ),
                                 ],
                               ),

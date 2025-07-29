@@ -12,12 +12,12 @@ class ReceiptFormatterBooking {
   );
 
   static Future<void> printGroupedReceipts(
-    BuildContext context, {
-    required List<Map<String, dynamic>> groupedReceipts,
-    required String templeName,
-    required String templeAddress,
-    required String templePhone,
-  }) async {
+      BuildContext context, {
+        required List<Map<String, dynamic>> groupedReceipts,
+        required String templeName,
+        required String templeAddress,
+        required String templePhone,
+      }) async {
     final currentDate = DateFormat('dd/MM/yyyy').format(DateTime.now());
 
     final image = await _generateGroupedReceiptBitmap(
@@ -70,9 +70,9 @@ class ReceiptFormatterBooking {
       double spaceAfter = 5,
     }) {
       final paint =
-          Paint()
-            ..color = color
-            ..strokeWidth = thickness;
+      Paint()
+        ..color = color
+        ..strokeWidth = thickness;
 
       double startX = 0;
       while (startX < width) {
@@ -88,14 +88,14 @@ class ReceiptFormatterBooking {
 
     void drawCentered(String text, double fontSize) {
       final builder =
-          ui.ParagraphBuilder(centerStyle)
-            ..pushStyle(
-              ui.TextStyle(fontSize: fontSize, color: const Color(0xFF000000)),
-            )
-            ..addText(text);
+      ui.ParagraphBuilder(centerStyle)
+        ..pushStyle(
+          ui.TextStyle(fontSize: fontSize, color: const Color(0xFF000000)),
+        )
+        ..addText(text);
       final paragraph =
-          builder.build()
-            ..layout(ui.ParagraphConstraints(width: width.toDouble()));
+      builder.build()
+        ..layout(ui.ParagraphConstraints(width: width.toDouble()));
       canvas.drawParagraph(
         paragraph,
         Offset((width - paragraph.width) / 2, yOffset),
@@ -105,28 +105,28 @@ class ReceiptFormatterBooking {
 
     void drawLeft(String text, double fontSize, {double indent = 20}) {
       final builder =
-          ui.ParagraphBuilder(leftStyle)
-            ..pushStyle(
-              ui.TextStyle(fontSize: fontSize, color: const Color(0xFF000000)),
-            )
-            ..addText(text);
+      ui.ParagraphBuilder(leftStyle)
+        ..pushStyle(
+          ui.TextStyle(fontSize: fontSize, color: const Color(0xFF000000)),
+        )
+        ..addText(text);
       final paragraph =
-          builder.build()
-            ..layout(ui.ParagraphConstraints(width: width.toDouble()));
+      builder.build()
+        ..layout(ui.ParagraphConstraints(width: width.toDouble()));
       canvas.drawParagraph(paragraph, Offset(indent, yOffset));
       yOffset += paragraph.height + 3;
     }
 
     void drawRight(String text, double fontSize, {double paddingRight = 20}) {
       final builder =
-          ui.ParagraphBuilder(rightStyle)
-            ..pushStyle(
-              ui.TextStyle(fontSize: fontSize, color: const Color(0xFF000000)),
-            )
-            ..addText(text);
+      ui.ParagraphBuilder(rightStyle)
+        ..pushStyle(
+          ui.TextStyle(fontSize: fontSize, color: const Color(0xFF000000)),
+        )
+        ..addText(text);
       final paragraph =
-          builder.build()
-            ..layout(ui.ParagraphConstraints(width: width.toDouble()));
+      builder.build()
+        ..layout(ui.ParagraphConstraints(width: width.toDouble()));
       canvas.drawParagraph(
         paragraph,
         Offset(width - paragraph.longestLine - paddingRight, yOffset),
@@ -164,13 +164,13 @@ class ReceiptFormatterBooking {
       drawLeft("DEVATHA    : $devatha", 22);
       drawDashedLine(spaceAfter: 0);
       final headerLine =
-          [
-            "NO".padLeft(5),
-            "VAZHIPADU".padLeft(15),
-            "QTY".padLeft(20),
-            "".padRight(2),
-            "AMOUNT".padLeft(21),
-          ].join();
+      [
+        "NO".padLeft(5),
+        "VAZHIPADU".padLeft(15),
+        "QTY".padLeft(20),
+        "".padRight(2),
+        "AMOUNT".padLeft(21),
+      ].join();
       drawLeft(headerLine, 24, indent: 0);
       drawDashedLine(spaceAfter: 0);
       drawLeft('', 12);
@@ -179,7 +179,7 @@ class ReceiptFormatterBooking {
         final item = items[i];
         final name = item['personName']?.toString().trim() ?? '';
         final star = item['personStar']?.toString().trim() ?? '';
-        final itemName = item['offerName']?.toString() ?? '';
+        final itemName = item['offerName']?.toString().toUpperCase() ?? '';
         final qty = item['quantity'].toString();
         final rate = double.tryParse(item['rate'].toString()) ?? 0;
         final amount = (int.tryParse(qty) ?? 1) * rate;
@@ -187,30 +187,41 @@ class ReceiptFormatterBooking {
         total += amount;
 
 
-        final itemLine =
-            [
-              (i + 1).toString().padRight(3),
-              itemName.toUpperCase().padLeft(18),
-              qty.padLeft(20),
-              "".padRight(2),
-              "₹${amount.toStringAsFixed(2)}".padLeft(
-                30,
-              ),
-            ].join();
+        const itemNameLineWidth = 40;
+        const indent = 30;
 
-        drawLeft(itemLine, 22, indent: 30);
-
-        if (name.isNotEmpty || star.isNotEmpty) {
-          final upperName = name.toUpperCase();
-          final nameStarLine =
-          star.isNotEmpty ? "$upperName (${star.toUpperCase()})" : upperName;
-          final paddedName = nameStarLine.padLeft(28);
-          drawLeft(paddedName, 22);
+        final itemNameLines = <String>[];
+        for (int j = 0; j < itemName.length; j += itemNameLineWidth) {
+          final end = (j + itemNameLineWidth < itemName.length)
+              ? j + itemNameLineWidth
+              : itemName.length;
+          itemNameLines.add(itemName.substring(j, end));
         }
 
 
+        drawLeft("${(i + 1).toString().padRight(3)}${itemNameLines[0]}", 22, indent: indent.toDouble());
+
+
+        for (int j = 1; j < itemNameLines.length; j++) {
+          drawLeft("   ${itemNameLines[j]}", 22, indent: indent.toDouble());
+        }
+
+
+        final qtyText = qty.padLeft(28);
+        final amountText = "₹${amount.toStringAsFixed(2)}".padLeft(32);
+        drawLeft("${" " * 30}$qtyText  $amountText", 22, indent: indent.toDouble());
+
+        if (name.isNotEmpty || star.isNotEmpty) {
+          final upperName = name.toUpperCase();
+          final nameStarLine = star.isNotEmpty
+              ? "$upperName (${star.toUpperCase()})"
+              : upperName;
+          drawLeft(nameStarLine.padLeft(28), 22);
+        }
+
         yOffset += 5;
       }
+
 
       drawDashedLine();
       final label = "TOTAL".padRight(40); // adjust spacing as needed
@@ -229,3 +240,4 @@ class ReceiptFormatterBooking {
     return picture.toImage(width, yOffset.toInt() + 40);
   }
 }
+

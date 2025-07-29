@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:kshethra_mini/utils/app_color.dart';
 import 'package:kshethra_mini/utils/app_styles.dart';
 import 'package:kshethra_mini/utils/components/size_config.dart';
@@ -11,6 +12,7 @@ import 'package:kshethra_mini/view/widgets/build_text_widget.dart';
 import 'package:kshethra_mini/view_model/booking_viewmodel.dart';
 import 'package:provider/provider.dart';
 import '../../../utils/components/responsive_layout.dart';
+import '../../../utils/upper_case_text_formatter.dart';
 
 class BookingFormWidget extends StatelessWidget {
   final double? crossAxisSpace;
@@ -31,7 +33,6 @@ class BookingFormWidget extends StatelessWidget {
 
     final bookingViewmodel = Provider.of<BookingViewmodel>(context);
     final counterList = bookingViewmodel.selectedGods?.counters ?? [];
-    final List<dynamic> counterListWithAll = ['All', ...counterList];
     final fromLang = "en";
     return SingleChildScrollView(
       child: Padding(
@@ -46,28 +47,37 @@ class BookingFormWidget extends StatelessWidget {
                   flex: 4,
                   child: Form(
                     key: bookingViewmodel.bookingKey,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
                     child: TextFormField(
-                      autofocus: true,
-                      validator: Validation.nameValidation,
-                      controller: bookingViewmodel.bookingNameController,
-                      textAlign: TextAlign.start,
-                      style: styles.blackRegular15,
-                      decoration: InputDecoration(
-                        hintText: 'Name'.tr(),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(15),
-                          borderSide: const BorderSide(
-                            color: kDullPrimaryColor,
-                            width: 2.0,
-                          ),
+                    autofocus: true,
+                    controller: bookingViewmodel.bookingNameController,
+                    keyboardType: TextInputType.name, // Correct usage
+                    textAlign: TextAlign.start,
+                    style: styles.blackRegular15,
+                    validator: Validation.nameValidation,
+                    textCapitalization: TextCapitalization.characters,
+                    inputFormatters: [
+                      UpperCaseTextFormatter(),
+                    ],
+                    decoration: InputDecoration(
+                      hintText: 'Name'.tr(),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(15),
+                        borderSide: const BorderSide(
+                          color: kDullPrimaryColor,
+                          width: 2.0,
                         ),
                       ),
                     ),
                   ),
+
+
+        ),
                 ),
+
                 const SizedBox(width: 10),
                 Expanded(
                   flex: 2,
@@ -132,91 +142,6 @@ class BookingFormWidget extends StatelessWidget {
               ),
             const SizedBox(height: 15),
             GodWidget(),
-            // Row(
-            //   crossAxisAlignment: CrossAxisAlignment.start,
-            //   children: [
-            //     Container(
-            //       width: SizeConfig.screenWidth * 0.255,
-            //       height: SizeConfig.screenHeight,
-            //       margin: const EdgeInsets.only(right: 10),
-            //       decoration: BoxDecoration(
-            //         color: const Color(0xFFF2D7C7),
-            //         borderRadius: BorderRadius.circular(12),
-            //         boxShadow: [
-            //           BoxShadow(
-            //             color: Colors.black.withOpacity(0.08),
-            //             blurRadius: 6,
-            //             offset: const Offset(2, 2),
-            //           ),
-            //         ],
-            //       ),
-            //       padding: const EdgeInsets.only(left: 10, top: 15),
-            //       child: ListView.builder(
-            //         padding: const EdgeInsets.only(top: 0),
-            //         shrinkWrap: true,
-            //         itemCount: counterListWithAll.length,
-            //         itemBuilder: (context, index) {
-            //           final item = counterListWithAll[index];
-            //           final String categoryName =
-            //           item == 'All' ? 'All' : item.counterName;
-            //           final bool isSelected =
-            //               categoryName == bookingViewmodel.selectedCategory;
-            //
-            //           return GestureDetector(
-            //             onTap: () {
-            //               bookingViewmodel.selectCategory(index);
-            //             },
-            //             child: Padding(
-            //               padding: const EdgeInsets.symmetric(vertical: 6),
-            //               child: Container(
-            //                 margin: const EdgeInsets.symmetric(horizontal: 8),
-            //                 padding: const EdgeInsets.symmetric(
-            //                   vertical: 12,
-            //                   horizontal: 10,
-            //                 ),
-            //                 decoration: BoxDecoration(
-            //                   color: isSelected
-            //                       ? Colors.orangeAccent
-            //                       : Colors.transparent,
-            //                   borderRadius: BorderRadius.circular(8),
-            //                 ),
-            //                 child: BuildTextWidget(
-            //                   text: categoryName,
-            //                   fromLang: fromLang,
-            //                   style: TextStyle(
-            //                     fontSize: 14,
-            //                     fontWeight: FontWeight.w500,
-            //                     color: isSelected ? Colors.white : Colors.black87,
-            //                   ),
-            //                 ),
-            //               ),
-            //             ),
-            //           );
-            //         },
-            //       ),
-            //     ),
-            //
-            //     Expanded(
-            //       child: Container(
-            //         padding: const EdgeInsets.only( right: 8.0,bottom: 100 ),
-            //         child: Column(
-            //           mainAxisSize: MainAxisSize.min,
-            //           crossAxisAlignment: CrossAxisAlignment.start,
-            //           children: [
-            //             VazhipadduWidget(
-            //               crossAixisCount: crossAixisCount ?? 3,
-            //               crossAxisSpace: crossAxisSpace ?? 15,
-            //               mainAxisSpace: mainAxisSpace ?? 15,
-            //               selectedCategoryIndex:
-            //               bookingViewmodel.selectedCounterIndex,
-            //               screeName: 'bookingPage',
-            //             ),
-            //           ],
-            //         ),
-            //       ),
-            //     ),
-            //   ],
-            // ),
             Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -240,46 +165,41 @@ class BookingFormWidget extends StatelessWidget {
                     ),
                     child: ListView.builder(
                       padding: EdgeInsets.zero,
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: counterListWithAll.length,
-                        itemBuilder: (context, index) {
-                          final item = counterListWithAll[index];
-                          final bool isAll = item == 'All';
-                          final String categoryName = isAll ? 'All' : item.counterName;
-                          final bool isSelected = categoryName == bookingViewmodel.selectedCategory;
+                      itemCount: counterList.length,
+                      itemBuilder: (context, index) {
+                        final item = counterList[index];
+                        final String categoryName = item.counterName ?? '';
+                        final bool isSelected = index == bookingViewmodel.selectedCounterIndex;
 
-                          return GestureDetector(
-                            onTap: () => bookingViewmodel.selectCategory(index),
-                            child: Container(
-                              margin: const EdgeInsets.only(left: 1, right: 6),
-                              padding: const EdgeInsets.fromLTRB(6, 10, 10, 10),
-                              decoration: BoxDecoration(
-                                color: isSelected ? Colors.orangeAccent : Colors.transparent,
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: BuildTextWidget(
-                                text: categoryName.tr(),
-                                fromLang: fromLang,
-                                maxLines: 2,
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w500,
-                                  color: isSelected ? Colors.white : Colors.black87,
-                                ),
+                        return GestureDetector(
+                          onTap: () {
+                            bookingViewmodel.selectCategory(index);
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.only(left: 1, right: 6, bottom: 6),
+                            padding: const EdgeInsets.fromLTRB(6, 10, 10, 10),
+                            decoration: BoxDecoration(
+                              color: isSelected ? Colors.orangeAccent : Colors.transparent,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: BuildTextWidget(
+                              text: categoryName.tr(),
+                              fromLang: fromLang,
+                              maxLines: 2,
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.w500,
+                                color: isSelected ? Colors.white : Colors.black87,
                               ),
                             ),
-                          );
-                        }
-
-
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ),
                 Expanded(
                   child: Container(
-                    padding: const EdgeInsets.only( left: 16,right: 8.0, bottom: 100),
-                    // match top padding of left container
                     child: VazhipadduWidget(
                       crossAixisCount: crossAixisCount ?? 3,
                       crossAxisSpace: crossAxisSpace ?? 15,
@@ -291,6 +211,7 @@ class BookingFormWidget extends StatelessWidget {
                 ),
               ],
             ),
+
           ],
         ),
       ),

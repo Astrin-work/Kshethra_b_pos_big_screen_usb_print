@@ -23,7 +23,7 @@ class AdvancedBookingFormWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final bookingViewmodel = context.watch<BookingViewmodel>();
     final counterList = bookingViewmodel.selectedGods?.counters ?? [];
-    final List<dynamic> counterListWithAll = ['All', ...counterList];
+    // final List<dynamic> counterListWithAll = ['All', ...counterList];
     final selectedCategoryIndex =
         bookingViewmodel.selectedAdvancedBookingCategoryIndex;
     final fromLang = "en";
@@ -57,13 +57,10 @@ class AdvancedBookingFormWidget extends StatelessWidget {
                     padding: const EdgeInsets.only(left: 8, top: 10),
                     child: ListView.builder(
                       padding: const EdgeInsets.symmetric(vertical: 20),
-                      itemCount: counterListWithAll.length,
+                      itemCount: counterList.length,
                       itemBuilder: (context, index) {
                         final isSelected = selectedCategoryIndex == index;
-                        final counterName =
-                            index == 0
-                                ? 'All'.tr()
-                                : counterListWithAll[index].counterName;
+                        final counterName = counterList[index].counterName;
 
                         return GestureDetector(
                           onTap: () {
@@ -80,9 +77,9 @@ class AdvancedBookingFormWidget extends StatelessWidget {
                             padding: const EdgeInsets.fromLTRB(6, 10, 10, 10), // Reduced left padding
                             decoration: BoxDecoration(
                               color:
-                                  isSelected
-                                      ? Colors.orangeAccent
-                                      : Colors.transparent,
+                              isSelected
+                                  ? Colors.orangeAccent
+                                  : Colors.transparent,
                               borderRadius: BorderRadius.circular(8),
 
                             ),
@@ -92,9 +89,9 @@ class AdvancedBookingFormWidget extends StatelessWidget {
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
                                 color:
-                                    isSelected
-                                        ? Colors.white
-                                        : Colors.black87,
+                                isSelected
+                                    ? Colors.white
+                                    : Colors.black87,
                               ),
                               maxLines: 2,
                               fromLang: fromLang,

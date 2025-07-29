@@ -56,7 +56,7 @@ class LoginView extends StatelessWidget {
                 ),
               ),
               10.kH,
-              SizedBox(height:SizeConfig.screenHeight* 0.200 ,),
+              SizedBox(height:SizeConfig.screenHeight* 0.180 ,),
               SizedBox(
                 width: SizeConfig.screenWidth*0.280,
                 child: Image.asset(Assets.icons.astrinsLogo.path),

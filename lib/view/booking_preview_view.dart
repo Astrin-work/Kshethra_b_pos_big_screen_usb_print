@@ -60,113 +60,107 @@ class PreViewWidget extends StatelessWidget {
 
     return Consumer<BookingViewmodel>(
       builder: (context, bookingViewmodel, child) {
-          final bookings = bookingViewmodel.vazhipaduBookingList;
+        final bookings = bookingViewmodel.vazhipaduBookingList;
         final fromLang = "en";
+
         return SizedBox(
           height: SizeConfig.screenHeight * 0.8,
-          width: SizeConfig.screenWidth / 1.1,
+          width: SizeConfig.screenWidth,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15.0),
             child: ListView.builder(
               itemCount: bookings.length,
               itemBuilder: (context, index) {
                 final booking = bookings[index];
+                final count = int.tryParse(booking.count ?? '1') ?? 1;
+                final price = int.tryParse(booking.price ?? '0') ?? 0;
+                final repeatCount = booking.repMethode == 'Once'
+                    ? 1
+                    : bookingViewmodel.repeatDays;
+                final total = count * price * repeatCount;
+
                 return Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8.0),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: kLightPrimaryColor,
+                      color: kDefaultIconLightColor,
                       borderRadius: BorderRadius.circular(15),
+                      boxShadow: const [
+                        BoxShadow(
+                          color: Colors.black12,
+                          blurRadius: 4,
+                          offset: Offset(0, 2),
+                        ),
+                      ],
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(15.0),
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              BuildTextWidget(
+                                text:
+                                "${"Vazhipadu".tr()} : ${booking.vazhipadu ?? ''}",
+                                style: styles.blackRegular13,
+                                fromLang: fromLang,
+                              ),
+                              IconButton(
+                                icon:
+                                const Icon(Icons.cancel, color: Colors.red),
+                                onPressed: () {
+                                  bookingViewmodel.vazhipaduDelete(
+                                    index,
+                                  );
+                                },
+                              ),
+                            ],
+                          ),
                           BuildTextWidget(
-                            text: booking.name.toString(),
-                            // style: styles.blackSemi18,
-                            textAlign: TextAlign.center,
-                            // fromLang: fromLang,
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            page == "booking"
-                                ? (booking.star ?? "")
-                                : (booking.option ?? ""),
+                            text: "Qty : ${booking.count ?? '0'}",
                             style: styles.blackRegular13,
-                            textAlign: TextAlign.center,
+                            fromLang: fromLang,
                           ),
-                          const SizedBox(height: 12),
-                          Container(
-                            width: double.maxFinite,
-                            decoration: BoxDecoration(
-                              color: kWhite,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            padding: const EdgeInsets.all(12),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    BuildTextWidget(
-                                      text: booking.vazhipadu?.tr() ?? "",
-                                      size: 15,
-                                      color: kBlack,
-                                      fontWeight: FontWeight.w500,
-                                      fromLang: fromLang,
-                                    ),
-                                    SizedBox(width: 20),
-                                    Text(
-                                      "₹ ${booking.totalPrice ?? '0'}",
-                                      style: styles.blackRegular15,
-                                    ),
-                                    // SizedBox(wid,),
-                                    Spacer(),
-                                    Row(
-                                      children: [
-                                        IconButton(
-                                          color: kRed,
-                                          icon: const Icon(Icons.delete),
-                                          onPressed: () {
-                                            bookingViewmodel.vazhipaduDelete(
-                                              index,
-                                            );
-                                          },
-                                        ),
-                                        // IconButton(
-                                        //   icon: const Icon(Icons.add),
-                                        //   onPressed: () {
-                                        //     bookingViewmodel.popFunction(
-                                        //       context,
-                                        //     );
-                                        //   },
-                                        // ),
-                                      ],
-                                    ),
-                                  ],
-                                ),
-                                BuildTextWidget(
-                                  text: booking.godname?.tr() ?? "",
-                                  size: 14,
-                                  color: kBlack,
-                                  fromLang: fromLang,
-                                ),
-                                const SizedBox(height: 10),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      "Qty: ${booking.count ?? '0'}",
-                                      style: styles.blackRegular13,
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
+                          BuildTextWidget(
+                            text:
+                            "${"Name".tr()} : ${booking.name ?? ''}",
+                            style: styles.blackRegular13,
+                            fromLang: fromLang,
+                          ),
+                          const SizedBox(height: 10),
+                          BuildTextWidget(
+                            text:
+                            "${"Star".tr()} : ${booking.star ?? ''}",
+                            style: styles.blackRegular13,
+                            fromLang: fromLang,
+                          ),
+                          const SizedBox(height: 10),
+                          BuildTextWidget(
+                            text:
+                            "${'vazhipadu_date'.tr()} : ${booking.date ?? DateFormat('dd-MM-yyyy').format(DateTime.now())}",
+                            style: styles.blackRegular13,
+                            fromLang: fromLang,
+                          ),
+                          const SizedBox(height: 6),
+                          BuildTextWidget(
+                            text:
+                            "${'Devatha'.tr()} : ${booking.godname ?? ''}",
+                            style: styles.blackRegular13,
+                            fromLang: fromLang,
+                          ),
+                          const SizedBox(height: 6),
+                          const Divider(),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              BuildTextWidget(
+                                text: "${'Amount'.tr()} : ₹ $total",
+                                style: styles.blackRegular13,
+                                fromLang: fromLang,
+                              ),
+                            ],
                           ),
                         ],
                       ),
@@ -181,3 +175,4 @@ class PreViewWidget extends StatelessWidget {
     );
   }
 }
+

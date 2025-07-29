@@ -8,7 +8,7 @@ class BackButtonComponent extends StatelessWidget {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.only(left: 7.0),
+        padding: const EdgeInsets.only(left: 7.0,top: 10),
         child: Container(
           height: 30,
           alignment: Alignment.topLeft,

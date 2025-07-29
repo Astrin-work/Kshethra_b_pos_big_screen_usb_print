@@ -21,8 +21,8 @@ class RepCheckBoxWidget extends StatelessWidget {
           child: Row(
             children: [
               _buildOption("Once", bookingViewmodel, styles),
-              _buildOption("Weekly", bookingViewmodel, styles),
               _buildOption("Daily", bookingViewmodel, styles),
+              _buildOption("Weekly", bookingViewmodel, styles),
               _buildOption("Monthly", bookingViewmodel, styles),
             ],
           ),

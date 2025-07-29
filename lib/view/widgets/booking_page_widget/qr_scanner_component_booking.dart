@@ -94,7 +94,6 @@ class QrScannerComponentBooking extends StatelessWidget {
                                   throw Exception("No receipt data found.");
                                 }
 
-                                // ✅ Get temple info safely
                                 final templeList = viewmodel.templeList;
                                 String templeName = 'Temple Name';
                                 String templeAddress = 'Temple Address';
@@ -112,62 +111,64 @@ class QrScannerComponentBooking extends StatelessWidget {
                                 for (final booking in response) {
                                   final serialNumber = booking['serialNumber']?.toString() ?? '';
                                   final poojaDate = DateFormat('dd/MM/yyyy').format(
-                                    DateTime.tryParse(booking['startDate']?.toString() ?? '') ?? DateTime.now(),
+                                    DateTime.tryParse(booking['startDate']?.toString() ?? '') ??
+                                        DateTime.now(),
                                   );
-                                  final postalCharge = double.tryParse(booking['postalCharge']?.toString() ?? '0')?.toStringAsFixed(2) ?? '0.00';
-                                  final devatha = viewmodel.selectedGods?.devathaName?.toString() ?? '';
+                                  final postalCharge = double.tryParse(
+                                    booking['postalCharge']?.toString() ?? '0',
+                                  )?.toStringAsFixed(2) ?? '0.00';
+                                  final devatha = viewmodel.selectedGods?.devathaName.toString() ?? '';
 
                                   final receiptList = booking['receipts'] as List<dynamic>? ?? [];
+
+                                  if (!groupedMap.containsKey(serialNumber)) {
+                                    groupedMap[serialNumber] = {
+                                      'serialNumber': serialNumber,
+                                      'poojaDate': poojaDate,
+                                      'postalCharge': postalCharge,
+                                      'devatha': devatha,
+                                      'receipts': <Map<String, dynamic>>[],
+                                    };
+                                  }
 
                                   for (final receipt in receiptList) {
                                     final name = receipt['personName'] ?? '';
                                     final star = receipt['personStar'] ?? '';
                                     final offerName = receipt['offerName']?.toString() ?? '';
-                                    final quantity = int.tryParse(receipt['quantity']?.toString() ?? '1') ?? 1;
-                                    final rate = double.tryParse(receipt['rate']?.toString() ?? '0') ?? 0;
+                                    final quantity = int.tryParse(
+                                      receipt['quantity']?.toString() ?? '1',
+                                    ) ?? 1;
+                                    final rate = double.tryParse(
+                                      receipt['rate']?.toString() ?? '0',
+                                    ) ?? 0;
 
-                                    final key = '$serialNumber|$name|$star|$poojaDate';
-
-                                    if (!groupedMap.containsKey(key)) {
-                                      groupedMap[key] = {
-                                        'serialNumber': serialNumber,
-                                        'personName': name,
-                                        'personStar': star,
-                                        'poojaDate': poojaDate,
-                                        'postalCharge': postalCharge,
-                                        'devatha': devatha,
-                                        'receipts': <Map<String, dynamic>>[],
-                                      };
-                                    }
-
-                                    groupedMap[key]!['receipts'].add({
+                                    groupedMap[serialNumber]!['receipts'].add({
                                       'offerName': offerName,
                                       'quantity': quantity,
                                       'rate': rate,
                                       'personName': name,
                                       'personStar': star,
                                     });
-
-                                    print('----------all details--------');
-                                    print(name);
-                                    print(star);
-                                    print(devatha);
-                                    print(rate);
-                                    print(quantity);
-                                    print(receipt);
                                   }
                                 }
 
                                 final List<Map<String, dynamic>> groupedReceipts = groupedMap.values.toList();
 
+                                for (int i = 0; i < groupedReceipts.length; i++) {
+                                  print("Printing receipt ${i + 1} of ${groupedReceipts.length}");
 
-                                await ReceiptFormatterBooking.printGroupedReceipts(
-                                  context,
-                                  groupedReceipts: groupedReceipts,
-                                  templeName: templeName,
-                                  templeAddress: templeAddress,
-                                  templePhone: templePhone,
-                                );
+                                  await ReceiptFormatterBooking.printGroupedReceipts(
+                                    context,
+                                    groupedReceipts: [groupedReceipts[i]],
+                                    templeName: templeName,
+                                    templeAddress: templeAddress,
+                                    templePhone: templePhone,
+                                  );
+
+                                  print("Finished printing receipt ${i + 1}");
+                                  await Future.delayed(const Duration(seconds: 2));
+                                }
+
 
                                 Navigator.push(
                                   context,
@@ -180,18 +181,12 @@ class QrScannerComponentBooking extends StatelessWidget {
                                 );
                               } catch (e) {
                                 debugPrint("❌ Error during print: $e");
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
-                                    content: Text("Failed to print receipt. ${e.toString()}"),
-                                  ),
-                                );
+
                               }
                             },
-
                           ),
                         ],
-                      )
-
+                      ),
                     ],
                   ),
                 ),

@@ -1,5 +1,6 @@
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
+import 'package:kshethra_mini/model/user_booking_model.dart';
 import 'package:kshethra_mini/utils/components/app_bar_widget.dart';
 import 'package:kshethra_mini/view/widgets/booking_page_widget/booking_action_bar.dart';
 import 'package:kshethra_mini/view/widgets/booking_page_widget/float_button_widget.dart';
@@ -20,7 +21,7 @@ class AdvancedBookingPreviewView extends StatelessWidget {
     super.key,
     required this.selectedRepMethod,
     required this.selectedDays,
-    required this.totalAmount,
+    required this.totalAmount, required List<UserBookingModel> bookingList,
   });
 
   @override
@@ -31,7 +32,7 @@ class AdvancedBookingPreviewView extends StatelessWidget {
           final total = bookingViewmodel.combinedTotalAmount + bookingViewmodel.postalAmount;
 
           return ResponsiveLayout(
-            pinelabDevice: BookingActionBar(
+            pinelabDevice: FloatButtonWidget(
               amount: total.toInt(),
               title: 'Advanced Booking',
               noOfScreens: 4,

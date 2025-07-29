@@ -58,15 +58,30 @@ class HomeWidget extends StatelessWidget {
                       height: SizeConfig.screenHeight * 0.052,
                       child: Image.asset(Assets.icons.pray.path),
                     ),
-                    titleWidget: BuildTextWidget(
-                      text: 'Vazhipaddu Booking'.tr(),
-                      color: Colors.black,
-                      size: 16,
-                      fontWeight: FontWeight.w500,
-                      maxLines: 2,
-                      textAlign: TextAlign.center,
-                      style:AppStyles().blackSemi15 ,
+                    titleWidget: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        BuildTextWidget(
+                          text:'Vazhipaddu'.tr(),
+                          color: Colors.black,
+                          size: 16,
+                          fontWeight: FontWeight.w500,
+                          textAlign: TextAlign.center,
+                          style: AppStyles().blackSemi15,
+                          fromLang: fromLang,
+                        ),
+                        BuildTextWidget(
+                          text: 'Booking'.tr(),
+                          color: Colors.black,
+                          size: 16,
+                          fontWeight: FontWeight.w500,
+                          textAlign: TextAlign.center,
+                          style: AppStyles().blackSemi15,
+                          fromLang: fromLang,
+                        ),
+                      ],
                     ),
+
                     onTap: () {
                       homepageViewmodel.bookingPageNavigate(context);
                     },

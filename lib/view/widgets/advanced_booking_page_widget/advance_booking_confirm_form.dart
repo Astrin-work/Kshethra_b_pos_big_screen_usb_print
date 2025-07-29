@@ -12,6 +12,7 @@ import 'package:kshethra_mini/view/widgets/build_text_widget.dart';
 import 'package:kshethra_mini/view_model/booking_viewmodel.dart';
 import 'package:provider/provider.dart';
 import '../../../model/api models/god_model.dart';
+import '../../../utils/upper_case_text_formatter.dart';
 
 class AdvancedBookingConfirmForm extends StatefulWidget {
   final Vazhipadus selectedVazhipaadu;
@@ -89,6 +90,10 @@ class _AdvancedBookingConfirmFormState
                     controller: bookingViewmodel.bookingNameController,
                     textAlign: TextAlign.center,
                     style: styles.blackRegular15,
+                    textCapitalization: TextCapitalization.characters,
+                    inputFormatters: [
+                      UpperCaseTextFormatter(),
+                    ],
                     decoration: InputDecoration(
                       hintText: "Name".tr(),
                       border: OutlineInputBorder(
@@ -111,6 +116,10 @@ class _AdvancedBookingConfirmFormState
                     textAlign: TextAlign.center,
                     style: styles.blackRegular15,
                     maxLength: 10,
+                    textCapitalization: TextCapitalization.characters,
+                    inputFormatters: [
+                      UpperCaseTextFormatter(),
+                    ],
                     decoration: InputDecoration(
                       hintText: "Phone".tr(),
                       border: OutlineInputBorder(
@@ -129,7 +138,7 @@ class _AdvancedBookingConfirmFormState
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      // 🔹 Star Selection
+
                       InkWell(
                         onTap: () {
                           bookingViewmodel.setAdvBookOption("star".tr());
@@ -173,8 +182,8 @@ class _AdvancedBookingConfirmFormState
                             borderRadius: BorderRadius.circular(15),
                             border: Border.all(
                               color: bookingViewmodel.selectedStar.isEmpty
-                                  ? Colors.red // show red border if empty
-                                  : kRed, // normal border
+                                  ? Colors.red
+                                  : kRed,
                               width: 1,
                             ),
                           ),
@@ -190,8 +199,6 @@ class _AdvancedBookingConfirmFormState
                           ),
                         ),
                       ),
-
-                      // 🔹 Date Selection
                       InkWell(
                         onTap: () {
                           bookingViewmodel.setAdvBookOption("date".tr());
@@ -274,7 +281,7 @@ class _AdvancedBookingConfirmFormState
                                         "Count",
                                         "Enter valid days",
                                       ),
-                                  controller: _repDaysController,
+                                  controller: bookingViewmodel.bookingRepController,
                                   onChanged: (value) {
                                     bookingViewmodel.bookingRepOnchange(
                                       value,
@@ -437,6 +444,10 @@ class _AdvancedBookingConfirmFormState
                                     bookingViewmodel.bookingAddressController,
                                 maxLines: 4,
                                 style: styles.blackRegular15,
+                                textCapitalization: TextCapitalization.characters,
+                                inputFormatters: [
+                                  UpperCaseTextFormatter(),
+                                ],
                                 decoration: InputDecoration(
                                   hintText: "Address".tr(),
                                   border: OutlineInputBorder(

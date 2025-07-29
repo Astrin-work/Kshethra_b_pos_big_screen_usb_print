@@ -26,7 +26,7 @@ class BookingFloatButtonWidget extends StatelessWidget {
     return Consumer<BookingViewmodel>(
       builder:
           (context, bookingViewmodel, child) => Padding(
-        padding: const EdgeInsets.only(left: 35.0, right: 5),
+        padding: const EdgeInsets.only(left: 35.0, right: 5,),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
