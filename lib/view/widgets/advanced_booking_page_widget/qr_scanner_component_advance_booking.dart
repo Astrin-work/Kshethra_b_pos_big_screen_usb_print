@@ -14,8 +14,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import '../../../utils/logger.dart';
-import '../receipt_widget/receipt_foramte_booking.dart';
-import '../receipt_widget/receipt_printer.dart';
+
+
 
 class QrScannerComponentAdvanceBooking extends StatelessWidget {
   final String amount;

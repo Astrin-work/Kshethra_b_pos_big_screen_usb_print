@@ -78,7 +78,6 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreenAdvanceBooking>
               // case 'Card':
               //   bookingViewmodel.handleCardPayment(total.toInt());
               // bookingViewmodel.navigateCardScreen(context);
-              break;
             default:
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text('Unsupported payment method')),

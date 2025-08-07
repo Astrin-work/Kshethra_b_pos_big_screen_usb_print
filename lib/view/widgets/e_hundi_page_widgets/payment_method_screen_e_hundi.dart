@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:kshethra_mini/view/widgets/e_hundi_page_widgets/choose_payment_method_e_hundi_widget.dart';
 import 'package:kshethra_mini/view_model/donation_viewmodel.dart';
 import 'package:kshethra_mini/view_model/e_hundi_viewmodel.dart';
 import 'package:provider/provider.dart';
@@ -39,6 +38,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreenEHundi> {
 
 @override
   void initState() {
+    super.initState();
     print("devatha Name:");
     print(widget.devathaName);
     print("star:");

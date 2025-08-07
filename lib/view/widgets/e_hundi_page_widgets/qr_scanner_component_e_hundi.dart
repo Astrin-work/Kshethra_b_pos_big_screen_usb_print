@@ -55,7 +55,7 @@ class _QrScannerComponentEHundiState extends State<QrScannerComponentEHundi> {
     try {
 
       final bookingViewmodel = Provider.of<BookingViewmodel>(context, listen: false);
-      final star = bookingViewmodel.selectedStar ?? '';
+      final star = bookingViewmodel.selectedStar;
       final data = {
         "devathaName":widget.devathaName,
         "amount": int.tryParse(amount) ?? 0,
@@ -122,9 +122,9 @@ class _QrScannerComponentEHundiState extends State<QrScannerComponentEHundi> {
 
     if (templeList.isNotEmpty) {
       final lastTemple = templeList.last;
-      templeName = lastTemple.templeName ?? templeName;
-      templeAddress = lastTemple.address ?? templeAddress;
-      templePhone = lastTemple.phoneNumber ?? templePhone;
+      templeName = lastTemple.templeName;
+      templeAddress = lastTemple.address;
+      templePhone = lastTemple.phoneNumber;
     }
     return Scaffold(
       body: Consumer<HomePageViewmodel>(

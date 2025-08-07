@@ -27,7 +27,7 @@ class ApiService {
       InterceptorsWrapper(
         onRequest: (options, handler) async {
           final token = await AppHive().getToken();
-          if (token != null && token.isNotEmpty) {
+          if (token.isNotEmpty) {
             options.headers['Authorization'] = 'Bearer $token';
           }
           return handler.next(options);
@@ -47,15 +47,13 @@ class ApiService {
               print("🔁 Old Token: $oldToken");
               print("🆕 New Token: $newToken");
 
-              if (newToken != null) {
-                final requestOptions = e.requestOptions;
-                requestOptions.headers['Authorization'] = 'Bearer $newToken';
-                requestOptions.extra['retry'] = true;
+              final requestOptions = e.requestOptions;
+              requestOptions.headers['Authorization'] = 'Bearer $newToken';
+              requestOptions.extra['retry'] = true;
 
-                final response = await _dio.fetch(requestOptions);
-                return handler.resolve(response);
-              }
-            } catch (refreshError) {
+              final response = await _dio.fetch(requestOptions);
+              return handler.resolve(response);
+                        } catch (refreshError) {
               print("❌ Token refresh failed: $refreshError");
               return handler.reject(e);
             }
@@ -74,17 +72,12 @@ class ApiService {
     final refreshToken = await AppHive().getRefreshToken();
     final accessToken = await AppHive().getToken();
 
-    if (refreshToken == null || accessToken == null) {
-      print("❌ Cannot refresh token: Access or refresh token is null.");
-      throw Exception("Missing tokens for refresh.");
-    }
-
     String deviceId = 'unknown';
     try {
       final deviceInfo = DeviceInfoPlugin();
       if (Platform.isAndroid) {
         final androidInfo = await deviceInfo.androidInfo;
-        deviceId = androidInfo.id ?? 'android-unknown';
+        deviceId = androidInfo.id;
       } else if (Platform.isIOS) {
         final iosInfo = await deviceInfo.iosInfo;
         deviceId = iosInfo.identifierForVendor ?? 'ios-unknown';
@@ -135,7 +128,7 @@ class ApiService {
 
       if (Platform.isAndroid) {
         final androidInfo = await deviceInfo.androidInfo;
-        deviceId = androidInfo.id ?? '';
+        deviceId = androidInfo.id;
       } else if (Platform.isIOS) {
         final iosInfo = await deviceInfo.iosInfo;
         deviceId = iosInfo.identifierForVendor ?? '';
