@@ -8,6 +8,7 @@ class AppHive {
   static const String _IS_SIGNED_IN_USER = "isSignedInUser";
   static const String _NAME = "name";
   static const String _TOKEN = "token";
+  static const String _REFRESH_TOKEN = "refresh_token"; // ✅ Added
   static const String _LANGUAGE = "language";
 
   /// Put methods
@@ -51,10 +52,7 @@ class AppHive {
   }
 
   Future<void> putIsUserLoggedIn({required bool isLoggedIn}) async {
-    await Hive.box(Constants.BOX_NAME).put(
-      _ISLOGGEDIN,
-      isLoggedIn,
-    );
+    await Hive.box(Constants.BOX_NAME).put(_ISLOGGEDIN, isLoggedIn);
   }
 
   /// Video Audio Status
@@ -75,16 +73,22 @@ class AppHive {
     return hiveGet(key: _NAME);
   }
 
-  /// Token
-  // Future<void> putToken(String? token) async {
-  //   await hivePut(key: _TOKEN, value: token);
-  // }
-  putToken({String? token}) {
-    hivePut(key: _TOKEN, value: token);
+  /// Access Token
+  Future<void> putToken({required String token}) async {
+    await hivePut(key: _TOKEN, value: token);
   }
 
   String getToken() {
     return hiveGet(key: _TOKEN);
+  }
+
+  /// Refresh Token -  NEW
+  Future<void> putRefreshToken({required String token}) async {
+    await hivePut(key: _REFRESH_TOKEN, value: token);
+  }
+
+  String getRefreshToken() {
+    return hiveGet(key: _REFRESH_TOKEN);
   }
 
   /// Signed-In User

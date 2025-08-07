@@ -91,7 +91,7 @@
   "Enter your Name (optional)": "మీ పేరు నమోదు చేయండి (ఐచ్చికం)",
   "Phone (optional)": "ఫోన్ (ఐచ్ఛికం)",
   "Daily": "ప్రతిరోజు",
-  "Do you want to Logout ?": "మీరు లాగ్ అవుట్ చేయాలనుకుంటున్నారా?",
+  "Do you want to Logout?": "మీరు లాగ్ అవుట్ చేయాలనుకుంటున్నారా?",
   "Logout": "లాగ్అవుట్",
   "Enter the amount to Donate": "దానం చేయడానికి మొత్తాన్ని నమోదు చేయండి",
   "All": "అన్నీ",
@@ -110,5 +110,7 @@
   "Once": "ఒక్కసారి",
   "Times": "సార్లు",
   "Postal Charges": "తపాలా ఖర్చులు",
-  "Amount": "మొత్తం"
+  "Amount": "మొత్తం",
+  "Devatha": "దేవతా",
+  "Cancel": "రద్దు చేయి"
 }

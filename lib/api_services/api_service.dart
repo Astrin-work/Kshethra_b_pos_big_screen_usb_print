@@ -1,4 +1,3 @@
-
 import 'dart:io';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:dio/dio.dart';
@@ -19,17 +18,114 @@ class ApiService {
   ApiService() {
     _dio = Dio(
       BaseOptions(
-          baseUrl: 'https://online.astrins.com/api',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        baseUrl: 'https://online.astrins.com/api',
+        headers: {'Content-Type': 'application/json'},
       ),
     );
 
-    // (_dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate = (client) {
-    //   client.badCertificateCallback = (cert, host, port) => true;
-    //   return client;
-    // };
+    _dio.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) async {
+          final token = await AppHive().getToken();
+          if (token != null && token.isNotEmpty) {
+            options.headers['Authorization'] = 'Bearer $token';
+          }
+          return handler.next(options);
+        },
+        onError: (DioException e, handler) async {
+          final isRefreshEndpoint = e.requestOptions.path.contains('/Token/refresh');
+          final hasRetried = e.requestOptions.extra['retry'] == true;
+
+          if (e.response?.statusCode == 401 && !isRefreshEndpoint && !hasRetried) {
+            try {
+              print("⚠️ Access token expired. Refreshing token...");
+              final oldToken = await AppHive().getToken();
+
+              await refreshAccessToken();
+
+              final newToken = await AppHive().getToken();
+              print("🔁 Old Token: $oldToken");
+              print("🆕 New Token: $newToken");
+
+              if (newToken != null) {
+                final requestOptions = e.requestOptions;
+                requestOptions.headers['Authorization'] = 'Bearer $newToken';
+                requestOptions.extra['retry'] = true;
+
+                final response = await _dio.fetch(requestOptions);
+                return handler.resolve(response);
+              }
+            } catch (refreshError) {
+              print("❌ Token refresh failed: $refreshError");
+              return handler.reject(e);
+            }
+          }
+
+          return handler.next(e);
+        },
+      ),
+    );
+  }
+
+
+
+
+  Future<void> refreshAccessToken() async {
+    final refreshToken = await AppHive().getRefreshToken();
+    final accessToken = await AppHive().getToken();
+
+    if (refreshToken == null || accessToken == null) {
+      print("❌ Cannot refresh token: Access or refresh token is null.");
+      throw Exception("Missing tokens for refresh.");
+    }
+
+    String deviceId = 'unknown';
+    try {
+      final deviceInfo = DeviceInfoPlugin();
+      if (Platform.isAndroid) {
+        final androidInfo = await deviceInfo.androidInfo;
+        deviceId = androidInfo.id ?? 'android-unknown';
+      } else if (Platform.isIOS) {
+        final iosInfo = await deviceInfo.iosInfo;
+        deviceId = iosInfo.identifierForVendor ?? 'ios-unknown';
+      }
+    } catch (e) {
+      print("⚠️ Error fetching device ID: $e");
+    }
+
+    try {
+      final response = await _dio.post(
+        '/Token/refresh',
+        data: {
+          "accessToken": accessToken,
+          "refreshToken": refreshToken,
+          "deviceId": deviceId,
+        },
+        options: Options(
+          headers: {
+            'accept': '*/*',
+            'Content-Type': 'application/json',
+          },
+        ),
+      );
+
+      final newAccessToken = response.data['accessToken'];
+      final newRefreshToken = response.data['refreshToken'];
+
+      if (newAccessToken?.isNotEmpty == true && newRefreshToken?.isNotEmpty == true) {
+        await AppHive().putToken(token: newAccessToken);
+        await AppHive().putRefreshToken(token: newRefreshToken);
+        print("✅ Token refreshed successfully");
+      } else {
+        throw Exception("❌ Missing token fields in refresh response");
+      }
+    } on DioException catch (e) {
+      print("❌ DioException during token refresh: ${e.response?.data}");
+      throw Exception("Failed to refresh token: ${e.message}");
+    } catch (e) {
+      print("❌ Unexpected error during token refresh: $e");
+      rethrow;
+    }
   }
 
   Future<String> login(String username, String password) async {
@@ -61,11 +157,16 @@ class ApiService {
       );
 
       print('Response data: ${response.data}');
-      final token = response.data['accessToken'];
-      print('Token: $token');
+      final accessToken = response.data['accessToken'];
+      final refreshToken = response.data['refreshToken'];
 
-      await AppHive().putToken(token: token);
-      return token;
+      print('Access Token: $accessToken');
+      print('Refresh Token: $refreshToken');
+
+      await AppHive().putToken(token: accessToken);
+      await AppHive().putRefreshToken(token: refreshToken);
+
+      return accessToken;
     } on DioException catch (e) {
       print('Error response: ${e.response}');
       print('Error data: ${e.response?.data}');
@@ -76,6 +177,7 @@ class ApiService {
       rethrow;
     }
   }
+
 
   Future<List<Godmodel>> getDevatha() async {
     final token = await AppHive().getToken();
@@ -160,9 +262,9 @@ class ApiService {
         print(" Response Data: ${response.data}");
         return response.data as Map<String, dynamic>;
       } else if (response.statusCode == 409) {
-        throw Exception("⚠️ Donation already exists.");
+        throw Exception(" Donation already exists.");
       } else {
-        throw Exception("❌ Failed with status: ${response.statusCode}");
+        throw Exception(" Failed with status: ${response.statusCode}");
       }
     } catch (e) {
       print("❌ Error posting donation: $e");
@@ -206,12 +308,12 @@ class ApiService {
         ),
       );
 
-      print("📤 Request Data: $eHundiData");
-      print("📥 Response Status: ${response.statusCode}");
-      print("📥 Response Body: ${response.data}");
+      print(" Request Data: $eHundiData");
+      print(" Response Status: ${response.statusCode}");
+      print(" Response Body: ${response.data}");
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        print("✅ E-Hundi posted successfully.");
+        print(" E-Hundi posted successfully.");
         return response.data;
       } else if (response.statusCode == 409) {
         throw Exception(" E-Hundi entry already exists.");
@@ -385,5 +487,14 @@ class ApiService {
       print('Failed to get device info: $e');
     }
   }
-
 }
+
+
+
+
+
+
+
+
+
+

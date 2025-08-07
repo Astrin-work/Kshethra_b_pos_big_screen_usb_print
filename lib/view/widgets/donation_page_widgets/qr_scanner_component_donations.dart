@@ -36,7 +36,6 @@ class QrScannerComponentDonations extends StatelessWidget {
     required this.address,
   });
 
-  // ✅ Fixed: This returns a Map, not bool
   Future<Map<String, dynamic>?> postDonation(BuildContext context) async {
     final donationData = {
       "name": name,
@@ -135,9 +134,9 @@ class QrScannerComponentDonations extends StatelessWidget {
 
                       if (templeList.isNotEmpty) {
                         final lastTemple = templeList.last;
-                        templeName = lastTemple.templeName ?? templeName;
-                        templeAddress = lastTemple.address ?? templeAddress;
-                        templePhone = lastTemple.phoneNumber ?? templePhone;
+                        templeName = lastTemple.templeName;
+                        templeAddress = lastTemple.address;
+                        templePhone = lastTemple.phoneNumber;
                       }
 
                       // 🕒 Get current system date/time
@@ -167,7 +166,6 @@ class QrScannerComponentDonations extends StatelessWidget {
                       print("Account Head: ${response['acctHeadName']}");
                       print("Temple: $templeName, $templeAddress, $templePhone");
 
-                      // ✅ Navigate to success screen
                       Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -178,7 +176,7 @@ class QrScannerComponentDonations extends StatelessWidget {
                         ),
                       );
                     } catch (e) {
-                      print("❌ Error during print: $e");
+                      print(" Error during print: $e");
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           content: Text("Failed to print receipt. ${e.toString()}"),

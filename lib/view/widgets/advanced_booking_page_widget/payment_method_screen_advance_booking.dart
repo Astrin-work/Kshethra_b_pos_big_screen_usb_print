@@ -69,7 +69,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreenAdvanceBooking>
         payOnTap: () {
           switch (_selectedMethod) {
             case 'UPI':
-              bookingViewmodel.navigateToQrScannerAdv(context);
+              bookingViewmodel.navigateToQrScannerAdv(context, total.toInt());
               // bookingViewmodel.navigateToQrScanner(context);
               break;
             case 'Cash':

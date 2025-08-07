@@ -29,14 +29,30 @@ class AuthViewmodel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void navigateHomeOrLogin(BuildContext context) {
-    Future.delayed(const Duration(seconds: 3)).then(
-          (_) => Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const LoginView()),
+  // void navigateHomeOrLogin(BuildContext context) {
+  //   Future.delayed(const Duration(seconds: 3)).then(
+  //         (_) => Navigator.pushReplacement(
+  //       context,
+  //       MaterialPageRoute(builder: (context) => const LoginView()),
+  //     ),
+  //   );
+  // }
+
+  void navigateHomeOrLogin(BuildContext context) async {
+    await Future.delayed(const Duration(seconds: 3));
+
+    if (!context.mounted) return;
+
+    final isLoggedIn = AppHive().getIsUserLoggedIn() == true;
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (_) => isLoggedIn ? const LanguageSelectView() : const LoginView(),
       ),
     );
   }
+
+
 
   Future<void> selectLanguagePageNavigate(BuildContext context) async {
     bool valid = loginKey.currentState?.validate() ?? false;
@@ -74,12 +90,23 @@ class AuthViewmodel extends ChangeNotifier {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBarWidget(msg: "Logout successful", color: kRed).build(context),
     );
+
+    // Clear login status
     AppHive().putIsUserLoggedIn(isLoggedIn: false);
-    appHive.clearHive();
+
+    // Clear tokens
+    AppHive().putToken(token: ""); // or pass null if your Hive logic allows
+    AppHive().putRefreshToken( token: ''); // or pass null if your Hive logic allows
+
+    // Clear all other Hive data if needed
+    AppHive().clearHive();
+
+    // Navigate to login screen
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(builder: (_) => LoginView()),
           (route) => false,
     );
   }
+
 }

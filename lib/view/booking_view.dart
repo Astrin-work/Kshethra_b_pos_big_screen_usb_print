@@ -18,30 +18,25 @@ class BookingView extends StatelessWidget {
       floatingActionButton: Consumer<BookingViewmodel>(
         builder:
             (context, bookingViewmodel, child) => ResponsiveLayout(
-          pinelabDevice:BookingFloatButtonWidget(
-            payOnTap: () async {
-              bookingViewmodel.navigateBookingPreviewView(context);
-              print("-------btn pressed------");
-
-            },
-          ),
+              pinelabDevice: BookingFloatButtonWidget(
+                payOnTap: () async {
+                  bookingViewmodel.navigateBookingPreviewView(context);
+                },
+              ),
 
               mediumDevice: BookingFloatButtonWidget(
-            height: 65,
-            payOnTap: () {
-              bookingViewmodel.navigateBookingPreviewView(context);
-
-
-            },
-          ),
-          largeDevice: BookingFloatButtonWidget(
-            height: 75,
-            payOnTap: () {
-              bookingViewmodel.navigateBookingPreviewView(context);
-
-            },
-          ),
-        ),
+                height: 65,
+                payOnTap: () {
+                  bookingViewmodel.navigateBookingPreviewView(context);
+                },
+              ),
+              largeDevice: BookingFloatButtonWidget(
+                height: 75,
+                payOnTap: () {
+                  bookingViewmodel.navigateBookingPreviewView(context);
+                },
+              ),
+            ),
       ),
       body: SingleChildScrollView(
         physics: NeverScrollableScrollPhysics(),
@@ -79,8 +74,6 @@ class BookingView extends StatelessWidget {
           ],
         ),
       ),
-
-
     );
   }
 }

@@ -28,13 +28,15 @@ class PaymentMethodScreenEHundi extends StatefulWidget {
       _PaymentMethodScreenState();
 }
 class _PaymentMethodScreenState extends State<PaymentMethodScreenEHundi> {
-  String _selectedMethod = 'Cash';
+
+  String _selectedMethod = 'UPI';
 
   void _onMethodSelected(String method) {
     setState(() {
       _selectedMethod = method;
     });
   }
+
 @override
   void initState() {
     print("devatha Name:");
@@ -65,10 +67,10 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreenEHundi> {
         ],
       ),
       floatingActionButton: FloatButtonWidget(
-        amount: int.tryParse(widget.amount ?? '0') ?? 0,
-        height: 60,
-        title: 'Confirm',
-        noOfScreens: 1,
+          amount: int.tryParse(widget.amount ?? '0') ?? 0,
+          height: 60,
+          title: 'Confirm',
+          noOfScreens: 1,
           payOnTap: () {
 
             final donationViewmodel = Provider.of<DonationViewmodel>(
@@ -84,11 +86,11 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreenEHundi> {
               print("Amount: $amount, Name: $name, Phone: $phone");
 
               EHundiViewmodel().navigateToQrScanner(
-                context,
-                amount,
-                name: name,
-                phone: phone,
-                DevathaName:widget.devathaName
+                  context,
+                  amount,
+                  name: name,
+                  phone: phone,
+                  DevathaName:widget.devathaName
               );
             } else {
               ScaffoldMessenger.of(context).showSnackBar(
@@ -96,6 +98,7 @@ class _PaymentMethodScreenState extends State<PaymentMethodScreenEHundi> {
               );
             }
           }
+
 
       ),
     );

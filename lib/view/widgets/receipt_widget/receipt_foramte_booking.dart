@@ -144,7 +144,7 @@ class ReceiptFormatterBooking {
         templeName.isNotEmpty ? templeName.toUpperCase() : "TEMPLE NAME",
         35,
       );
-      // drawCentered("KSHETRAM", 28);
+
       drawCentered(
         templeAddress.isNotEmpty ? templeAddress : "TEMPLE ADDRESS",
         22,
@@ -166,9 +166,9 @@ class ReceiptFormatterBooking {
       [
         "NO".padLeft(5),
         "VAZHIPADU".padLeft(15),
-        "QTY".padLeft(20),
+        "QTY".padLeft(29),
         "".padRight(2),
-        "AMOUNT".padLeft(21),
+        "AMOUNT".padLeft(13  ),
       ].join();
       drawLeft(headerLine, 24, indent: 0);
       drawDashedLine(spaceAfter: 0);
@@ -180,14 +180,13 @@ class ReceiptFormatterBooking {
         final star = item['personStar']?.toString().trim() ?? '';
         final itemName = item['offerName']?.toString().toUpperCase() ?? '';
         final qty = item['quantity'].toString();
-        final rate = double.tryParse(item['rate'].toString()) ?? 0;
-        final amount = (int.tryParse(qty) ?? 1) * rate;
+        final amount = (item['rate'] as num?)?.toDouble() ?? 0.0;
 
         total += amount;
 
-
-        const itemNameLineWidth = 40;
+        const itemNameLineWidth = 22;
         const indent = 30;
+        const serialWidth = 3;
 
         final itemNameLines = <String>[];
         for (int j = 0; j < itemName.length; j += itemNameLineWidth) {
@@ -198,33 +197,38 @@ class ReceiptFormatterBooking {
         }
 
 
-        drawLeft("${(i + 1).toString().padRight(3)}${itemNameLines[0]}", 22, indent: indent.toDouble());
+        final serialText = "${(i + 1).toString().padRight(serialWidth)}";
+        final firstLineNameOnly = itemNameLines[0].padRight(30);
+        final qtyText = qty.padLeft(0);
+        final amountText = "₹${amount.toStringAsFixed(2)}".padLeft(20);
+        final firstLine = "$serialText$firstLineNameOnly$qtyText$amountText";
+        drawLeft(firstLine, 22, indent: indent.toDouble());
 
 
         for (int j = 1; j < itemNameLines.length; j++) {
-          drawLeft("   ${itemNameLines[j]}", 22, indent: indent.toDouble());
+          drawLeft(" " * serialWidth + itemNameLines[j], 22, indent: indent.toDouble());
         }
 
-
-        final qtyText = qty.padLeft(28);
-        final amountText = "₹${amount.toStringAsFixed(2)}".padLeft(32);
-        drawLeft("${" " * 30}$qtyText  $amountText", 22, indent: indent.toDouble());
 
         if (name.isNotEmpty || star.isNotEmpty) {
           final upperName = name.toUpperCase();
           final nameStarLine = star.isNotEmpty
               ? "$upperName (${star.toUpperCase()})"
               : upperName;
-          drawLeft(nameStarLine.padLeft(28), 22);
+
+          drawLeft(" " * serialWidth + nameStarLine, 22, indent: indent.toDouble());
         }
 
         yOffset += 5;
       }
 
 
+
+
+
       drawDashedLine();
       final label = "TOTAL".padRight(40); // adjust spacing as needed
-      final amount = "₹${total.toStringAsFixed(2)}".padLeft(40); // pad full string including ₹
+      final amount = "₹${total.toStringAsFixed(2)}".padLeft(36); // pad full string including ₹
 
       drawLeft(label + amount, 24);
 

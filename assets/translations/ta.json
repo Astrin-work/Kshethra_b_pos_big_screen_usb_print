@@ -90,7 +90,7 @@
   "Enter your Name (optional)": "உங்கள் பெயரை உள்ளிடவும் (விருப்பத்தேர்வு)",
   "Phone (optional)": "தொலைபேசி (விரும்பினால்)",
   "Daily": "தினசரி",
-  "Do you want to Logout ?": "நீங்கள் வெளியேற விரும்புகிறீர்களா?",
+  "Do you want to Logout?": "நீங்கள் வெளியேற விரும்புகிறீர்களா?",
   "Logout": "வெளியேறு",
   "Enter the amount to Donate": "நன்கு தொகையை உள்ளிடவும்",
   "Adavance": "அட்வான்ஸ்",
@@ -108,5 +108,7 @@
   "vazhipadu_date": "வழிபாட்டு தேதி",
   "God": "கடவன்",
   "Postal Charges": "அஞ்சல் கட்டணம்",
-  "Amount": "தொகை"
+  "Amount": "தொகை",
+  "Devatha": "தேவதா",
+  "Cancel" : "ரத்துசெய்"
 }

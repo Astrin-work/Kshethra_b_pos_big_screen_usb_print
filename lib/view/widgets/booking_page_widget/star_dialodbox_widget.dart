@@ -37,13 +37,6 @@ class StarDialogBox extends StatelessWidget {
           child: Column(
             children: [
               Text("Select your Star".tr(), style: styles.blackRegular18),
-              // BuildTextWidget(
-              //   text: "Select your Star",
-              //   toLang: currentLang,
-              //   color: kBlack,
-              //   fontWeight: FontWeight.w500,
-              //   size: 16,
-              // ),
               15.kH,
               Flexible(
                 child: GridView.builder(
@@ -61,6 +54,7 @@ class StarDialogBox extends StatelessWidget {
                         stars[index].starKey?.tr() ?? "",
                         context,
                       );
+
                     },
 
                     child: Container(

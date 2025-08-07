@@ -92,7 +92,7 @@
   "Enter your Name (optional)": "अपना नाम दर्ज करें (वैकल्पिक)",
   "Phone (optional)": "दूरवाणी वैकल्पिक)",
   "Daily": "दैनिक",
-  "Do you want to Logout ?": "क्या आप लॉगआउट करना चाहते हैं?",
+  "Do you want to Logout?": "क्या आप लॉगआउट करना चाहते हैं?",
   "Logout ": "लॉग आउट",
   "Enter the amount to Donate": "दान करने के लिए राशि दर्ज करें",
   "Adavance": "\nअग्रिम\n",
@@ -112,5 +112,7 @@
   "Once": "ఒక్కసారి",
   "Times": "సార్లు",
   "Postal Charges": "डाक शुल्क",
-  "Amount": "राशि"
+  "Amount": "राशि",
+  "Devatha": "देवी",
+  "Cancel": "रद्द करना"
 }

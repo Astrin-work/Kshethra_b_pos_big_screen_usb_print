@@ -49,33 +49,29 @@ class BookingFormWidget extends StatelessWidget {
                     key: bookingViewmodel.bookingKey,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
                     child: TextFormField(
-                    autofocus: true,
-                    controller: bookingViewmodel.bookingNameController,
-                    keyboardType: TextInputType.name, // Correct usage
-                    textAlign: TextAlign.start,
-                    style: styles.blackRegular15,
-                    validator: Validation.nameValidation,
-                    textCapitalization: TextCapitalization.characters,
-                    inputFormatters: [
-                      UpperCaseTextFormatter(),
-                    ],
-                    decoration: InputDecoration(
-                      hintText: 'Name'.tr(),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(15),
-                        borderSide: const BorderSide(
-                          color: kDullPrimaryColor,
-                          width: 2.0,
+                      autofocus: true,
+                      controller: bookingViewmodel.bookingNameController,
+                      keyboardType: TextInputType.name, // Correct usage
+                      textAlign: TextAlign.start,
+                      style: styles.blackRegular15,
+                      validator: Validation.nameValidation,
+                      textCapitalization: TextCapitalization.characters,
+                      inputFormatters: [UpperCaseTextFormatter()],
+                      decoration: InputDecoration(
+                        hintText: 'Name'.tr(),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(15),
+                          borderSide: const BorderSide(
+                            color: kDullPrimaryColor,
+                            width: 2.0,
+                          ),
                         ),
                       ),
                     ),
                   ),
-
-
-        ),
                 ),
 
                 const SizedBox(width: 10),
@@ -86,7 +82,10 @@ class BookingFormWidget extends StatelessWidget {
                     child: MaterialButton(
                       shape: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(16),
-                        borderSide: BorderSide(color: kDullPrimaryColor,width: 2),
+                        borderSide: BorderSide(
+                          color: kDullPrimaryColor,
+                          width: 2,
+                        ),
                       ),
                       onPressed: () async {
                         await showDialog(
@@ -169,17 +168,25 @@ class BookingFormWidget extends StatelessWidget {
                       itemBuilder: (context, index) {
                         final item = counterList[index];
                         final String categoryName = item.counterName;
-                        final bool isSelected = index == bookingViewmodel.selectedCounterIndex;
+                        final bool isSelected =
+                            index == bookingViewmodel.selectedCounterIndex;
 
                         return GestureDetector(
                           onTap: () {
                             bookingViewmodel.selectCategory(index);
                           },
                           child: Container(
-                            margin: const EdgeInsets.only(left: 1, right: 6, bottom: 6),
+                            margin: const EdgeInsets.only(
+                              left: 1,
+                              right: 6,
+                              bottom: 6,
+                            ),
                             padding: const EdgeInsets.fromLTRB(6, 10, 10, 10),
                             decoration: BoxDecoration(
-                              color: isSelected ? Colors.orangeAccent : Colors.transparent,
+                              color:
+                                  isSelected
+                                      ? Colors.orangeAccent
+                                      : Colors.transparent,
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: BuildTextWidget(
@@ -189,7 +196,8 @@ class BookingFormWidget extends StatelessWidget {
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
-                                color: isSelected ? Colors.white : Colors.black87,
+                                color:
+                                    isSelected ? Colors.white : Colors.black87,
                               ),
                             ),
                           ),
@@ -204,14 +212,14 @@ class BookingFormWidget extends StatelessWidget {
                       crossAixisCount: crossAixisCount ?? 3,
                       crossAxisSpace: crossAxisSpace ?? 15,
                       mainAxisSpace: mainAxisSpace ?? 15,
-                      selectedCategoryIndex: bookingViewmodel.selectedCounterIndex,
+                      selectedCategoryIndex:
+                          bookingViewmodel.selectedCounterIndex,
                       screeName: 'bookingPage',
                     ),
                   ),
                 ),
               ],
             ),
-
           ],
         ),
       ),

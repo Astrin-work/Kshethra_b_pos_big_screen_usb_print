@@ -59,17 +59,17 @@ class _QrScannerComponentEHundiState extends State<QrScannerComponentEHundi> {
       final data = {
         "devathaName":widget.devathaName,
         "amount": int.tryParse(amount) ?? 0,
-        "personName": name,
-        "phoneNumber": phone,
-        "personStar": star,
+        "personName": name.isNotEmpty ? name : "",
+        "phoneNumber": phone.isNotEmpty ? phone : "",
+        "personStar": star.isNotEmpty ? star : "",
         "paymentType": "cash",
         "transactionId": "asdf",
         "bankId": "asd",
         "bankName": "asdf",
       };
 
-      // Print payload for debugging
-      print("📤 Payload for E-Hundi Donation:");
+
+      print(" Payload for E-Hundi Donation:");
       data.forEach((key, value) => print("  $key: $value"));
 
       final response = await ApiService().postEHundiDetails(data);

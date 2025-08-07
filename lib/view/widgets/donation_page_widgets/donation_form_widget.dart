@@ -194,13 +194,11 @@ class _DonationFormWidgetState extends State<DonationFormWidget> {
                             color: kWhite,
                           ),
                           child: Center(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: BuildTextWidget(
-                                text:
-                                donationItem.acctHeadName,
-                                fromLang:fromLang ,
-                              ),
+                            child: BuildTextWidget(
+                              text:
+                              donationItem.acctHeadName,
+                              fromLang:fromLang ,
+                              maxLines: 2,
                             ),
                           ),
                         ),

@@ -16,8 +16,7 @@ import '../../../view_model/booking_viewmodel.dart';
 
 class EHundiDialogWidget extends StatefulWidget {
   final String selectedGod;
-  const EHundiDialogWidget({super.key,
-    required this.selectedGod});
+  const EHundiDialogWidget({super.key, required this.selectedGod});
 
   @override
   State<EHundiDialogWidget> createState() => _EHundiDialogWidgetState();
@@ -102,9 +101,7 @@ class _EHundiDialogWidgetState extends State<EHundiDialogWidget> {
                             controller: nameController,
                             style: styles.blackRegular13,
                             textCapitalization: TextCapitalization.characters,
-                            inputFormatters: [
-                              UpperCaseTextFormatter(),
-                            ],
+                            inputFormatters: [UpperCaseTextFormatter()],
                             decoration: InputDecoration(
                               hintText: "Enter your Name (optional)".tr(),
                               border: OutlineInputBorder(
@@ -146,7 +143,7 @@ class _EHundiDialogWidgetState extends State<EHundiDialogWidget> {
                                     MaterialButton(
                                       minWidth: 250,
                                       height: 50,
-                                      padding:  EdgeInsets.symmetric(
+                                      padding: EdgeInsets.symmetric(
                                         horizontal: 16,
                                       ),
                                       shape: RoundedRectangleBorder(
@@ -159,35 +156,38 @@ class _EHundiDialogWidgetState extends State<EHundiDialogWidget> {
                                       onPressed: () {
                                         showDialog(
                                           context: context,
-                                          builder:
-                                              (context) => ResponsiveLayout(
-                                                pinelabDevice: StarDialogBox(),
-                                                mediumDevice: StarDialogBox(
-                                                  borderRadius: 25,
-                                                  mainAxisSpace: 30,
-                                                  crossAxisSpace: 45,
-                                                ),
-                                                semiMediumDevice: StarDialogBox(
-                                                  borderRadius: 25,
-                                                  mainAxisSpace: 30,
-                                                  crossAxisSpace: 45,
-                                                  axisCount: 3,
-                                                ),
-                                                semiLargeDevice: StarDialogBox(
-                                                  borderRadius: 30,
-                                                  mainAxisSpace: 30,
-                                                  crossAxisSpace: 45,
-                                                  axisCount: 3,
-                                                ),
-                                                largeDevice: StarDialogBox(
-                                                  borderRadius: 35,
-                                                  mainAxisSpace: 30,
-                                                  crossAxisSpace: 45,
-                                                  axisCount: 4,
-                                                ),
-                                              ),
-                                        );
+                                          builder: (context) => ResponsiveLayout(
+                                            pinelabDevice: StarDialogBox(),
+                                            mediumDevice: StarDialogBox(
+                                              borderRadius: 25,
+                                              mainAxisSpace: 30,
+                                              crossAxisSpace: 45,
+                                            ),
+                                            semiMediumDevice: StarDialogBox(
+                                              borderRadius: 25,
+                                              mainAxisSpace: 30,
+                                              crossAxisSpace: 45,
+                                              axisCount: 3,
+                                            ),
+                                            semiLargeDevice: StarDialogBox(
+                                              borderRadius: 30,
+                                              mainAxisSpace: 30,
+                                              crossAxisSpace: 45,
+                                              axisCount: 3,
+                                            ),
+                                            largeDevice: StarDialogBox(
+                                              borderRadius: 35,
+                                              mainAxisSpace: 30,
+                                              crossAxisSpace: 45,
+                                              axisCount: 4,
+                                            ),
+                                          ),
+                                        ).then((_) {
+                                          // Reset star selection after dialog is closed
+                                          Provider.of<BookingViewmodel>(context, listen: false).clearSelectedStar();
+                                        });
                                       },
+
                                       child: Align(
                                         alignment: Alignment.centerLeft,
                                         child: BuildTextWidget(
@@ -210,28 +210,31 @@ class _EHundiDialogWidgetState extends State<EHundiDialogWidget> {
                       children: [
                         MaterialButton(
                           onPressed: () {
-                            final eHundiViewModel = Provider.of<EHundiViewmodel>(
-                              context,
-                              listen: false,
-                            );
+                            final eHundiViewModel =
+                                Provider.of<EHundiViewmodel>(
+                                  context,
+                                  listen: false,
+                                );
 
-                            if (eHundiViewModel.eHundiKey.currentState?.validate() ?? false) {
-                              final amount = eHundiViewModel.eHundiAmountController.text.trim();
+                            if (eHundiViewModel.eHundiKey.currentState
+                                    ?.validate() ??
+                                false) {
+                              final amount =
+                                  eHundiViewModel.eHundiAmountController.text
+                                      .trim();
                               final name = nameController.text.trim();
                               final phone = phoneController.text.trim();
-
 
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => PaymentMethodScreenEHundi(
-                                    amount: amount,
-                                    name: name,
-                                    phone: phone,
-                                    devathaName: widget.selectedGod,
-
-
-                                  ),
+                                  builder:
+                                      (context) => PaymentMethodScreenEHundi(
+                                        amount: amount,
+                                        name: name,
+                                        phone: phone,
+                                        devathaName: widget.selectedGod,
+                                      ),
                                 ),
                               );
                             }

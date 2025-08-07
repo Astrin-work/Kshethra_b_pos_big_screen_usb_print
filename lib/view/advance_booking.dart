@@ -18,21 +18,6 @@ class AdvanceBooking extends StatelessWidget {
         child: Column(
           children: [
             AppBarWidget(title: "Advance Booking".tr()),
-            // Row(
-            //   crossAxisAlignment: CrossAxisAlignment.center,
-            //   mainAxisAlignment: MainAxisAlignment.center,
-            //   children: [
-            //     SizedBox(height: 550,),
-            //     Text(
-            //       "Comming Soon",
-            //       style: TextStyle(
-            //         color: Colors.black,
-            //         fontSize: 18,
-            //         fontWeight: FontWeight.w600,
-            //       ),
-            //     ),
-            //   ],
-            // ),
              ResponsiveLayout(
               pinelabDevice: Padding(
                 padding: const EdgeInsets.only(left: 15.0, right: 15),

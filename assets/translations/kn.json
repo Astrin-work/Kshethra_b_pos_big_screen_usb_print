@@ -91,8 +91,8 @@
   "Enter your Name (optional)": "ನಿಮ್ಮ ಹೆಸರು ನಮೂದಿಸಿ (ಐಚ್ಛಿಕ)",
   "Phone (optional)": "ಫೋನ್ (ಐಚ್ಛಿಕ)",
   "Daily": "ದೈನಂದಿನ",
-  "Do you want to Logout ?": "ನೀವು ಲಾಗ್ ಔಟ್ ಮಾಡಲು ಬಯಸುತ್ತೀರಾ?",
-  "Logout ": "ಲಾಗ್ಔಟ್",
+  "Do you want to Logout?": "ನೀವು ಲಾಗ್ ಔಟ್ ಮಾಡಲು ಬಯಸುತ್ತೀರಾ?",
+  "Logout": "ಲಾಗ್ಔಟ್",
   "Enter the amount to Donate": "ದಾನದ ಮೊತ್ತವನ್ನು ನಮೂದಿಸಿ",
   "E-Bhandaram": "ಇ-ಭಂಡಾರನ್",
   "All": "ಎಲ್ಲಾ",
@@ -111,5 +111,8 @@
   "Once": "ಒಮ್ಮೆ",
   "Times": "ಸಾರಿ",
   "Postal Charges": "ಅಂಚೆ ಶುಲ್ಕ",
-  "Amount": "ಮೊತ್ತ"
+  "Amount": "ಮೊತ್ತ",
+  "Devatha": "ದೇವತಾ",
+  "Cancel" : "ರದ್ದುಮಾಡು"
+
 }

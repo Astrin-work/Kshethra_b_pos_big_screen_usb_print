@@ -16,9 +16,9 @@ class LargeDeviceWidget extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        SizedBox(height: SizeConfig.screenHeight*0.05,),
+        SizedBox(height: SizeConfig.screenHeight*0.03,),
         Text("Select your language",style: TextStyle(fontSize: 30,fontWeight: FontWeight.w400),),
-        SizedBox(height: SizeConfig.screenHeight*0.050),
+        SizedBox(height: SizeConfig.screenHeight*0.030),
         Wrap(
           spacing: 30,
           runSpacing:35 ,
@@ -35,7 +35,7 @@ class LargeDeviceWidget extends StatelessWidget {
         SizedBox(height: SizeConfig.screenHeight*0.02,),
         Image.asset(
           fit: BoxFit.fill,
-          // width: SizeConfig.screenWidth * 0.4,
+          // width: SizeConfig.screenWidth * 0.4,s
           height: SizeConfig.screenHeight*0.08,
           Assets.icons.astrinsLogo.path,
         )

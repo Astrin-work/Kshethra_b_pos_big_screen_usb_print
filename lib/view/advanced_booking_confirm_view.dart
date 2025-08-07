@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kshethra_mini/view/widgets/advanced_booking_page_widget/advance_booking_float_button_widget.dart';
 import 'package:provider/provider.dart';
 import 'package:kshethra_mini/utils/components/app_bar_widget.dart';
 import 'package:kshethra_mini/utils/components/responsive_layout.dart';
@@ -69,7 +70,6 @@ class AdvancedBookingConfirmView extends StatelessWidget {
       return;
     }
 
-    // Validate form fields (if any are in the form widget)
     if (!isFormValid) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBarWidget(
@@ -85,10 +85,42 @@ class AdvancedBookingConfirmView extends StatelessWidget {
     viewmodel.setVazhipaduAdvBookingList(selectedVazhipaadu, context);
   }
 
+  void _handlePayTapAdv(BuildContext context, BookingViewmodel viewmodel) {
+    final isFormValid = viewmodel.advBookingKey.currentState?.validate() ?? false;
 
+    final name = viewmodel.bookingNameController.text.trim();
+    final phone = viewmodel.bookingPhnoController.text.trim();
+    final selectedStar = viewmodel.selectedStar.trim();
+    final selectedDate = viewmodel.selectedDate.trim();
 
+    String? error;
 
+    if (name.isEmpty) {
+      error = "Please enter a name";
+    } else if (phone.isEmpty || phone.length < 10) {
+      error = "Please enter a valid phone number";
+    } else if (selectedStar.isEmpty || selectedStar == "Star" || selectedStar == "നക്ഷത്രം") {
+      error = "Please select a star";
+    } else if (selectedDate.isEmpty || selectedDate == "Date" || selectedDate == "തീയതി") {
+      error = "Please select a date";
+    } else if (!isFormValid) {
+      error = "Please fill all required fields";
+    }
 
+    if (error != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBarWidget(
+          msg: error,
+          color: Colors.redAccent,
+        ).build(context),
+      );
+      return;
+    }
+
+    // Proceed if all validations pass
+    viewmodel.popFunction(context);
+    viewmodel.setVazhipaduAdvBookingList(selectedVazhipaadu, context);
+  }
 
 
   void _handleAddTap(BuildContext context, BookingViewmodel viewmodel) {
@@ -109,6 +141,50 @@ class AdvancedBookingConfirmView extends StatelessWidget {
     viewmodel.advBookingAddVazhipadu(selectedVazhipaadu, context);
   }
 
+  void _handleAddTapAdv(BuildContext context, BookingViewmodel viewmodel) {
+    final isValid = viewmodel.advBookingKey.currentState?.validate() ?? false;
+
+    if (!isValid) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBarWidget(
+          msg: "Please fill all required fields",
+          color: Colors.grey,
+        ).build(context),
+      );
+      return;
+    }
+
+    bool isAdded = viewmodel.advBookingAddVazhipadu(selectedVazhipaadu, context);
+    if (isAdded) {
+      // ✅ Show success message
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBarWidget(
+          msg: " Vazhipadu added successfully!",
+          color: Colors.green,
+        ).build(context),
+      );
+
+      print(" Vazhipadu added successfully!");
+
+      viewmodel.bookingAddNewDevottee();
+      viewmodel.popFunction(context);
+    } else {
+      //
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBarWidget(
+          msg: " Failed to add Vazhipadu.",
+          color: Colors.red,
+        ).build(context),
+      );
+
+      print("❌ Failed to add Vazhipadu.");
+    }
+  }
+
+
+
+
+
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
@@ -116,19 +192,19 @@ class AdvancedBookingConfirmView extends StatelessWidget {
     return Consumer<BookingViewmodel>(
       builder: (context, bookingViewmodel, child) => Scaffold(
         floatingActionButton: ResponsiveLayout(
-          pinelabDevice: BookingFloatButtonWidget(
+          pinelabDevice: AdvanceBookingFloatButtonWidget(
             payOnTap: () => _handlePayTap(context, bookingViewmodel),
-            addOnTap: () => _handleAddTap(context, bookingViewmodel),
+            addOnTap: () => _handleAddTapAdv(context, bookingViewmodel,),
           ),
-          mediumDevice: BookingFloatButtonWidget(
+          mediumDevice: AdvanceBookingFloatButtonWidget(
             height: 65,
-            payOnTap: () => _handlePayTap(context, bookingViewmodel),
-            addOnTap: () => _handleAddTap(context, bookingViewmodel),
+            payOnTap: () => _handlePayTapAdv(context, bookingViewmodel),
+            addOnTap: () => _handleAddTapAdv(context, bookingViewmodel, ),
           ),
-          largeDevice: BookingFloatButtonWidget(
+          largeDevice: AdvanceBookingFloatButtonWidget(
             height: 75,
             payOnTap: () => _handlePayTap(context, bookingViewmodel),
-            addOnTap: () => _handleAddTap(context, bookingViewmodel),
+            addOnTap: () => _handleAddTapAdv(context, bookingViewmodel,),
           ),
         ),
         body: SingleChildScrollView(

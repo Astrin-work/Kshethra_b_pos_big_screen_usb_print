@@ -41,9 +41,9 @@ class QrScannerComponentBooking extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final currentLang = Provider.of<HomePageViewmodel>(context).currentLanguage;
+    bool isLoading=true;
     AppStyles styles = AppStyles();
     SizeConfig().init(context);
-
     return Scaffold(
       body: Consumer<HomePageViewmodel>(
         builder:
@@ -110,13 +110,13 @@ class QrScannerComponentBooking extends StatelessWidget {
                                 for (final booking in response) {
                                   final serialNumber = booking['serialNumber']?.toString() ?? '';
                                   final poojaDate = DateFormat('dd/MM/yyyy').format(
-                                    DateTime.tryParse(booking['startDate']?.toString() ?? '') ??
-                                        DateTime.now(),
+                                    DateTime.tryParse(booking['startDate']?.toString() ?? '') ?? DateTime.now(),
                                   );
-                                  final postalCharge = double.tryParse(
-                                    booking['postalCharge']?.toString() ?? '0',
-                                  )?.toStringAsFixed(2) ?? '0.00';
                                   final devatha = viewmodel.selectedGods?.devathaName.toString() ?? '';
+
+                                  print(" Serial Number: $serialNumber");
+                                  print(" Pooja Date: $poojaDate");
+                                  print(" Devatha: $devatha");
 
                                   final receiptList = booking['receipts'] as List<dynamic>? ?? [];
 
@@ -124,7 +124,6 @@ class QrScannerComponentBooking extends StatelessWidget {
                                     groupedMap[serialNumber] = {
                                       'serialNumber': serialNumber,
                                       'poojaDate': poojaDate,
-                                      'postalCharge': postalCharge,
                                       'devatha': devatha,
                                       'receipts': <Map<String, dynamic>>[],
                                     };
@@ -134,12 +133,17 @@ class QrScannerComponentBooking extends StatelessWidget {
                                     final name = receipt['personName'] ?? '';
                                     final star = receipt['personStar'] ?? '';
                                     final offerName = receipt['offerName']?.toString() ?? '';
-                                    final quantity = int.tryParse(
-                                      receipt['quantity']?.toString() ?? '1',
-                                    ) ?? 1;
-                                    final rate = double.tryParse(
-                                      receipt['rate']?.toString() ?? '0',
-                                    ) ?? 0;
+                                    final quantity = int.tryParse(receipt['quantity']?.toString() ?? '1') ?? 1;
+                                    final rate = (receipt['rate'] as num?)?.toDouble() ?? 0.0;
+
+
+                                    print("------------------------------------------------");
+                                    print(" Person Name: $name");
+                                    print(" Star: $star");
+                                    print(" Offer: $offerName");
+                                    print(" Quantity: $quantity");
+                                    print(" Rate: $rate");
+                                    print("------------------------------------------------");
 
                                     groupedMap[serialNumber]!['receipts'].add({
                                       'offerName': offerName,
@@ -154,7 +158,7 @@ class QrScannerComponentBooking extends StatelessWidget {
                                 final List<Map<String, dynamic>> groupedReceipts = groupedMap.values.toList();
 
                                 for (int i = 0; i < groupedReceipts.length; i++) {
-                                  print("Printing receipt ${i + 1} of ${groupedReceipts.length}");
+                                  print(" Printing receipt ${i + 1} of ${groupedReceipts.length}");
 
                                   await ReceiptFormatterBooking.printGroupedReceipts(
                                     context,
@@ -164,26 +168,25 @@ class QrScannerComponentBooking extends StatelessWidget {
                                     templePhone: templePhone,
                                   );
 
-                                  print("Finished printing receipt ${i + 1}");
+                                  print("✅ Finished printing receipt ${i + 1}");
                                   await Future.delayed(const Duration(seconds: 2));
                                 }
-
 
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                     builder: (context) => PaymentCompleteScreen(
-                                      amount: viewmodel.totalAmount.toStringAsFixed(2),
+                                      amount: amount.toString(),
                                       noOfScreen: viewmodel.vazhipaduBookingList.length,
                                     ),
                                   ),
                                 );
                               } catch (e) {
                                 debugPrint("❌ Error during print: $e");
-
                               }
                             },
                           ),
+
                         ],
                       ),
                     ],

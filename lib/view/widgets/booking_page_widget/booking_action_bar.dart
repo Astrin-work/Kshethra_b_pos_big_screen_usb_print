@@ -67,7 +67,7 @@ class BookingActionBar extends StatelessWidget {
                 ),
                 child: Center(
                   child: amount != null
-                      ? Text("₹ $amount", style: styles.whiteRegular20)
+                      ? Text("Proceed To Pay ₹ $amount", style: styles.whiteRegular20)
                       : Text(
                     "₹ ${bookingViewmodel.totalVazhipaduAmt}",
                     style: styles.whiteRegular20,
@@ -87,6 +87,7 @@ class BookingActionBar extends StatelessWidget {
                   Provider.of<BookingViewmodel>(context, listen: false);
                   bookingViewmodel.clearBookingForm();
                   Navigator.pop(context);
+
                 }
               },
               child: Container(
@@ -106,9 +107,19 @@ class BookingActionBar extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                       color: kWhite,
                     ),
-                    child: const Icon(
-                      Icons.add,
-                      color: kDullPrimaryColor,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.person_add, color: kDullPrimaryColor),
+                        Text(
+                          "Add More",
+                          style: TextStyle(
+                            color: kDullPrimaryColor,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),

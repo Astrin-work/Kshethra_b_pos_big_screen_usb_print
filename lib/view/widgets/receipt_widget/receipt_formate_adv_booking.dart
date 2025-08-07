@@ -5,17 +5,19 @@ import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 
 class ReceiptFormateAdvBooking {
-  static const MethodChannel _platform = MethodChannel('com.example.panel_printer');
+  static const MethodChannel _platform = MethodChannel(
+    'com.example.panel_printer',
+  );
 
   static Future<void> printGroupedReceipts(
-      BuildContext context, {
-        required List<Map<String, dynamic>> groupedReceipts,
-        required String methodOption,
-        required String repeatDay,
-        required String templeName,
-        required String templeAddress,
-        required String templePhone,
-      }) async {
+    BuildContext context, {
+    required List<Map<String, dynamic>> groupedReceipts,
+    required String methodOption,
+    required String repeatDay,
+    required String templeName,
+    required String templeAddress,
+    required String templePhone,
+  }) async {
     final currentDate = DateFormat('dd/MM/yyyy').format(DateTime.now());
 
     final image = await _generateGroupedReceiptBitmap(
@@ -23,12 +25,13 @@ class ReceiptFormateAdvBooking {
       groupedReceipts: groupedReceipts,
       methodOption: methodOption,
       repeatDay: repeatDay,
-      templeName:templeName,
-      templeAddress:templeAddress,
-      templePhone:templePhone,
+      templeName: templeName,
+      templeAddress: templeAddress,
+      templePhone: templePhone,
     );
 
-    final byteData = await image.toByteData(format: ui.ImageByteFormat.png) ?? ByteData(0);
+    final byteData =
+        await image.toByteData(format: ui.ImageByteFormat.png) ?? ByteData(0);
     final byteArray = byteData.buffer.asUint8List();
 
     try {
@@ -68,9 +71,10 @@ class ReceiptFormateAdvBooking {
       Color color = const Color(0xFF000000),
       double spaceAfter = 5,
     }) {
-      final paint = Paint()
-        ..color = color
-        ..strokeWidth = thickness;
+      final paint =
+          Paint()
+            ..color = color
+            ..strokeWidth = thickness;
 
       double startX = 0;
       while (startX < width) {
@@ -85,21 +89,32 @@ class ReceiptFormateAdvBooking {
     }
 
     void drawCentered(String text, double fontSize) {
-      final builder = ui.ParagraphBuilder(centerStyle)
-        ..pushStyle(ui.TextStyle(fontSize: fontSize, color: const Color(0xFF000000)))
-        ..addText(text);
-      final paragraph = builder.build()
-        ..layout(ui.ParagraphConstraints(width: width.toDouble()));
-      canvas.drawParagraph(paragraph, Offset((width - paragraph.width) / 2, yOffset));
+      final builder =
+          ui.ParagraphBuilder(centerStyle)
+            ..pushStyle(
+              ui.TextStyle(fontSize: fontSize, color: const Color(0xFF000000)),
+            )
+            ..addText(text);
+      final paragraph =
+          builder.build()
+            ..layout(ui.ParagraphConstraints(width: width.toDouble()));
+      canvas.drawParagraph(
+        paragraph,
+        Offset((width - paragraph.width) / 2, yOffset),
+      );
       yOffset += paragraph.height + 5;
     }
 
     void drawLeft(String text, double fontSize, {double indent = 20}) {
-      final builder = ui.ParagraphBuilder(leftStyle)
-        ..pushStyle(ui.TextStyle(fontSize: fontSize, color: const Color(0xFF000000)))
-        ..addText(text);
-      final paragraph = builder.build()
-        ..layout(ui.ParagraphConstraints(width: width.toDouble()));
+      final builder =
+          ui.ParagraphBuilder(leftStyle)
+            ..pushStyle(
+              ui.TextStyle(fontSize: fontSize, color: const Color(0xFF000000)),
+            )
+            ..addText(text);
+      final paragraph =
+          builder.build()
+            ..layout(ui.ParagraphConstraints(width: width.toDouble()));
       canvas.drawParagraph(paragraph, Offset(indent, yOffset));
       yOffset += paragraph.height + 3;
     }
@@ -118,114 +133,120 @@ class ReceiptFormateAdvBooking {
 
       double total = 0.0;
 
-
-      drawCentered(templeName.isNotEmpty ? templeName.toUpperCase() : "TEMPLE NAME", 35);
+      drawCentered(
+        templeName.isNotEmpty ? templeName.toUpperCase() : "TEMPLE NAME",
+        35,
+      );
       // drawCentered("KSHETRAM", 28);
-      drawCentered(templeAddress.isNotEmpty ? templeAddress : "TEMPLE ADDRESS", 22);
-      drawCentered(templePhone.isNotEmpty ? "📞 $templePhone" : "📞 Temple Phone", 20);
+      drawCentered(
+        templeAddress.isNotEmpty ? templeAddress : "TEMPLE ADDRESS",
+        22,
+      );
+      drawCentered(
+        templePhone.isNotEmpty ? "📞 $templePhone" : "📞 Temple Phone",
+        20,
+      );
       drawDashedLine();
-      drawLeft("RECEIPT NO : $serialNumber".padRight(40) + "DATE : $currentDate".padRight(15), 22);
+      drawLeft(
+        "RECEIPT NO : $serialNumber".padRight(40) +
+            "DATE : $currentDate".padRight(15),
+        22,
+      );
       drawLeft("DEVATHA    : $devatha", 22);
       drawDashedLine(spaceAfter: 0);
+
       final headerLine = [
         "NO".padLeft(5),
         "VAZHIPADU".padLeft(15),
-        "QTY".padLeft(20),
+        "QTY".padLeft(29),
         "".padRight(2),
-        "AMOUNT".padLeft(21),
+        "AMOUNT".padLeft(13  ),
       ].join();
+
       drawLeft(headerLine, 24, indent: 0);
       drawDashedLine(spaceAfter: 0);
       drawLeft('', 12);
 
       for (int i = 0; i < items.length; i++) {
         final item = items[i];
-        final itemName = (item['offerName'] ?? '').toString();
+        final itemName = (item['offerName'] ?? '').toString().toUpperCase().trim();
         final qty = (item['quantity'] ?? '1').toString();
-        final amount = double.tryParse(item['rate']?.toString() ?? '0') ?? 0.0;
-        final personName = (item['personName'] ?? '').toString();
-        final personStar = (item['personStar'] ?? '').toString();
+        final rate = double.tryParse(item['rate']?.toString() ?? '0') ?? 0.0;
+        final itemTotal = rate * (int.tryParse(qty) ?? 1);
         final itemRepeatMethod = (item['repeatMethod'] ?? '').toString().toLowerCase();
+        final totalFromApi = double.tryParse(group['totalAmount']?.toString() ?? '0') ?? 0.0;
         final itemRepeatDays = (item['repeatDays'] ?? '').toString();
-        final repeatCount = (item['repeatCount'] ?? '1').toString();
-        final devathaName = (item['devathaName'] ?? '').toString();
-        final poojaStartDate = (item['startDate'] ?? '').toString();
-        final poojaEndDate = (item['endDate'] ?? '').toString();
 
-        total += amount * (int.tryParse(qty) ?? 1);
+        final displayRepeatDays = itemRepeatDays.isNotEmpty ? itemRepeatDays : repeatDay;
+        final qtyWithRepeat = '$qty (${displayRepeatDays.toString()} Times)';
 
-        // Adjusted spacing between Qty and Amount
-        final itemLine = [
-          (i + 1).toString().padRight(3),
-          itemName.toUpperCase().padLeft(18),
-          qty.padLeft(22),
-          "".padRight(2),
-          "₹${amount.toStringAsFixed(2)}".padLeft(30),
+        // Split item name into multiple lines
+        const itemNameLineWidth = 20;
+        final nameLines = <String>[];
+        for (int j = 0; j < itemName.length; j += itemNameLineWidth) {
+          final end = (j + itemNameLineWidth < itemName.length)
+              ? j + itemNameLineWidth
+              : itemName.length;
+          nameLines.add(itemName.substring(j, end));
+        }
+
+        final firstLine = [
+          (i + 1).toString().padRight(4),
+          nameLines[0].padRight(20),
+          qtyWithRepeat.padLeft(18),
+          "₹${itemTotal.toStringAsFixed(2)}".padLeft(12)
         ].join();
 
+        drawLeft(firstLine, 22);
 
+        // Additional item name lines
+        for (int k = 1; k < nameLines.length; k++) {
+          drawLeft("    ${nameLines[k]}", 22);
+        }
 
-        drawLeft(itemLine, 22);
+        // Person details
+        final personName = (item['personName'] ?? '').toString();
+        final personStar = (item['personStar'] ?? '').toString();
+        final rawName = '${personName.toUpperCase()}${personStar.isNotEmpty ? ' (${personStar.toUpperCase()})' : ''}';
+        drawLeft("    $rawName", 22);
 
-        // Sub-line 1: Person Name (Star)
-        final rawName = '${personName.isNotEmpty ? personName.toUpperCase() : ''}'
-            '${personStar.isNotEmpty ? ' (${personStar.toUpperCase()})' : ''}';
+        // Repeat method
+        final method = itemRepeatMethod.isNotEmpty ? itemRepeatMethod : methodOption.toLowerCase();
+        final repeatLine = method == 'once' || method.isEmpty
+            ? '    REPEAT : ONCE'
+            : '    REPEAT : ${_capitalize(method).toUpperCase()}';
+        drawLeft(repeatLine, 22);
 
-        final nameLine = rawName.padLeft(24);
-        drawLeft(nameLine, 25);
-
-
-
-
-        // Sub-line 2: Repeat Method
-        final displayRepeatMethod = itemRepeatMethod.isNotEmpty
-            ? itemRepeatMethod
-            : methodOption.toLowerCase();
-
-        final displayRepeatDays = itemRepeatDays.isNotEmpty
-            ? itemRepeatDays
-            : repeatDay;
-
-        final repeatLine = displayRepeatMethod == 'ONCE' || displayRepeatMethod.isEmpty
-            ? '          REPEAT : ONCE'  // 10 spaces
-            : '          REPEAT : ${_capitalize(displayRepeatMethod).toUpperCase()} (${displayRepeatDays} TIMES)';
-        drawLeft(repeatLine, 25);
-
-
-
-
-        // Sub-line 3: Pooja Date
+        // Pooja Dates
+        final poojaStartDate = (item['startDate'] ?? '').toString();
+        final poojaEndDate = (item['endDate'] ?? '').toString();
         if (poojaStartDate.isNotEmpty && poojaEndDate.isNotEmpty) {
           drawLeft("    Pooja Date : $poojaStartDate to $poojaEndDate", 22);
         }
 
-        // Optional: Devatha Name
+        // Devatha Name
+        final devathaName = (item['devathaName'] ?? '').toString();
         if (devathaName.isNotEmpty) {
           drawLeft("    GOD: $devathaName", 22);
         }
+
+
       }
 
-      if (postalCharge > 0) {
-        final postalLabel = "POSTAL CHARGE".padLeft(24);
-        final postalAmount = "₹${postalCharge.toStringAsFixed(2)}".padLeft(48);
-        final postalLine = "$postalLabel$postalAmount";
-        drawLeft(postalLine, 22);
-      } else {
-        final postalLabel = "POSTAL CHARGE".padLeft(24);
-        final postalAmount = "₹0.00".padLeft(48);
-        final postalLine = "$postalLabel$postalAmount";
-        drawLeft(postalLine, 22);
-      }
+      final postalLabel = "POSTAL CHARGE:";
+      final postalAmount = "₹${postalCharge.toStringAsFixed(2)}".padLeft(55);
+      final postalLine = "   $postalLabel$postalAmount";
+      drawLeft(postalLine, 22);
 
       drawLeft('', 22);
       drawDashedLine();
-
-      final grandTotal = total + postalCharge;
+      final totalFromApi =
+          double.tryParse(group['totalAmount']?.toString() ?? '0') ?? 0.0;
+      final grandTotal = totalFromApi + postalCharge;
       drawLeft(
         "TOTAL".padRight(35) + "₹${grandTotal.toStringAsFixed(2)}".padLeft(41),
         24,
       );
-
 
       yOffset += 30;
     }

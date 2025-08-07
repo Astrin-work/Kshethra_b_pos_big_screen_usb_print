@@ -241,7 +241,7 @@ class QrScannerComponentAdvanceBooking extends StatelessWidget {
             "${(i + 1).toString().padLeft(2)}. $itemName $qty   ₹${amt.toStringAsFixed(2).padLeft(7)}",
       );
 
-      // Print name/star only if not already printed
+
       if (!printedNames.contains(nameKey)) {
         buffer.writeln(leftIndent + "    $personName ($personStar)");
         printedNames.add(nameKey);
@@ -352,16 +352,15 @@ class QrScannerComponentAdvanceBooking extends StatelessWidget {
                             textColor: Colors.white,
                             child: const Text("Adv booking print"),
                             onPressed: () async {
-                              final viewmodel =
-                                  context.read<BookingViewmodel>();
+                              final viewmodel = context.read<BookingViewmodel>();
 
                               try {
-                                final response =
-                                    await viewmodel.submitAdvVazhipadu();
+                                final response = await viewmodel.submitAdvVazhipadu();
 
                                 if (response.isEmpty) {
-                                  throw Exception("❌ No receipt data found.");
+                                  throw Exception(" No receipt data found.");
                                 }
+
                                 final templeList = viewmodel.templeList;
                                 String templeName = 'Temple Name';
                                 String templeAddress = 'Temple Address';
@@ -369,64 +368,39 @@ class QrScannerComponentAdvanceBooking extends StatelessWidget {
 
                                 if (templeList.isNotEmpty) {
                                   final lastTemple = templeList.last;
-                                  templeName =
-                                      lastTemple.templeName ?? templeName;
-                                  templeAddress =
-                                      lastTemple.address ?? templeAddress;
-                                  templePhone =
-                                      lastTemple.phoneNumber ?? templePhone;
+                                  templeName = lastTemple.templeName;
+                                  templeAddress = lastTemple.address;
+                                  templePhone = lastTemple.phoneNumber;
                                 }
-                                final Map<String, Map<String, dynamic>>
-                                groupedMap = {};
+
+                                final Map<String, Map<String, dynamic>> groupedMap = {};
 
                                 for (var item in response) {
-                                  final serialNumber =
-                                      (item['serialNumber'] ?? '').toString();
-                                  final personName =
-                                      (item['personName'] ?? '').toString();
-                                  final personStar =
-                                      (item['personStar'] ?? '').toString();
-                                  final devathaName =
-                                      (item['devathaName'] ?? '').toString();
-                                  final offerName =
-                                      (item['offerName'] ?? '').toString();
-                                  final repeatMethod =
-                                      (item['repeatMethod'] ?? '').toString();
-                                  final repeatDays =
-                                      (item['repeatDays'] ?? '').toString();
-                                  final postalType =
-                                      (item['postalType'] ?? '').toString();
+                                  final serialNumber = (item['serialNumber'] ?? '').toString();
+                                  final personName = (item['personName'] ?? '').toString();
+                                  final personStar = (item['personStar'] ?? '').toString();
+                                  final devathaName = (item['devathaName'] ?? '').toString();
+                                  final offerName = (item['offerName'] ?? '').toString();
+                                  final repeatMethod = (item['repeatMethod'] ?? '').toString();
+                                  final repeatDays = (item['repeatDays'] ?? '').toString();
+                                  final postalType = (item['postalType'] ?? '').toString();
 
-                                  final quantity =
-                                      int.tryParse(
-                                        (item['quantity'] ?? '1').toString(),
-                                      ) ??
-                                      1;
-                                  final rate =
-                                      double.tryParse(
-                                        (item['rate'] ?? '0').toString(),
-                                      ) ??
-                                      0.0;
+                                  final quantity = int.tryParse((item['quantity'] ?? '1').toString()) ?? 1;
+                                  final rate = (item['rate'] as num?)?.toDouble() ?? 0.0;
 
-                                  final postalCharge =
-                                      (() {
-                                        final value = item['postalCharge'];
-                                        if (value is String)
-                                          return double.tryParse(value) ?? 0.0;
-                                        if (value is int)
-                                          return value.toDouble();
-                                        if (value is double) return value;
-                                        return 0.0;
-                                      })();
+                                  final postalCharge = (() {
+                                    final value = item['postalCharge'];
+                                    if (value is String) return double.tryParse(value) ?? 0.0;
+                                    if (value is int) return value.toDouble();
+                                    if (value is double) return value;
+                                    return 0.0;
+                                  })();
+
+                                  final totalAmount = (item['totalAmount'] as num?)?.toDouble() ?? 0.0;
 
                                   final poojaDateRaw = item['startDate'];
-                                  final poojaDate = DateFormat(
-                                    'dd/MM/yyyy',
-                                  ).format(
-                                    DateTime.tryParse(
-                                          poojaDateRaw.toString(),
-                                        ) ??
-                                        DateTime.now(),
+                                  final poojaDate = DateFormat('dd/MM/yyyy').format(
+                                    DateTime.tryParse(poojaDateRaw.toString()) ?? DateTime.now(),
                                   );
 
                                   final receiptItem = {
@@ -442,71 +416,83 @@ class QrScannerComponentAdvanceBooking extends StatelessWidget {
                                     groupedMap[serialNumber] = {
                                       'serialNumber': serialNumber,
                                       'devatha': devathaName,
-                                      'postalCharge':
-                                          postalCharge, // ✅ now it's double
+                                      'postalCharge': postalCharge,
                                       'repeatMethod': repeatMethod,
                                       'repeatDays': repeatDays,
                                       'postalType': postalType,
+                                      'totalAmount': totalAmount,
                                       'receipts': [receiptItem],
                                     };
                                   } else {
-                                    (groupedMap[serialNumber]!['receipts']
-                                            as List)
-                                        .add(receiptItem);
+                                    (groupedMap[serialNumber]!['receipts'] as List).add(receiptItem);
                                   }
                                 }
 
-                                final printableReceipts =
-                                    groupedMap.values.toList();
+                                final printableReceipts = groupedMap.values.toList();
 
-                                for (var receipt in printableReceipts) {
-                                  final List receipts = receipt['receipts'];
-                                  final dates =
-                                      receipts
-                                          .map((e) => e['poojaDate'])
-                                          .toSet()
-                                          .toList();
-                                  debugPrint(
-                                    "   Serial: ${receipt['serialNumber']} → Pooja Dates:",
+
+                                debugPrint("Printable Receipts:");
+                                for (var receiptGroup in printableReceipts) {
+                                  debugPrint(" Serial Number: ${receiptGroup['serialNumber']}");
+                                  debugPrint(" Devatha: ${receiptGroup['devatha']}");
+                                  debugPrint(" Postal Type: ${receiptGroup['postalType']}");
+                                  debugPrint(" Postal Charge: ${receiptGroup['postalCharge']}");
+                                  debugPrint(" Repeat Method: ${receiptGroup['repeatMethod']}");
+                                  debugPrint("Repeat Days: ${receiptGroup['repeatDays']}");
+                                  debugPrint(" Total Amount: ${receiptGroup['totalAmount']}");
+
+                                  List receipts = receiptGroup['receipts'];
+                                  for (var item in receipts) {
+                                    debugPrint("     Person Name: ${item['personName']}");
+                                    debugPrint("     Star: ${item['personStar']}");
+                                    debugPrint("     Offer Name: ${item['offerName']}");
+                                    debugPrint("     Quantity: ${item['quantity']}");
+                                    debugPrint("     Rate: ${item['rate']}");
+                                    debugPrint("     Pooja Date: ${item['poojaDate']}");
+                                  }
+                                  debugPrint("-----------------------------");
+                                }
+
+                                for (int i = 0; i < printableReceipts.length; i++) {
+                                  print("🖨️ Printing receipt ${i + 1} of ${printableReceipts.length}");
+
+                                  await ReceiptFormateAdvBooking.printGroupedReceipts(
+                                    context,
+                                    groupedReceipts: [printableReceipts[i]],
+                                    methodOption: viewmodel.selectedRepMethod,
+                                    repeatDay: viewmodel.repeatDays.toString(),
+                                    templeName: templeName,
+                                    templeAddress: templeAddress,
+                                    templePhone: templePhone,
                                   );
-                                  for (var date in dates) {
-                                    debugPrint("   • $date");
-                                  }
+
+                                  print(" Finished printing receipt ${i + 1}");
+                                  await Future.delayed(const Duration(seconds: 2));
                                 }
 
-                                await ReceiptFormateAdvBooking.printGroupedReceipts(
-                                  context,
-                                  groupedReceipts: printableReceipts,
-                                  methodOption: viewmodel.selectedRepMethod,
-                                  repeatDay: viewmodel.repeatDays.toString(),
-                                  templeName: templeName,
-                                  templeAddress: templeAddress,
-                                  templePhone: templePhone,
-                                );
+
 
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder:
-                                        (context) => PaymentCompleteScreen(
-                                          amount: viewmodel.totalAmount
-                                              .toStringAsFixed(2),
-                                          noOfScreen: printableReceipts.length,
-                                        ),
+                                    builder: (context) => PaymentCompleteScreen(
+                                      amount: amount.toString(),
+                                      noOfScreen: printableReceipts.length,
+                                    ),
                                   ),
                                 );
                               } catch (e) {
                                 debugPrint("❌ Error during print: $e");
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
-                                    content: Text(
-                                      "Failed to print receipt. ${e.toString()}",
-                                    ),
+                                    content: Text("Failed to print receipt. ${e.toString()}"),
                                   ),
                                 );
                               }
                             },
                           ),
+
+
                         ],
                       ),
                     ],

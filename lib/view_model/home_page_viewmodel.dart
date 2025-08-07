@@ -128,8 +128,10 @@ class HomePageViewmodel extends ChangeNotifier {
             title: 'Do you want to Logout?'.tr(),
             fButton: 'Logout'.tr(),
             fOnTap: () async {
-              final token = await AppHive().getToken();
-              print("Deleting token: $token");
+              final AccessToken = await AppHive().getToken();
+              final refreshToken = await AppHive().getRefreshToken();
+              print("Deleting AccessToken: $AccessToken");
+              print("Deleting RefreshToken: $refreshToken");
               await AppHive().clearHive();
               AuthViewmodel().logout(context);
             },
